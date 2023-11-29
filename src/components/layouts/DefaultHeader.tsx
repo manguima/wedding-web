@@ -14,18 +14,8 @@ export const DefaultHeader = ({
 }) => {
   const { primaryColor } = useLayoutContext();
 
-  const { setOffsetKabuki } = useKabukiRoll();
-
-  // GET REF MENU HEADER
-  const menuRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    !!menuRef && setOffsetKabuki?.(Number(menuRef?.current?.offsetHeight));
-  }, [menuRef?.current?.offsetHeight]);
-
   return (
     <Container
-      ref={menuRef}
       fluid
       p={{ base: "1rem", sm: "2rem" }}
       w={"100%"}

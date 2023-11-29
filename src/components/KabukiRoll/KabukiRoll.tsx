@@ -2,9 +2,7 @@
 import { debounce } from "lodash";
 
 import {
-  Dispatch,
   ReactElement,
-  SetStateAction,
   createContext,
   useContext,
   useEffect,
@@ -19,8 +17,6 @@ interface StickyrollContext {
   sectionsCount: number;
   totalHeight: number;
   currentSectionHeight: number;
-  offsetKabuki: 0;
-  setOffsetKabuki?: Dispatch<SetStateAction<number>>;
 }
 
 const stickyrollInitialProps: StickyrollContext = {
@@ -30,7 +26,6 @@ const stickyrollInitialProps: StickyrollContext = {
   sectionsCount: 0,
   totalHeight: 0,
   currentSectionHeight: 0,
-  offsetKabuki: 0,
 };
 
 const stickyrollContext = createContext<StickyrollContext>(
@@ -47,6 +42,7 @@ type StickyrollProps = {
 
 export const KabukiRoll = ({
   anchor = "bottom",
+  offset = 0,
   debugMode = false,
   sections,
   children,
@@ -61,9 +57,6 @@ export const KabukiRoll = ({
   const [totalHeight, setTotalHeight] = useState(0);
   const [sectionsHeight, setSectionsHeight] = useState<number[]>([]);
   const providerRef = useRef<any>(null);
-
-  // SET OFFSET KABUKIROLL
-  const [offsetKabuki, setOffsetKabuki] = useState(0);
 
   // update the sections count when the sections change
   useEffect(() => {
@@ -113,15 +106,13 @@ export const KabukiRoll = ({
         .reduce((a, b) => a + b, 0);
 
       let anchorTo =
-        anchor === "bottom"
-          ? scrollBottom - offsetKabuki
-          : scrollTop + offsetKabuki;
+        anchor === "bottom" ? scrollBottom - offset : scrollTop + offset;
 
       // console.log(scrollHeight, scrollBottom);
 
       if (anchorTo >= scrollHeight) {
         currentPage = index;
-        // console.log("current page", currentPage);
+        console.log("current page", currentPage);
         progress = (anchorTo - scrollHeight) / sectionHeight;
       }
     });
@@ -190,8 +181,6 @@ export const KabukiRoll = ({
           sectionsCount: sectionsCount,
           totalHeight,
           currentSectionHeight: sectionsHeight[currentSection],
-          offsetKabuki,
-          setOffsetKabuki,
         } as StickyrollContext
       }
     >
