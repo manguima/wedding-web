@@ -1,4 +1,4 @@
-import { fontHailey, fontItaliana } from "@/app/layout";
+import { fontHailey, fontItaliana } from "@/utils/fonts";
 import { noise } from "@/utils/noise";
 import {
   Box,
@@ -15,7 +15,7 @@ export const HeaderSection = ({ index }: any) => {
     <Container
       fluid
       p={0}
-      mih={"100vh"}
+      mih={"150vh"}
       h={"100%"}
       w={"100%"}
       style={{
@@ -25,10 +25,11 @@ export const HeaderSection = ({ index }: any) => {
         backgroundRepeat: "no-repeat",
         backgroundPosition: "center -32vw",
         backgroundBlendMode: "overlay",
+        backgroundAttachment: "fixed",
         position: "relative",
       }}
     >
-      <Center w={"100%"} h={"100vh"}>
+      <Center w={"100%"} h={"100vh"} style={{ position: "sticky", top: 0 }}>
         <Flex
           direction={"column"}
           gap={"3rem"}
