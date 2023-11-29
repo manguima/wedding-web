@@ -23,13 +23,13 @@ export const DefaultHeader = ({
       <Center>
         <Flex
           align={"center"}
-          justify={"center"}
+          justify={"space-between"}
           maw={"1200px"}
           w={"100%"}
           style={{ position: "relative" }}
         >
-          <Box style={{ position: "absolute", left: 0 }}>
-            <LogoIcon />
+          <Box>
+            <LogoIcon width={"8rem"} />
           </Box>
           <Flex gap={"1rem"}>
             {listNav.map((item, index) => (

@@ -10,7 +10,7 @@ import {
   Text,
 } from "@mantine/core";
 
-export const HeaderSection = ({ index }: any) => {
+export const HeaderSection = ({ index }: { index: number }) => {
   return (
     <Container
       fluid
@@ -33,9 +33,9 @@ export const HeaderSection = ({ index }: any) => {
         <Flex
           direction={"column"}
           gap={"3rem"}
-          mt={"24%"}
           justify={"center"}
           align={"center"}
+          top={"20vh"}
           style={{ position: "relative" }}
         >
           <Flex

@@ -10,14 +10,17 @@ export const metadata: Metadata = {
 };
 
 export default function Home() {
-  const pageSections = [() => <HeaderSection />, () => <AboutusSection />];
+  const pageSections = [
+    ({ index }: { index: number }) => <HeaderSection index={index} />,
+    ({ index }: { index: number }) => <AboutusSection index={index} />,
+  ];
 
   return (
     <Container fluid p={0}>
       <KabukiRoll
         anchor="top"
         sections={pageSections.map((Section, index) => {
-          return <Section key={index} />;
+          return <Section key={index} index={index} />;
         })}
       />
     </Container>
