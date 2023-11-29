@@ -3,6 +3,7 @@ import { Metadata } from "next";
 import { HeaderSection } from "../components/HomePage/HeaderSection";
 import { AboutusSection } from "@/components/HomePage/AboutusSection";
 import { KabukiRoll } from "@/components/KabukiRoll/KabukiRoll";
+import { CountDownSection } from "@/components/HomePage/CountDownSection";
 
 export const metadata: Metadata = {
   title: "Home - Deyse & Matheus",
@@ -13,6 +14,7 @@ export default function Home() {
   const pageSections = [
     ({ index }: { index: number }) => <HeaderSection index={index} />,
     ({ index }: { index: number }) => <AboutusSection index={index} />,
+    ({ index }: { index: number }) => <CountDownSection index={index} />,
   ];
 
   return (

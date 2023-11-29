@@ -18,7 +18,7 @@ import { useLayoutContext } from "../layouts/LayoutProvider";
 
 export const AboutusSection = ({ index }: { index: number }) => {
   // GET VALUES HOME PROVIDER
-  const { setPrimaryColor } = useLayoutContext();
+  const { setPrimaryColor, setSecondaryColor } = useLayoutContext();
 
   // GET VALUES KABUKIROLL SECTIONS
   const { currentSection } = useKabukiRoll();
@@ -27,6 +27,7 @@ export const AboutusSection = ({ index }: { index: number }) => {
   useEffect(() => {
     if (currentSection === index) {
       setPrimaryColor?.("black");
+      setSecondaryColor?.("#E5C74D")
     }
   }, [currentSection]);
 
@@ -84,6 +85,7 @@ export const AboutusSection = ({ index }: { index: number }) => {
                 fz={"3rem"}
                 fw={400}
                 lh={"4.2rem"}
+                style={{ rotate: "-8deg" }}
               >
                 “Vejam, saibam, considerem e compreendam que a mão do Senhor fez
                 isso.”{" "}

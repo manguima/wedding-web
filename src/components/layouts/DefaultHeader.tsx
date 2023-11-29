@@ -12,7 +12,7 @@ export const DefaultHeader = ({
 }: {
   position?: "sticky" | "fixed";
 }) => {
-  const { primaryColor } = useLayoutContext();
+  const { primaryColor, secondaryColor } = useLayoutContext();
 
   return (
     <Container
@@ -34,7 +34,11 @@ export const DefaultHeader = ({
           style={{ position: "relative" }}
         >
           <Box>
-            <LogoIcon width={"8rem"} primaryColor={primaryColor} />
+            <LogoIcon
+              width={"8rem"}
+              primaryColor={primaryColor}
+              secondaryColor={secondaryColor}
+            />
           </Box>
           <Flex gap={"1rem"}>
             {listNav.map((item, index) => (
@@ -58,7 +62,7 @@ const ButtonNav = ({
 }) => {
   const { hovered, ref } = useHover<HTMLAnchorElement>();
 
-  const { primaryColor } = useLayoutContext();
+  const { primaryColor, secondaryColor } = useLayoutContext();
 
   return (
     <UnstyledButton
@@ -69,7 +73,7 @@ const ButtonNav = ({
       styles={{
         root: {
           fontSize: "1rem",
-          color: hovered ? "#E5C74D" : primaryColor,
+          color: hovered ? secondaryColor : primaryColor,
         },
       }}
     >

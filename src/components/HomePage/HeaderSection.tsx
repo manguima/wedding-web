@@ -16,7 +16,7 @@ import { useEffect } from "react";
 
 export const HeaderSection = ({ index }: { index: number }) => {
   // GET VALUES HOME PROVIDER
-  const { setPrimaryColor } = useLayoutContext();
+  const { setPrimaryColor, setSecondaryColor } = useLayoutContext();
 
   // GET VALUES KABUKIROLL SECTIONS
   const { currentSection } = useKabukiRoll();
@@ -25,6 +25,7 @@ export const HeaderSection = ({ index }: { index: number }) => {
   useEffect(() => {
     if (currentSection === index) {
       setPrimaryColor?.("white");
+      setSecondaryColor?.("#E5C74D");
     }
   }, [currentSection]);
 
