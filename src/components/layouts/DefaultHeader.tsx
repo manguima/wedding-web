@@ -4,6 +4,8 @@ import { LogoIcon } from "../icons/LogoIcon";
 import Link from "next/link";
 import { useDisclosure, useHover } from "@mantine/hooks";
 import { useLayoutContext } from "./LayoutProvider";
+import { useEffect, useRef } from "react";
+import { useKabukiRoll } from "../KabukiRoll/KabukiRoll";
 
 export const DefaultHeader = ({
   position = "fixed",
@@ -12,8 +14,18 @@ export const DefaultHeader = ({
 }) => {
   const { primaryColor } = useLayoutContext();
 
+  const { setOffsetKabuki } = useKabukiRoll();
+
+  // GET REF MENU HEADER
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    !!menuRef && setOffsetKabuki?.(Number(menuRef?.current?.offsetHeight));
+  }, [menuRef?.current?.offsetHeight]);
+
   return (
     <Container
+      ref={menuRef}
       fluid
       p={{ base: "1rem", sm: "2rem" }}
       w={"100%"}

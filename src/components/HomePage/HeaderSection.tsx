@@ -25,7 +25,6 @@ export const HeaderSection = ({ index }: { index: number }) => {
   useEffect(() => {
     if (currentSection === index) {
       setPrimaryColor?.("white");
-      console.log(currentSection, index);
     }
   }, [currentSection]);
 

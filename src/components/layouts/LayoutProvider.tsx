@@ -10,6 +10,8 @@ import {
 export type LayoutInterface = {
   primaryColor: string;
   setPrimaryColor?: Dispatch<SetStateAction<string>>;
+  setOffsetKabuki?: Dispatch<SetStateAction<number>>;
+  offsetKabuki?: number;
 };
 
 export const LayoutContext = createContext<LayoutInterface>({

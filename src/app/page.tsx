@@ -19,7 +19,6 @@ export default function Home() {
     <Container fluid p={0}>
       <KabukiRoll
         anchor="top"
-        offset={50}
         sections={pageSections.map((Section, index) => {
           return <Section key={index} index={index} />;
         })}

@@ -27,7 +27,6 @@ export const AboutusSection = ({ index }: { index: number }) => {
   useEffect(() => {
     if (currentSection === index) {
       setPrimaryColor?.("black");
-      console.log(currentSection, index);
     }
   }, [currentSection]);
 
