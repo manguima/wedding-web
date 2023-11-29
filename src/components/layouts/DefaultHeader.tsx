@@ -15,8 +15,9 @@ export const DefaultHeader = ({
       p={{ base: "1rem", sm: "2rem" }}
       w={"100%"}
       style={{
-        background: "linear-gradient(180deg, #0F1D14 0%, #0F1D1400 100%)",
+        background: "linear-gradient(180deg, #0F1D1490 0%, #0F1D1400 100%)",
         position: position,
+        zIndex: 10,
       }}
     >
       <Center>
@@ -60,6 +61,7 @@ const ButtonNav = ({
       href={url}
       styles={{
         root: {
+          fontSize: "1rem",
           color: hovered ? "#E5C74D" : "white",
         },
       }}
