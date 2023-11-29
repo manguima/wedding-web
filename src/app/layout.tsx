@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
 
-import localFont from "next/font/local";
-
 import "@mantine/core/styles.css";
 import { ColorSchemeScript, MantineProvider } from "@mantine/core";
 import { DefaultHeader } from "@/components/layouts/DefaultHeader";
 import { responsive } from "@/utils/responsive";
+import { LayoutProvider } from "@/components/layouts/LayoutProvider";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -34,8 +33,10 @@ export default function RootLayout({
       </head>
       <body>
         <MantineProvider theme={{ fontFamily: "Roboto, sans-serif" }}>
-          <DefaultHeader />
-          {children}
+          <LayoutProvider>
+            <DefaultHeader />
+            {children}
+          </LayoutProvider>
         </MantineProvider>
       </body>
     </html>

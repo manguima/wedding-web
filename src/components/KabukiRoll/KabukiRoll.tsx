@@ -112,7 +112,7 @@ export const KabukiRoll = ({
 
       if (anchorTo >= scrollHeight) {
         currentPage = index;
-        console.log("current page", currentPage);
+        // console.log("current page", currentPage);
         progress = (anchorTo - scrollHeight) / sectionHeight;
       }
     });

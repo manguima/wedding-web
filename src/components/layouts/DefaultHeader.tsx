@@ -3,19 +3,22 @@ import { Box, Center, Container, Flex, UnstyledButton } from "@mantine/core";
 import { LogoIcon } from "../icons/LogoIcon";
 import Link from "next/link";
 import { useDisclosure, useHover } from "@mantine/hooks";
+import { useLayoutContext } from "./LayoutProvider";
 
 export const DefaultHeader = ({
   position = "fixed",
 }: {
   position?: "sticky" | "fixed";
 }) => {
+  const { primaryColor } = useLayoutContext();
+
   return (
     <Container
       fluid
       p={{ base: "1rem", sm: "2rem" }}
       w={"100%"}
       style={{
-        background: "linear-gradient(180deg, #0F1D1490 0%, #0F1D1400 100%)",
+        background: "linear-gradient(180deg, #0F1D1430 0%, #0F1D1400 90%)",
         position: position,
         zIndex: 10,
       }}
@@ -29,7 +32,7 @@ export const DefaultHeader = ({
           style={{ position: "relative" }}
         >
           <Box>
-            <LogoIcon width={"8rem"} />
+            <LogoIcon width={"8rem"} primaryColor={primaryColor} />
           </Box>
           <Flex gap={"1rem"}>
             {listNav.map((item, index) => (
@@ -53,6 +56,8 @@ const ButtonNav = ({
 }) => {
   const { hovered, ref } = useHover<HTMLAnchorElement>();
 
+  const { primaryColor } = useLayoutContext();
+
   return (
     <UnstyledButton
       ref={ref}
@@ -62,7 +67,7 @@ const ButtonNav = ({
       styles={{
         root: {
           fontSize: "1rem",
-          color: hovered ? "#E5C74D" : "white",
+          color: hovered ? "#E5C74D" : primaryColor,
         },
       }}
     >

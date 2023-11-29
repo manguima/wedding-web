@@ -1,3 +1,4 @@
+"use client";
 import { fontHailey, fontItaliana } from "@/utils/fonts";
 import { noise } from "@/utils/noise";
 import {
@@ -9,8 +10,25 @@ import {
   Flex,
   Text,
 } from "@mantine/core";
+import { useLayoutContext } from "../layouts/LayoutProvider";
+import { useKabukiRoll } from "../KabukiRoll/KabukiRoll";
+import { useEffect } from "react";
 
 export const HeaderSection = ({ index }: { index: number }) => {
+  // GET VALUES HOME PROVIDER
+  const { setPrimaryColor } = useLayoutContext();
+
+  // GET VALUES KABUKIROLL SECTIONS
+  const { currentSection } = useKabukiRoll();
+
+  // VALIDE VALUES KABUKI WITH HOME PROVIDER AND CHANGE VALUES
+  useEffect(() => {
+    if (currentSection === index) {
+      setPrimaryColor?.("white");
+      console.log(currentSection, index);
+    }
+  }, [currentSection]);
+
   return (
     <Container
       fluid

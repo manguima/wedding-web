@@ -12,8 +12,25 @@ import {
   Text,
   Title,
 } from "@mantine/core";
+import { useKabukiRoll } from "../KabukiRoll/KabukiRoll";
+import { useEffect } from "react";
+import { useLayoutContext } from "../layouts/LayoutProvider";
 
-export const AboutusSection = ({index}: {index: number}) => {
+export const AboutusSection = ({ index }: { index: number }) => {
+  // GET VALUES HOME PROVIDER
+  const { setPrimaryColor } = useLayoutContext();
+
+  // GET VALUES KABUKIROLL SECTIONS
+  const { currentSection } = useKabukiRoll();
+
+  // VALIDE VALUES KABUKI WITH HOME PROVIDER AND CHANGE VALUES
+  useEffect(() => {
+    if (currentSection === index) {
+      setPrimaryColor?.("black");
+      console.log(currentSection, index);
+    }
+  }, [currentSection]);
+
   return (
     <Container fluid p={0} w={"100%"} h={"150vh"}>
       <Center w={"100%"} h={"100vh"} style={{ position: "sticky", top: 0 }}>
@@ -50,10 +67,7 @@ export const AboutusSection = ({index}: {index: number}) => {
               >
                 Um pouco sobre nós
               </Title>
-              <Text
-                fz={{ base: "1rem", sm: "0.8rem", md: "1rem" }}
-                c={"#00000099"}
-              >
+              <Text fz={{ base: "1rem" }} c={"#00000099"}>
                 Nos apaixonamos um pelo outro, cativados pela paciência e
                 bondade, reconhecendo que Deus é o centro desse amor. Ao longo
                 dos anos, enfrentamos desafios, pedimos desculpas quando
@@ -68,12 +82,21 @@ export const AboutusSection = ({index}: {index: number}) => {
               <Text
                 mt={"2rem"}
                 ff={fontHailey.style.fontFamily}
-                fz={{ base: "4rem", sm: "2rem", md: "2rem" }}
+                fz={"3rem"}
                 fw={400}
                 lh={"4.2rem"}
               >
                 “Vejam, saibam, considerem e compreendam que a mão do Senhor fez
-                isso.” (IS 41:20)
+                isso.”{" "}
+                <b
+                  style={{
+                    fontFamily: "Roboto, sans-serif",
+                    fontSize: "1rem",
+                    fontWeight: 400,
+                  }}
+                >
+                  (IS 41:20)
+                </b>
               </Text>
             </Flex>
           </Grid.Col>
