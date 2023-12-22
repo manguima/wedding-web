@@ -5,6 +5,7 @@ import { ColorSchemeScript, MantineProvider } from "@mantine/core";
 import { DefaultHeader } from "@/components/layouts/DefaultHeader";
 import { responsive } from "@/utils/responsive";
 import { LayoutProvider } from "@/components/layouts/LayoutProvider";
+import { DefaultFooter } from "@/components/layouts/DefaultFooter";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -36,6 +37,7 @@ export default function RootLayout({
           <LayoutProvider>
             <DefaultHeader />
             {children}
+            <DefaultFooter />
           </LayoutProvider>
         </MantineProvider>
       </body>

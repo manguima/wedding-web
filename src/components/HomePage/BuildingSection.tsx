@@ -1,9 +1,17 @@
 "use client";
-import { Center, Container, Flex, Text, Title } from "@mantine/core";
+import {
+  ActionIcon,
+  Center,
+  Container,
+  Flex,
+  Text,
+  Title,
+} from "@mantine/core";
 import { useLayoutContext } from "../layouts/LayoutProvider";
 import { useKabukiRoll } from "../KabukiRoll/KabukiRoll";
 import { useEffect } from "react";
 import { fontHailey } from "@/utils/fonts";
+import { IconBrandLinkedin } from "@tabler/icons-react";
 
 export const BuildingSection = ({ index }: { index: number }) => {
   // GET VALUES HOME PROVIDER
@@ -42,7 +50,7 @@ export const BuildingSection = ({ index }: { index: number }) => {
           >
             Ainda tem muito mais!
           </Title>
-          <Text fz={"1.2rem"}>Aguarde para novas atualizações.</Text>
+          <Text fz={"1rem"}>Aguarde para novas atualizações.</Text>
         </Flex>
       </Center>
     </Container>

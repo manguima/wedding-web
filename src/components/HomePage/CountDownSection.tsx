@@ -60,13 +60,13 @@ export const CountDownSection = ({ index }: { index: number }) => {
           <Title fz={"5rem"} ff={fontItaliana?.style?.fontFamily}>
             Caminho para o "Sim"
           </Title>
-          <Flex w={"100%"}>
+          <Flex w={"100%"} justify={"center"}>
             {/* TIME EXAMPLE */}
-            <Grid w={"100%"}>
+            <Grid w={"80%"}>
               {[...Array(4)].map(() => (
                 <Grid.Col span={3}>
                   <AspectRatio w={"100%"} ratio={10 / 10}>
-                    <Flex w={"100%"} h={"100%"} p={"4rem"}>
+                    <Flex w={"100%"} h={"100%"} p={"2.5rem"}>
                       <Center
                         w={"100%"}
                         h={"100%"}
@@ -82,10 +82,12 @@ export const CountDownSection = ({ index }: { index: number }) => {
                           justify={"center"}
                           style={{ rotate: "-45deg" }}
                         >
-                          <Text lh={"3rem"} fz={"3rem"}>
+                          <Text lh={"2rem"} fw={500} fz={"2.4rem"}>
                             00
                           </Text>
-                          <Text fw={600}>Hora</Text>
+                          <Text fw={500} fz={"1.2rem"}>
+                            Hora
+                          </Text>
                         </Flex>
                       </Center>
                     </Flex>

@@ -42,7 +42,12 @@ export const DefaultHeader = ({
           </Box>
           <Flex gap={"1rem"}>
             {listNav.map((item, index) => (
-              <ButtonNav {...item} index={index} />
+              <ButtonNav
+                {...item}
+                index={index}
+                primaryColor={primaryColor}
+                secondaryColor={secondaryColor}
+              />
             ))}
           </Flex>
         </Flex>
@@ -51,18 +56,20 @@ export const DefaultHeader = ({
   );
 };
 
-const ButtonNav = ({
+export const ButtonNav = ({
   label,
   url,
   index,
+  primaryColor = "white",
+  secondaryColor = "#E5C74D",
 }: {
   label: string;
   url: string;
   index: number;
+  primaryColor?: string | undefined;
+  secondaryColor?: string | undefined;
 }) => {
   const { hovered, ref } = useHover<HTMLAnchorElement>();
-
-  const { primaryColor, secondaryColor } = useLayoutContext();
 
   return (
     <UnstyledButton
@@ -82,7 +89,7 @@ const ButtonNav = ({
   );
 };
 
-const listNav = [
+export const listNav = [
   { label: "Início", url: "/" },
   { label: "Confirmar presença", url: "#confirm" },
   { label: "Sobre Nós", url: "#aboutus" },

@@ -37,11 +37,11 @@ export const HeaderSection = ({ index }: { index: number }) => {
       h={"100%"}
       w={"100%"}
       style={{
-        background: "#152417",
+        background: "#15241795",
         backgroundImage: "url(images/img_header_section.png)",
-        backgroundSize: "100%",
+        backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
-        backgroundPosition: "center",
+        backgroundPosition: "top",
         backgroundBlendMode: "overlay",
         backgroundAttachment: "fixed",
         position: "relative",
