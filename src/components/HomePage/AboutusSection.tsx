@@ -15,6 +15,7 @@ import {
 import { useKabukiRoll } from "../KabukiRoll/KabukiRoll";
 import { useEffect } from "react";
 import { useLayoutContext } from "../layouts/LayoutProvider";
+import { responsive } from "@/utils/responsive";
 
 export const AboutusSection = ({ index }: { index: number }) => {
   // GET VALUES HOME PROVIDER
@@ -27,13 +28,20 @@ export const AboutusSection = ({ index }: { index: number }) => {
   useEffect(() => {
     if (currentSection === index) {
       setPrimaryColor?.("black");
-      setSecondaryColor?.("#E5C74D")
+      setSecondaryColor?.("#E5C74D");
     }
   }, [currentSection]);
 
   return (
-    <Container fluid p={0} w={"100%"} h={"150vh"}>
-      <Center w={"100%"} h={"100vh"} style={{ position: "sticky", top: 0 }}>
+    <Container fluid p={0} w={"100%"} h={"200vh"}>
+      <Center
+        w={"100%"}
+        h={"100vh"}
+        style={{
+          position: "sticky",
+          top: 0,
+        }}
+      >
         <Grid maw={"1200px"} w={"100%"} gutter={"4rem"}>
           <Grid.Col span={6}>
             <Center>
@@ -85,7 +93,6 @@ export const AboutusSection = ({ index }: { index: number }) => {
                 fz={"3rem"}
                 fw={400}
                 lh={"4.2rem"}
-                style={{ rotate: "-8deg" }}
               >
                 “Vejam, saibam, considerem e compreendam que a mão do Senhor fez
                 isso.”{" "}
