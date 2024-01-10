@@ -1,4 +1,4 @@
-import { Container, Flex } from "@mantine/core";
+import { Container, Flex, ScrollArea } from "@mantine/core";
 import { Metadata } from "next";
 import { HeaderSection } from "../components/HomePage/HeaderSection";
 import { AboutusSection } from "@/components/HomePage/AboutusSection";

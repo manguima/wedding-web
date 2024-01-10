@@ -93,5 +93,5 @@ export const listNav = [
   { label: "Início", url: "/" },
   { label: "Confirmar presença", url: "#confirm" },
   { label: "Sobre Nós", url: "#aboutus" },
-  { label: "Lista de presentes", url: "#gifts" },
+  // { label: "Lista de presentes", url: "#gifts" },
 ];

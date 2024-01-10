@@ -13,6 +13,7 @@ import {
 import { useLayoutContext } from "../layouts/LayoutProvider";
 import { useKabukiRoll } from "../KabukiRoll/KabukiRoll";
 import { useEffect } from "react";
+import Link from "next/link";
 
 export const HeaderSection = ({ index }: { index: number }) => {
   // GET VALUES HOME PROVIDER
@@ -47,6 +48,17 @@ export const HeaderSection = ({ index }: { index: number }) => {
         position: "relative",
       }}
     >
+      <Box
+        w={"100%"}
+        h={"100%"}
+        style={{
+          opacity: 0.5,
+          position: "absolute",
+          top: 0,
+          left: 0,
+          background: `url(${noise})`,
+        }}
+      ></Box>
       <Center w={"100%"} h={"100vh"} style={{ position: "sticky", top: 0 }}>
         <Flex
           direction={"column"}
@@ -119,25 +131,15 @@ export const HeaderSection = ({ index }: { index: number }) => {
           </Flex>
           <Button
             variant="outline"
-            radius={"2rem"}
             color="#E5C74D"
+            component={Link}
+            href={"#confirm"}
             style={{ zIndex: 3 }}
           >
             Confirmar Presença
           </Button>
         </Flex>
       </Center>
-      <Box
-        w={"100%"}
-        h={"100%"}
-        style={{
-          opacity: 0.5,
-          position: "absolute",
-          top: 0,
-          left: 0,
-          background: `url(${noise})`,
-        }}
-      ></Box>
     </Container>
   );
 };

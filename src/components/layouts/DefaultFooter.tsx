@@ -11,7 +11,7 @@ export const DefaultFooter = () => {
       fluid
       p={0}
       style={{
-        background: "#152510",
+        background: "#171F0E",
       }}
     >
       <Center w={"100%"} p={"2rem"}>
@@ -55,6 +55,14 @@ export const DefaultFooter = () => {
           </Grid>
         </Flex>
       </Center>
+      <Flex w={"100%"} style={{ background: "#11170A" }}>
+        <Center w={"100%"}>
+          <Flex w={"100%"} maw={"1200px"} py={"1rem"} justify={"space-between"}>
+            <Text c={"#64815C"}>Criado por Matheus & Deyse</Text>
+            <Text c={"#64815C"}>Copyright - 2024 ®</Text>
+          </Flex>
+        </Center>
+      </Flex>
     </Container>
   );
 };
