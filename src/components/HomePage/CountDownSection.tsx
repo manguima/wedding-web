@@ -16,6 +16,7 @@ import { useLayoutContext } from "../layouts/LayoutProvider";
 import { noise } from "@/utils/noise";
 import { fontItaliana } from "@/utils/fonts";
 import { useInView } from "framer-motion";
+import { useSetState } from "@mantine/hooks";
 
 export const CountDownSection = ({ index }: { index: number }) => {
   // GET VALUES HOME PROVIDER
@@ -35,6 +36,40 @@ export const CountDownSection = ({ index }: { index: number }) => {
   // ANIMATION
   const targetRef = useRef(null);
   const isInView = useInView(targetRef);
+
+  // COUNTDOWN TIMER
+  const countDownDate = new Date("Nov 9, 2024 15:30:00").getTime();
+
+  const [dateTimeNow, changeDateTimeNow] = useSetState({
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+  });
+
+  const IntervalDate = setInterval(() => {
+    const now = new Date().getTime();
+
+    const distance = countDownDate - now;
+
+    changeDateTimeNow({
+      days: Math.floor(distance / (1000 * 60 * 60 * 24)),
+    });
+    changeDateTimeNow({
+      hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+    });
+    changeDateTimeNow({
+      minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
+    });
+    changeDateTimeNow({
+      seconds: Math.floor((distance % (1000 * 60)) / 1000),
+    });
+
+    // If the count down is finished, write some text
+    if (distance < 0) {
+      clearInterval(IntervalDate);
+    }
+  });
 
   return (
     <Container
@@ -129,10 +164,24 @@ export const CountDownSection = ({ index }: { index: number }) => {
                           style={{ rotate: "-45deg" }}
                         >
                           <Text lh={"2rem"} fw={500} fz={"2.4rem"}>
-                            00
+                            {
+                              {
+                                0: dateTimeNow.days,
+                                1: dateTimeNow.hours,
+                                2: dateTimeNow.minutes,
+                                3: dateTimeNow.seconds,
+                              }[index]
+                            }
                           </Text>
                           <Text fw={500} fz={"1.2rem"}>
-                            Hora
+                            {
+                              {
+                                0: "DIAS",
+                                1: "HORAS",
+                                2: "MINUTOS",
+                                3: "SEGUNDOS",
+                              }[index]
+                            }
                           </Text>
                         </Flex>
                       </Center>
