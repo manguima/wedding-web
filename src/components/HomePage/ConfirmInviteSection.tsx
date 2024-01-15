@@ -693,7 +693,7 @@ const StepFor = ({ index }: { index: number }) => {
   const currentStep = useCurrentStep.getState().currentStep;
 
   return (
-    <Flex w={"25rem"} direction={"column"} gap={"2rem"}>
+    <Flex w={"100%"} miw={"25rem"} direction={"column"} gap={"2rem"}>
       <Text fz={"1.2rem"} ta={"center"} c={"#fff"}>
         Ficamos felizes em saber que você estará conosco nesse dia tão especial.
         Não vemos a hora de compartilhar a alegria do nosso casamento com você!
