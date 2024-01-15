@@ -54,7 +54,7 @@ export const HeaderSection = ({ index }: { index: number }) => {
       w={"100%"}
       style={{
         background: "#15241795",
-        backgroundImage: "url(images/img_header_section.png)",
+        backgroundImage: "url(images/img_header_section.jpg)",
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
         backgroundPosition: "top",
