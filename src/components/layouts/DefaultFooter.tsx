@@ -57,7 +57,13 @@ export const DefaultFooter = () => {
       </Center>
       <Flex w={"100%"} style={{ background: "#11170A" }}>
         <Center w={"100%"}>
-          <Flex w={"100%"} maw={"1200px"} py={"1rem"} justify={"space-between"}>
+          <Flex
+            w={"100%"}
+            maw={"1200px"}
+            py={{ base: "1rem", md: "1rem" }}
+            px={{ base: "2rem", md: "0" }}
+            justify={"space-between"}
+          >
             <Text c={"#64815C"}>Criado por Matheus & Deyse</Text>
             <Text c={"#64815C"}>Copyright - 2024 ®</Text>
           </Flex>

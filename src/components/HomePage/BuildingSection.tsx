@@ -41,7 +41,7 @@ export const BuildingSection = ({ index }: { index: number }) => {
       h={"150vh"}
       style={{
         backgroundImage: "url(./images/img_building_section.png)",
-        backgroundSize: "contain",
+        backgroundSize: "100%",
         backgroundPosition: "bottom",
         backgroundRepeat: "no-repeat",
       }}
@@ -52,6 +52,7 @@ export const BuildingSection = ({ index }: { index: number }) => {
             fw={500}
             fz={"6rem"}
             lh={"5rem"}
+            ta={"center"}
             ff={fontHailey?.style?.fontFamily}
             style={{
               transition: "all ease 0.3s",

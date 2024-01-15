@@ -103,7 +103,7 @@ export const CountDownSection = ({ index }: { index: number }) => {
               <Text
                 ff={fontItaliana.style.fontFamily}
                 tt={"uppercase"}
-                fz={"1.4rem"}
+                fz={{ base: "1.5rem", md: "1.4rem" }}
                 fw={600}
                 style={{
                   transform: isInView ? "translateY(0)" : "translateY(-100px)",
@@ -116,7 +116,6 @@ export const CountDownSection = ({ index }: { index: number }) => {
               </Text>
             }
             color="dark"
-            styles={{ label: { fontSize: "2rem" } }}
           />
           <Title
             style={{
@@ -125,18 +124,24 @@ export const CountDownSection = ({ index }: { index: number }) => {
               transform: isInView ? "translateX(0)" : "translateX(+100px)",
               opacity: isInView ? 1 : 0,
             }}
-            fz={"5rem"}
+            p={{ base: "1rem", md: 0 }}
+            ta={"center"}
+            fz={{ base: "4rem", md: "5rem" }}
             ff={fontItaliana?.style?.fontFamily}
           >
             Caminho para o "Sim"
           </Title>
           <Flex w={"100%"} justify={"center"}>
             {/* TIME EXAMPLE */}
-            <Grid w={"80%"}>
+            <Grid
+              w={{ base: "100%", md: "80%" }}
+              p={{ base: "2rem", md: 0 }}
+              gutter={{ base: "1rem", md: 0 }}
+            >
               {[...Array(4)].map((a, index) => (
                 <Grid.Col
                   key={index}
-                  span={3}
+                  span={{ base: 6, md: 3 }}
                   style={{
                     transition: "all ease 0.2s",
                     transitionDelay: `${index * 0.2}s`,
@@ -163,7 +168,11 @@ export const CountDownSection = ({ index }: { index: number }) => {
                           justify={"center"}
                           style={{ rotate: "-45deg" }}
                         >
-                          <Text lh={"2rem"} fw={500} fz={"2.4rem"}>
+                          <Text
+                            lh={{ base: "2rem", md: "2rem" }}
+                            fw={500}
+                            fz={{ base: "2rem", md: "2.4rem" }}
+                          >
                             {
                               {
                                 0: dateTimeNow.days,
@@ -173,7 +182,7 @@ export const CountDownSection = ({ index }: { index: number }) => {
                               }[index]
                             }
                           </Text>
-                          <Text fw={500} fz={"1.2rem"}>
+                          <Text fw={500} fz={{ base: "1rem", md: "1.2rem" }}>
                             {
                               {
                                 0: "DIAS",

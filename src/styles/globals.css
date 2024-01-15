@@ -16,3 +16,10 @@
   scrollbar-width: thin; /* "auto" or "thin" */
   scrollbar-color: rgb(197, 151, 67) rgb(255, 207, 118); /* scroll thumb and track */
 }
+
+@media (max-width: 768px) {
+  html,
+  body {
+    font-size: 12px !important;
+  }
+}

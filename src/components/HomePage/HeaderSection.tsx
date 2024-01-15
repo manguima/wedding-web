@@ -93,27 +93,27 @@ export const HeaderSection = ({ index }: { index: number }) => {
             style={{ pointerEvents: "none", userSelect: "none" }}
           >
             <Text
-              fz={{ base: "1rem", sm: "5rem" }}
+              fz={{ base: "5rem", md: "5rem" }}
               c={"white"}
-              lh={"2rem"}
+              lh={{ base: "2rem", md: "2rem" }}
               tt={"uppercase"}
               ff={fontItaliana.style.fontFamily}
             >
               Salve
             </Text>
             <Text
-              fz={"10rem"}
+              fz={{ base: "7rem", md: "10rem" }}
               c="#E5C74D"
-              lh={"8rem"}
+              lh={{ base: "8rem", md: "8rem" }}
               ff={fontHailey.style.fontFamily}
             >
               esta
             </Text>
             <Text
               ff={fontItaliana.style.fontFamily}
-              fz={{ base: "1rem", sm: "5rem" }}
+              fz={{ base: "5rem", md: "5rem" }}
               tt={"uppercase"}
-              lh={"3rem"}
+              lh={{ base: "2rem", md: "3rem" }}
               c="white"
             >
               Data
@@ -134,13 +134,21 @@ export const HeaderSection = ({ index }: { index: number }) => {
                     position: "relative",
                   }}
                 >
-                  <Text lh={"1.5rem"} fz={"1.5rem"} c={"white"}>
+                  <Text
+                    lh={{ base: "1rem", md: "1.5rem" }}
+                    fz={{ base: "1rem", md: "1.5rem" }}
+                    c={"white"}
+                  >
                     {item.value}
                   </Text>
                   <Flex
                     style={{ position: "absolute", left: "calc(100% + 1rem)" }}
                   >
-                    <Text c={"white"} fz={"1rem"} tt={"capitalize"}>
+                    <Text
+                      c={"white"}
+                      fz={{ base: "1rem", md: "1rem" }}
+                      tt={"capitalize"}
+                    >
                       {item.label}
                     </Text>
                   </Flex>

@@ -48,6 +48,7 @@ export const AboutusSection = ({ index }: { index: number }) => {
 
   // ANIMATE
   const isInView = useInView(targetRef);
+  const delay = 0.3;
 
   return (
     <Container ref={targetRef} fluid p={0} w={"100%"} h={"200vh"}>
@@ -59,28 +60,36 @@ export const AboutusSection = ({ index }: { index: number }) => {
           top: 0,
         }}
       >
-        <Grid maw={"1200px"} w={"100%"} gutter={"4rem"}>
-          <Grid.Col span={6}>
+        <Grid
+          maw={"1200px"}
+          w={"100%"}
+          gutter={{ base: "2rem", md: "4rem" }}
+          p={{ base: "2rem", md: 0 }}
+        >
+          <Grid.Col span={{ base: 12, md: 6 }}>
             <Center>
               <Box
                 style={{
                   opacity: isInView ? 1 : 0,
                   transform: isInView ? "translateY(0)" : "translateY(100px)",
                   transition: "all ease 0.5s",
-                  transitionDelay: "0.2s",
+                  transitionDelay: `${delay}s`,
                   position: "relative",
                 }}
                 p={0}
-                w={"70%"}
+                w={{ base: "100%", md: "70%" }}
               >
                 <Box
                   style={{
-                    borderRadius: "15rem 15rem 1rem 1rem",
+                    borderRadius: "40rem 40rem 1rem 1rem",
                     boxShadow: "-10px 10px 0px 0px #dddddd",
                     overflow: "hidden",
                   }}
                 >
-                  <AspectRatio w={"100%"} ratio={10 / 14}>
+                  <AspectRatio visibleFrom="md" w={"100%"} ratio={10 / 14}>
+                    <Image src="images/img_aboutus_section.png" />
+                  </AspectRatio>
+                  <AspectRatio hiddenFrom="md" w={"100%"} ratio={10 / 5}>
                     <Image src="images/img_aboutus_section.png" />
                   </AspectRatio>
                 </Box>
@@ -88,22 +97,22 @@ export const AboutusSection = ({ index }: { index: number }) => {
             </Center>
           </Grid.Col>
 
-          <Grid.Col span={6}>
+          <Grid.Col span={{ base: 12, md: 6 }}>
             <Flex
               h={"100%"}
-              gap={"1rem"}
+              gap={{ base: "0.5", md: "1rem" }}
               direction={"column"}
               justify={"center"}
               align={"start"}
             >
               <Title
-                fz={{ base: "2.5rem", sm: "0.8rem", md: "2.5rem" }}
+                fz={{ base: "2rem", md: "2.5rem" }}
                 ff={fontItaliana.style.fontFamily}
                 style={{
                   opacity: isInView ? 1 : 0,
                   transform: isInView ? "translateX(0)" : "translateX(100px)",
                   transition: "all ease 0.5s",
-                  transitionDelay: "0.2s",
+                  transitionDelay: `${delay}s`,
                 }}
               >
                 Um pouco sobre nós
@@ -113,9 +122,9 @@ export const AboutusSection = ({ index }: { index: number }) => {
                   opacity: isInView ? 1 : 0,
                   transform: isInView ? "translateX(0)" : "translateX(100px)",
                   transition: "all ease 0.5s",
-                  transitionDelay: "0.4s",
+                  transitionDelay: `${delay * 2}s`,
                 }}
-                fz={{ base: "1rem" }}
+                fz={{ base: "1rem", md: "1rem" }}
                 c={"#00000099"}
               >
                 Nos apaixonamos um pelo outro, cativados pela paciência e
@@ -134,13 +143,13 @@ export const AboutusSection = ({ index }: { index: number }) => {
                   opacity: isInView ? 1 : 0,
                   transform: isInView ? "translateX(0)" : "translateX(100px)",
                   transition: "all ease 0.5s",
-                  transitionDelay: "0.6s",
+                  transitionDelay: `${delay * 3}s`,
                 }}
                 mt={"2rem"}
                 ff={fontHailey.style.fontFamily}
-                fz={"3rem"}
+                fz={{ base: "3rem", md: "3rem" }}
                 fw={400}
-                lh={"4.2rem"}
+                lh={{ base: "4rem", md: "4.2rem" }}
               >
                 “Vejam, saibam, considerem e compreendam que a mão do Senhor fez
                 isso.”{" "}

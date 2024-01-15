@@ -31,7 +31,7 @@ export const DefaultHeader = ({
   return (
     <Container
       fluid
-      p={{ base: "1rem", sm: "2rem" }}
+      p={{ base: "1.5rem", sm: "2rem" }}
       w={"100%"}
       style={{
         background: "linear-gradient(180deg, #0F1D1430 0%, #0F1D1400 90%)",
@@ -47,9 +47,9 @@ export const DefaultHeader = ({
           w={"100%"}
           style={{ position: "relative" }}
         >
-          <Box>
+          <Box w={{ base: "7rem", md: "8rem" }}>
             <LogoIcon
-              width={"8rem"}
+              width={"100%"}
               primaryColor={primaryColor}
               secondaryColor={secondaryColor}
             />
@@ -92,10 +92,10 @@ export const ButtonNav = ({
     <UnstyledButton
       ref={ref}
       key={index}
+      fz={{ base: "1rem", md: "1rem" }}
       onClick={action}
       styles={{
         root: {
-          fontSize: "1rem",
           color: hovered ? secondaryColor : primaryColor,
         },
       }}

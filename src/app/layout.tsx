@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
+import "../styles/globals.css";
 
 import "@mantine/core/styles.css";
-import "../styles/globals.css";
 import { ColorSchemeScript, MantineProvider } from "@mantine/core";
 import { DefaultHeader } from "@/components/layouts/DefaultHeader";
 import { responsive } from "@/utils/responsive";
@@ -22,6 +22,7 @@ export default function RootLayout({
 }) {
   return (
     <html style={{ fontSize: responsive(5, 18) }} lang="en">
+      {/* <html lang="en"> */}
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link

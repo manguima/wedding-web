@@ -34,7 +34,7 @@ type currentStepAction = {
 
 export const useCurrentStep = create<currentStepState & currentStepAction>(
   (set) => ({
-    currentStep: 0,
+    currentStep: 4,
     updateCurrentStep: (data) =>
       set(() => ({
         currentStep: data,
@@ -79,7 +79,7 @@ export const ConfirmInviteSection = ({ index }: { index: number }) => {
       style={{
         background: "#00000099",
         backgroundImage: "url(images/img_checkout_section.png)",
-        backgroundSize: "100%",
+        backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
         backgroundPosition: "center",
         backgroundBlendMode: "overlay",
@@ -88,9 +88,13 @@ export const ConfirmInviteSection = ({ index }: { index: number }) => {
       }}
     >
       <Center w={"100%"} h={"100vh"} style={{ position: "sticky", top: 0 }}>
-        <Flex>
+        <Flex
+          w={{ base: "100%", md: "unset" }}
+          p={{ base: "1rem", md: "unset" }}
+        >
           <Box
-            p={"2rem"}
+            w={{ base: "100%", md: "unset" }}
+            p={{ base: "1rem" }}
             style={{
               borderRadius: "0.5rem",
               transition: "all ease 0.4s",
@@ -154,8 +158,8 @@ const StepInit = ({ index }: { index: number }) => {
           c={"#fff"}
           fw={400}
           ta={"center"}
-          lh={"4rem"}
-          fz={"4rem"}
+          lh={{ base: "4rem", md: "4rem" }}
+          fz={{ base: "4rem", md: "4rem" }}
           ff={fontHailey.style.fontFamily}
           w={{ base: "100%", md: "25rem" }}
           style={{
@@ -186,7 +190,13 @@ const StepInit = ({ index }: { index: number }) => {
               opacity: isInView ? 1 : 0,
             }}
           >
-            <Text fw={300} lh={"3rem"} fz={"3rem"} tt={"uppercase"} c={"#fff"}>
+            <Text
+              fw={300}
+              lh={{ base: "3rem", md: "3rem" }}
+              fz={{ base: "3rem", md: "3rem" }}
+              tt={"uppercase"}
+              c={"#fff"}
+            >
               Nov
             </Text>
           </Box>
@@ -205,17 +215,18 @@ const StepInit = ({ index }: { index: number }) => {
             }}
           >
             <Text
-              lh={0}
-              fz={"1.5rem"}
+              lh={{ base: "1.5rem", md: "1.5rem" }}
+              fz={{ base: "1.5rem", md: "1.5rem" }}
+              top={{ base: "0", md: "1rem" }}
               c={"#fff"}
               ff={fontItaliana.style.fontFamily}
-              style={{ position: "absolute", top: "1rem" }}
+              style={{ position: "absolute" }}
             >
               Sábado
             </Text>
             <Text
-              lh={"8rem"}
-              fz={"8rem"}
+              lh={{ base: "8rem", md: "8rem" }}
+              fz={{ base: "8rem", md: "8rem" }}
               tt={"uppercase"}
               c={"#ffde22"}
               ff={fontItaliana.style.fontFamily}
@@ -229,13 +240,15 @@ const StepInit = ({ index }: { index: number }) => {
               09
             </Text>
             <Text
-              lh={0}
-              fz={"1.5rem"}
+              ta={"center"}
+              lh={{ base: "1.5rem", md: "1.5rem" }}
+              fz={{ base: "1.5rem", md: "1.5rem" }}
               c={"#fff"}
               ff={fontItaliana.style.fontFamily}
+              bottom={{ base: "0", md: "1rem" }}
               style={{
+                whiteSpace: "nowrap",
                 position: "absolute",
-                bottom: "1rem",
                 transition: "all ease 0.3s",
                 transitionDelay: "0.8s",
                 transform: isInView ? "translateY(0)" : "translateY(+100px)",
@@ -258,7 +271,13 @@ const StepInit = ({ index }: { index: number }) => {
               opacity: isInView ? 1 : 0,
             }}
           >
-            <Text fw={300} lh={"3rem"} fz={"3rem"} tt={"uppercase"} c={"#fff"}>
+            <Text
+              fw={300}
+              lh={{ base: "3rem", md: "3rem" }}
+              fz={{ base: "3rem", md: "3rem" }}
+              tt={"uppercase"}
+              c={"#fff"}
+            >
               15:30
             </Text>
           </Box>
@@ -278,6 +297,7 @@ const StepInit = ({ index }: { index: number }) => {
                 <IconCheck />
               </Box>
             }
+            mt={{ base: "4rem", md: 0 }}
             c={"#000"}
             color="#F5D759"
             onClick={() => {
@@ -307,13 +327,19 @@ const StepOne = ({ index }: { index: number }) => {
   return (
     index === currentStep &&
     !inputLoading && (
-      <Flex direction={"column"}>
-        <Flex w={"25rem"} direction={"column"} gap={"1rem"}>
+      <Flex w={"100%"} direction={"column"} p={{ base: "2rem", md: 0 }}>
+        <Flex
+          w={{ base: "100%", md: "25rem" }}
+          direction={"column"}
+          gap={{ base: "1rem", md: "1rem" }}
+        >
+          {/* DESKTOP */}
           <TextInput
             styles={{
               input: { background: "transparent", color: "#fff" },
               label: { color: "#fff" },
             }}
+            size="lg"
             value={inputCode}
             onChange={(e) => setInputCode(e.currentTarget.value)}
             label="Codígo do convite"
@@ -409,13 +435,14 @@ const StepTwo = ({ index }: { index: number }) => {
   return (
     index === currentStep &&
     !inputLoading && (
-      <Flex direction={"column"}>
-        <Flex w={"25rem"} direction={"column"} gap={"1rem"}>
-          <Text fw={700} fz={"1.4rem"} c={"#fff"}>
+      <Flex direction={"column"} p={{ base: "2rem", md: 0 }} miw={"25rem"}>
+        <Flex w={"100%"} direction={"column"} gap={"1rem"}>
+          <Text fw={700} fz={{ base: "1.4rem", md: "1.4rem" }} c={"#fff"}>
             Cadastro de convidado
           </Text>
+          {/* DESKTOP */}
           <TextInput
-            fz={"1rem"}
+            required
             styles={{
               input: { background: "transparent", color: "#fff" },
               label: { color: "#fff" },
@@ -425,7 +452,7 @@ const StepTwo = ({ index }: { index: number }) => {
             placeholder="Nome Completo"
           />
           <TextInput
-            fz={"1rem"}
+            required
             styles={{
               input: { background: "transparent", color: "#fff" },
               label: { color: "#fff" },
@@ -435,7 +462,7 @@ const StepTwo = ({ index }: { index: number }) => {
             placeholder="E-mail para receber avisos"
           />
           <TextInput
-            fz={"1rem"}
+            required
             styles={{
               input: { background: "transparent", color: "#fff" },
               label: { color: "#fff" },
@@ -487,6 +514,7 @@ const StepTwo = ({ index }: { index: number }) => {
                           input: { background: "transparent", color: "#fff" },
                           label: { color: "#fff" },
                         }}
+                        required
                         fz={"1rem"}
                         {...guestForm.getInputProps(`guests.${index + 1}.name`)}
                         label="Nome Completo"
@@ -565,6 +593,7 @@ const StepTwo = ({ index }: { index: number }) => {
               onClick={() => {
                 createNewGuests(guestForm.values);
               }}
+              // disabled={guestForm.isValid() ? true : false}
               c={"#000"}
               color="#F5D759"
             >
@@ -613,7 +642,13 @@ const StepThre = ({ index }: { index: number }) => {
   return (
     index === currentStep &&
     !inputLoading && (
-      <Flex w={"25rem"} direction={"column"} gap={"1rem"}>
+      <Flex
+        w={"100%"}
+        miw={"25rem"}
+        direction={"column"}
+        gap={"1rem"}
+        p={{ base: "2rem", md: 0 }}
+      >
         <Text c={"#fff"} fz={"1.4rem"}>
           Olá {guestName}! Deseja deixar uma mensagem para os noivos?
         </Text>
