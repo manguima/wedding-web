@@ -144,6 +144,7 @@ export const HeaderSection = ({ index }: { index: number }) => {
             variant="outline"
             color="#E5C74D"
             component={Link}
+            onClick={() => menuToView.getState().invite.scrollIntoView()}
             href={"#confirm"}
             style={{ zIndex: 3 }}
           >
