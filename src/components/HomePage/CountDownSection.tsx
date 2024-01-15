@@ -63,8 +63,8 @@ export const CountDownSection = ({ index }: { index: number }) => {
           <Flex w={"100%"} justify={"center"}>
             {/* TIME EXAMPLE */}
             <Grid w={"80%"}>
-              {[...Array(4)].map(() => (
-                <Grid.Col span={3}>
+              {[...Array(4)].map((a, index) => (
+                <Grid.Col key={index} span={3}>
                   <AspectRatio w={"100%"} ratio={10 / 10}>
                     <Flex w={"100%"} h={"100%"} p={"2.5rem"}>
                       <Center

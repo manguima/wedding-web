@@ -47,7 +47,7 @@ export const DefaultFooter = () => {
                 </Text>
                 <Flex direction={"column"}>
                   {listNav.map((item, index) => (
-                    <ButtonNav {...item} index={index} />
+                    <ButtonNav key={index} {...item} index={index} />
                   ))}
                 </Flex>
               </Flex>

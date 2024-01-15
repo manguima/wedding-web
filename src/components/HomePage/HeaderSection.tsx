@@ -14,6 +14,8 @@ import { useLayoutContext } from "../layouts/LayoutProvider";
 import { useKabukiRoll } from "../KabukiRoll/KabukiRoll";
 import { useEffect } from "react";
 import Link from "next/link";
+import { menuToView } from "../layouts/DefaultHeader";
+import { useScrollIntoView } from "@mantine/hooks";
 
 export const HeaderSection = ({ index }: { index: number }) => {
   // GET VALUES HOME PROVIDER
@@ -30,8 +32,17 @@ export const HeaderSection = ({ index }: { index: number }) => {
     }
   }, [currentSection]);
 
+  // MENU TO VIEW
+  const { scrollIntoView, targetRef } = useScrollIntoView<HTMLDivElement>({
+    offset: 0,
+  });
+  useEffect(() => {
+    menuToView.setState({ home: { scrollIntoView } });
+  }, [targetRef]);
+
   return (
     <Container
+      ref={targetRef}
       fluid
       p={0}
       mih={"150vh"}

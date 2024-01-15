@@ -1,11 +1,25 @@
 "use client";
 import { Box, Center, Container, Flex, UnstyledButton } from "@mantine/core";
 import { LogoIcon } from "../icons/LogoIcon";
-import Link from "next/link";
-import { useDisclosure, useHover } from "@mantine/hooks";
+import { useHover } from "@mantine/hooks";
 import { useLayoutContext } from "./LayoutProvider";
-import { useEffect, useRef } from "react";
-import { useKabukiRoll } from "../KabukiRoll/KabukiRoll";
+import { create } from "zustand";
+
+type UniqueToView = {
+  scrollIntoView: ({ alignment }?: any | undefined) => void;
+};
+
+type StateToView = {
+  home: UniqueToView;
+  aboutus: UniqueToView;
+  invite: UniqueToView;
+};
+
+export const menuToView = create<StateToView>((set) => ({
+  home: { scrollIntoView: () => {} },
+  aboutus: { scrollIntoView: () => {} },
+  invite: { scrollIntoView: () => {} },
+}));
 
 export const DefaultHeader = ({
   position = "fixed",
@@ -43,6 +57,7 @@ export const DefaultHeader = ({
           <Flex gap={"1rem"}>
             {listNav.map((item, index) => (
               <ButtonNav
+                key={index}
                 {...item}
                 index={index}
                 primaryColor={primaryColor}
@@ -60,23 +75,24 @@ export const ButtonNav = ({
   label,
   url,
   index,
+  action,
   primaryColor = "white",
   secondaryColor = "#E5C74D",
 }: {
   label: string;
   url: string;
   index: number;
+  action: () => void;
   primaryColor?: string | undefined;
   secondaryColor?: string | undefined;
 }) => {
-  const { hovered, ref } = useHover<HTMLAnchorElement>();
+  const { hovered, ref } = useHover<HTMLButtonElement>();
 
   return (
     <UnstyledButton
       ref={ref}
       key={index}
-      component={Link}
-      href={url}
+      onClick={action}
       styles={{
         root: {
           fontSize: "1rem",
@@ -90,8 +106,20 @@ export const ButtonNav = ({
 };
 
 export const listNav = [
-  { label: "Início", url: "/" },
-  { label: "Confirmar presença", url: "#confirm" },
-  { label: "Sobre Nós", url: "#aboutus" },
+  {
+    label: "Início",
+    url: "/",
+    action: () => menuToView.getState().home?.scrollIntoView(),
+  },
+  {
+    label: "Confirmar presença",
+    url: "#confirm",
+    action: () => menuToView.getState().invite?.scrollIntoView(),
+  },
+  {
+    label: "Sobre Nós",
+    url: "#aboutus",
+    action: () => menuToView.getState().aboutus?.scrollIntoView(),
+  },
   // { label: "Lista de presentes", url: "#gifts" },
 ];

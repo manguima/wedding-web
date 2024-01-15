@@ -8,6 +8,7 @@ import { responsive } from "@/utils/responsive";
 import { LayoutProvider } from "@/components/layouts/LayoutProvider";
 import { DefaultFooter } from "@/components/layouts/DefaultFooter";
 import { ZustandProvider } from "@/zustand/zustandProvider";
+import "@mantine/carousel/styles.css";
 
 export const metadata: Metadata = {
   title: "Create Next App",
