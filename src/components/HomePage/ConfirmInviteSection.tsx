@@ -13,7 +13,7 @@ import {
 } from "@mantine/core";
 import { useKabukiRoll } from "../KabukiRoll/KabukiRoll";
 import { useLayoutContext } from "../layouts/LayoutProvider";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useCodeStore, useZustandContext } from "@/zustand/zustandProvider";
 import { fontHailey, fontItaliana } from "@/utils/fonts";
 import { IconArrowLeft, IconArrowRight, IconCheck } from "@tabler/icons-react";
@@ -22,6 +22,7 @@ import { Carousel, Embla } from "@mantine/carousel";
 import { useForm } from "@mantine/form";
 import { menuToView } from "../layouts/DefaultHeader";
 import { useScrollIntoView } from "@mantine/hooks";
+import { useInView } from "framer-motion";
 
 type currentStepState = {
   currentStep: number;
@@ -134,10 +135,16 @@ const StepInit = ({ index }: { index: number }) => {
   const currentStep = useCurrentStep.getState().currentStep;
 
   const { inputLoading } = useZustandContext();
+
+  // ANIMATION
+  const targetRef = useRef(null);
+  const isInView = useInView(targetRef);
+
   return (
     index === currentStep &&
     !inputLoading && (
       <Flex
+        ref={targetRef}
         direction={"column"}
         gap={"2rem"}
         align={"center"}
@@ -151,16 +158,32 @@ const StepInit = ({ index }: { index: number }) => {
           fz={"4rem"}
           ff={fontHailey.style.fontFamily}
           w={{ base: "100%", md: "25rem" }}
+          style={{
+            transition: "all ease 0.3s",
+            transitionDelay: "0.2s",
+            transform: isInView ? "translateY(0)" : "translateY(-100px)",
+            opacity: isInView ? 1 : 0,
+          }}
         >
           Você está
           <br /> convidado para o <br /> nosso grande dia!
         </Text>
-        <Flex align={"center"} justify={"center"}>
+        <Flex
+          align={"center"}
+          justify={"center"}
+          style={{ position: "relative" }}
+        >
           <Box
             style={{
+              position: "absolute",
+              right: "100%",
               borderWidth: "0.2rem 0",
               borderStyle: "solid",
               borderColor: "#fff",
+              transition: "all ease 0.3s",
+              transitionDelay: "0.2s",
+              transform: isInView ? "translateX(0)" : "translateX(-100px)",
+              opacity: isInView ? 1 : 0,
             }}
           >
             <Text fw={300} lh={"3rem"} fz={"3rem"} tt={"uppercase"} c={"#fff"}>
@@ -173,12 +196,17 @@ const StepInit = ({ index }: { index: number }) => {
             justify={"center"}
             px={"1rem"}
             pb={"2rem"}
-            style={{ position: "relative" }}
+            style={{
+              position: "relative",
+              transition: "all ease 0.3s",
+              transitionDelay: "0.4s",
+              transform: isInView ? "translateX(0)" : "translateX(-100px)",
+              opacity: isInView ? 1 : 0,
+            }}
           >
             <Text
               lh={0}
               fz={"1.5rem"}
-              tt={"uppercase"}
               c={"#fff"}
               ff={fontItaliana.style.fontFamily}
               style={{ position: "absolute", top: "1rem" }}
@@ -191,6 +219,12 @@ const StepInit = ({ index }: { index: number }) => {
               tt={"uppercase"}
               c={"#ffde22"}
               ff={fontItaliana.style.fontFamily}
+              style={{
+                transition: "all ease 0.3s",
+                transitionDelay: "0.6s",
+                transform: isInView ? "translateX(0)" : "translateX(-100px)",
+                opacity: isInView ? 1 : 0,
+              }}
             >
               09
             </Text>
@@ -199,16 +233,29 @@ const StepInit = ({ index }: { index: number }) => {
               fz={"1.5rem"}
               c={"#fff"}
               ff={fontItaliana.style.fontFamily}
-              style={{ position: "absolute", bottom: "1rem" }}
+              style={{
+                position: "absolute",
+                bottom: "1rem",
+                transition: "all ease 0.3s",
+                transitionDelay: "0.8s",
+                transform: isInView ? "translateY(0)" : "translateY(+100px)",
+                opacity: isInView ? 1 : 0,
+              }}
             >
               Sítio Geranium
             </Text>
           </Flex>
           <Box
             style={{
+              position: "absolute",
+              left: "100%",
               borderWidth: "0.2rem 0",
               borderStyle: "solid",
               borderColor: "#fff",
+              transition: "all ease 0.3s",
+              transitionDelay: "1s",
+              transform: isInView ? "translateX(0)" : "translateX(-100px)",
+              opacity: isInView ? 1 : 0,
             }}
           >
             <Text fw={300} lh={"3rem"} fz={"3rem"} tt={"uppercase"} c={"#fff"}>
@@ -218,6 +265,11 @@ const StepInit = ({ index }: { index: number }) => {
         </Flex>
         <Flex>
           <Button
+            style={{
+              transition: "all ease 0.3s",
+              transitionDelay: "1.2s",
+              opacity: isInView ? 1 : 0,
+            }}
             leftSection={
               <Box
                 pr={"0.5rem"}

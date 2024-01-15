@@ -12,10 +12,11 @@ import {
 } from "@mantine/core";
 import { useLayoutContext } from "../layouts/LayoutProvider";
 import { useKabukiRoll } from "../KabukiRoll/KabukiRoll";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { menuToView } from "../layouts/DefaultHeader";
 import { useScrollIntoView } from "@mantine/hooks";
+import { useInView } from "framer-motion";
 
 export const HeaderSection = ({ index }: { index: number }) => {
   // GET VALUES HOME PROVIDER
@@ -39,6 +40,9 @@ export const HeaderSection = ({ index }: { index: number }) => {
   useEffect(() => {
     menuToView.setState({ home: { scrollIntoView } });
   }, [targetRef]);
+
+  // ANIMATION
+  const isInView = useInView(targetRef);
 
   return (
     <Container
@@ -76,8 +80,12 @@ export const HeaderSection = ({ index }: { index: number }) => {
           gap={"3rem"}
           justify={"center"}
           align={"center"}
-          top={"20vh"}
-          style={{ position: "relative" }}
+          opacity={isInView ? 1 : 0}
+          top={isInView ? "20vh" : "0vh"}
+          style={{
+            position: "relative",
+            transition: "all 0.9s cubic-bezier(0.17, 0.55, 0.55, 1) 0.5s",
+          }}
         >
           <Flex
             align={"center"}

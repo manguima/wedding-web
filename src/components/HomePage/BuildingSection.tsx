@@ -9,9 +9,10 @@ import {
 } from "@mantine/core";
 import { useLayoutContext } from "../layouts/LayoutProvider";
 import { useKabukiRoll } from "../KabukiRoll/KabukiRoll";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { fontHailey } from "@/utils/fonts";
 import { IconBrandLinkedin } from "@tabler/icons-react";
+import { useInView } from "framer-motion";
 
 export const BuildingSection = ({ index }: { index: number }) => {
   // GET VALUES HOME PROVIDER
@@ -28,8 +29,13 @@ export const BuildingSection = ({ index }: { index: number }) => {
     }
   }, [currentSection]);
 
+  // ANIMATION
+  const targetRef = useRef(null);
+  const isInView = useInView(targetRef);
+
   return (
     <Container
+      ref={targetRef}
       fluid
       w={"100%"}
       h={"150vh"}
@@ -47,10 +53,26 @@ export const BuildingSection = ({ index }: { index: number }) => {
             fz={"6rem"}
             lh={"5rem"}
             ff={fontHailey?.style?.fontFamily}
+            style={{
+              transition: "all ease 0.3s",
+              transitionDelay: "0.7s",
+              transform: isInView ? "translateY(0)" : "translateY(+100px)",
+              opacity: isInView ? 1 : 0,
+            }}
           >
             Ainda tem muito mais!
           </Title>
-          <Text fz={"1rem"}>Aguarde para novas atualizações.</Text>
+          <Text
+            style={{
+              transition: "all ease 0.3s",
+              transitionDelay: "1s",
+              transform: isInView ? "translateY(0)" : "translateY(+100px)",
+              opacity: isInView ? 1 : 0,
+            }}
+            fz={"1rem"}
+          >
+            Aguarde para novas atualizações.
+          </Text>
         </Flex>
       </Center>
     </Container>

@@ -18,6 +18,7 @@ import { useLayoutContext } from "../layouts/LayoutProvider";
 import { responsive } from "@/utils/responsive";
 import { menuToView } from "../layouts/DefaultHeader";
 import { useScrollIntoView } from "@mantine/hooks";
+import { useInView } from "framer-motion";
 
 export const AboutusSection = ({ index }: { index: number }) => {
   // GET VALUES HOME PROVIDER
@@ -45,6 +46,9 @@ export const AboutusSection = ({ index }: { index: number }) => {
     });
   }, [targetRef]);
 
+  // ANIMATE
+  const isInView = useInView(targetRef);
+
   return (
     <Container ref={targetRef} fluid p={0} w={"100%"} h={"200vh"}>
       <Center
@@ -58,7 +62,17 @@ export const AboutusSection = ({ index }: { index: number }) => {
         <Grid maw={"1200px"} w={"100%"} gutter={"4rem"}>
           <Grid.Col span={6}>
             <Center>
-              <Box p={0} w={"70%"} style={{ position: "relative" }}>
+              <Box
+                style={{
+                  opacity: isInView ? 1 : 0,
+                  transform: isInView ? "translateY(0)" : "translateY(100px)",
+                  transition: "all ease 0.5s",
+                  transitionDelay: "0.2s",
+                  position: "relative",
+                }}
+                p={0}
+                w={"70%"}
+              >
                 <Box
                   style={{
                     borderRadius: "15rem 15rem 1rem 1rem",
@@ -85,10 +99,25 @@ export const AboutusSection = ({ index }: { index: number }) => {
               <Title
                 fz={{ base: "2.5rem", sm: "0.8rem", md: "2.5rem" }}
                 ff={fontItaliana.style.fontFamily}
+                style={{
+                  opacity: isInView ? 1 : 0,
+                  transform: isInView ? "translateX(0)" : "translateX(100px)",
+                  transition: "all ease 0.5s",
+                  transitionDelay: "0.2s",
+                }}
               >
                 Um pouco sobre nós
               </Title>
-              <Text fz={{ base: "1rem" }} c={"#00000099"}>
+              <Text
+                style={{
+                  opacity: isInView ? 1 : 0,
+                  transform: isInView ? "translateX(0)" : "translateX(100px)",
+                  transition: "all ease 0.5s",
+                  transitionDelay: "0.4s",
+                }}
+                fz={{ base: "1rem" }}
+                c={"#00000099"}
+              >
                 Nos apaixonamos um pelo outro, cativados pela paciência e
                 bondade, reconhecendo que Deus é o centro desse amor. Ao longo
                 dos anos, enfrentamos desafios, pedimos desculpas quando
@@ -101,6 +130,12 @@ export const AboutusSection = ({ index }: { index: number }) => {
                 carne e desejamos que...
               </Text>
               <Text
+                style={{
+                  opacity: isInView ? 1 : 0,
+                  transform: isInView ? "translateX(0)" : "translateX(100px)",
+                  transition: "all ease 0.5s",
+                  transitionDelay: "0.6s",
+                }}
                 mt={"2rem"}
                 ff={fontHailey.style.fontFamily}
                 fz={"3rem"}
