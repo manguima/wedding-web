@@ -34,7 +34,7 @@ type currentStepAction = {
 
 export const useCurrentStep = create<currentStepState & currentStepAction>(
   (set) => ({
-    currentStep: 4,
+    currentStep: 0,
     updateCurrentStep: (data) =>
       set(() => ({
         currentStep: data,
