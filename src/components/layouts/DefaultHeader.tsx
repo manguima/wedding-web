@@ -94,6 +94,7 @@ export const ButtonNav = ({
       ref={ref}
       key={index}
       fz={{ base: "1rem", md: "1rem" }}
+      fw={400}
       onClick={action}
       styles={{
         root: {
