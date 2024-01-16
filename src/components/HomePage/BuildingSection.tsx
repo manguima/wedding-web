@@ -38,7 +38,7 @@ export const BuildingSection = ({ index }: { index: number }) => {
       ref={targetRef}
       fluid
       w={"100%"}
-      h={"150svh"}
+      h={"150dvh"}
       style={{
         backgroundImage: "url(./images/img_building_section.png)",
         backgroundSize: "100%",
@@ -46,7 +46,7 @@ export const BuildingSection = ({ index }: { index: number }) => {
         backgroundRepeat: "no-repeat",
       }}
     >
-      <Center w={"100%"} h={"100svh"} style={{ position: "sticky", top: 0 }}>
+      <Center w={"100%"} h={"100dvh"} style={{ position: "sticky", top: 0 }}>
         <Flex direction={"column"} justify={"center"} align={"center"}>
           <Title
             fw={500}

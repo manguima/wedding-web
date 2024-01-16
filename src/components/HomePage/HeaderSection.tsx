@@ -49,7 +49,7 @@ export const HeaderSection = ({ index }: { index: number }) => {
       ref={targetRef}
       fluid
       p={0}
-      mih={"150svh"}
+      mih={"150dvh"}
       h={"100%"}
       w={"100%"}
       style={{
@@ -74,7 +74,7 @@ export const HeaderSection = ({ index }: { index: number }) => {
           background: `url(${noise})`,
         }}
       ></Box>
-      <Center w={"100%"} h={"100svh"} style={{ position: "sticky", top: 0 }}>
+      <Center w={"100%"} h={"100dvh"} style={{ position: "sticky", top: 0 }}>
         <Flex
           direction={"column"}
           gap={"3rem"}

@@ -82,7 +82,7 @@ export const CountDownSection = ({ index }: { index: number }) => {
         backgroundColor: "#E1F0D2",
         position: "relative",
       }}
-      h={"150svh"}
+      h={"150dvh"}
     >
       <Center w={"100%"} h={"100%"}>
         <Flex

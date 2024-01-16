@@ -187,9 +187,9 @@ export const KabukiRoll = ({
       <div
         ref={providerRef}
         style={{
-          minHeight: "100svh",
-          // minWidth: "100svw",
-          maxWidth: "100svw",
+          minHeight: "100dvh",
+          // minWidth: "100dvw",
+          maxWidth: "100dvw",
           position: "relative",
           display: "flex",
           flexDirection: "column",
