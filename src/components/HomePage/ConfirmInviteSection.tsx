@@ -87,10 +87,11 @@ export const ConfirmInviteSection = ({ index }: { index: number }) => {
         position: "relative",
       }}
     >
-      <Center w={"100%"} h={"100dvh"} style={{ position: "sticky", top: 0 }}>
+      <Center w={"100%"} h={"100svh"} style={{ position: "sticky", top: 0 }}>
         <Flex
           w={{ base: "100%", md: "unset" }}
           p={{ base: "1rem", md: "unset" }}
+          style={{ overflow: "hidden" }}
         >
           <Box
             w={{ base: "100%", md: "unset" }}

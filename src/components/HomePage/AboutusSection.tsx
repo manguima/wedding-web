@@ -51,13 +51,13 @@ export const AboutusSection = ({ index }: { index: number }) => {
   const delay = 0.3;
 
   return (
-    <Container ref={targetRef} fluid p={0} w={"100%"} h={"200vh"}>
+    <Container ref={targetRef} fluid p={0} w={"100%"} h={"200svh"}>
       <Center
         w={"100%"}
-        h={"100dvh"}
+        h={"100svh"}
         style={{
           position: "sticky",
-          top: 0,
+          top: "0svh",
         }}
       >
         <Grid
@@ -65,6 +65,9 @@ export const AboutusSection = ({ index }: { index: number }) => {
           w={"100%"}
           gutter={{ base: "2rem", md: "4rem" }}
           p={{ base: "2rem", md: 0 }}
+          style={{
+            overflow: "hidden",
+          }}
         >
           <Grid.Col span={{ base: 12, md: 6 }}>
             <Center>

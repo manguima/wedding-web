@@ -91,6 +91,7 @@ export const CountDownSection = ({ index }: { index: number }) => {
           align={"center"}
           w="100%"
           direction={"column"}
+          style={{ overflow: "hidden" }}
         >
           <Divider
             style={{

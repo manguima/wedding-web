@@ -46,8 +46,13 @@ export const BuildingSection = ({ index }: { index: number }) => {
         backgroundRepeat: "no-repeat",
       }}
     >
-      <Center w={"100%"} h={"100dvh"} style={{ position: "sticky", top: 0 }}>
-        <Flex direction={"column"} justify={"center"} align={"center"}>
+      <Center w={"100%"} h={"100svh"} style={{ position: "sticky", top: 0 }}>
+        <Flex
+          direction={"column"}
+          justify={"center"}
+          align={"center"}
+          style={{ overflow: "hidden" }}
+        >
           <Title
             fw={500}
             fz={"6rem"}

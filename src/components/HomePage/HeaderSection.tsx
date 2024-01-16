@@ -57,7 +57,7 @@ export const HeaderSection = ({ index }: { index: number }) => {
         backgroundImage: "url(images/img_header_section.jpg)",
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
-        backgroundPosition: "top",
+        backgroundPosition: "top center",
         backgroundBlendMode: "overlay",
         backgroundAttachment: "fixed",
         position: "relative",
@@ -74,7 +74,7 @@ export const HeaderSection = ({ index }: { index: number }) => {
           background: `url(${noise})`,
         }}
       ></Box>
-      <Center w={"100%"} h={"100dvh"} style={{ position: "sticky", top: 0 }}>
+      <Center w={"100%"} h={"100svh"} style={{ position: "sticky", top: 0 }}>
         <Flex
           direction={"column"}
           gap={"3rem"}

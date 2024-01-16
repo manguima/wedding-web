@@ -5,7 +5,7 @@
 //   $y2: $value2;
 //   $a: ($y2 - $y1) / ($x2 - $x1);
 //   $b: ($x2 * $y1 - $x1 * $y2) / ($x2 - $x1);
-//   @return calc(#{$a * 100dvw} + #{$b * 1px});
+//   @return calc(#{$a * 100svw} + #{$b * 1px});
 // }`;
 
 export function responsive(
@@ -22,7 +22,7 @@ export function responsive(
   const a = (y2 - y1) / (x2 - x1);
   const b = (x2 * y1 - x1 * y2) / (x2 - x1);
 
-  return `calc((${a} * 100dvw) + (${b} * 1px))`;
+  return `calc((${a} * 100svw) + (${b} * 1px))`;
 }
 
 export const responsiveH = (
@@ -39,7 +39,7 @@ export const responsiveH = (
   const a = (y2 - y1) / (x2 - x1);
   const b = (x2 * y1 - x1 * y2) / (x2 - x1);
 
-  return `calc((${a} * 100dvh) + (${b} * 1px))`;
+  return `calc((${a} * 100svh) + (${b} * 1px))`;
 };
 export const responsiveX = (
   value1: number,
