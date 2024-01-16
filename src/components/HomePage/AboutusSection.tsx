@@ -54,7 +54,7 @@ export const AboutusSection = ({ index }: { index: number }) => {
     <Container ref={targetRef} fluid p={0} w={"100%"} h={"200vh"}>
       <Center
         w={"100%"}
-        h={"100vh"}
+        h={"100svh"}
         style={{
           position: "sticky",
           top: 0,

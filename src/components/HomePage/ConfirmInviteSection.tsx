@@ -75,7 +75,7 @@ export const ConfirmInviteSection = ({ index }: { index: number }) => {
       fluid
       p={0}
       w={"100%"}
-      h={"150vh"}
+      h={"150svh"}
       style={{
         background: "#00000099",
         backgroundImage: "url(images/img_checkout_section.png)",
@@ -87,7 +87,7 @@ export const ConfirmInviteSection = ({ index }: { index: number }) => {
         position: "relative",
       }}
     >
-      <Center w={"100%"} h={"100vh"} style={{ position: "sticky", top: 0 }}>
+      <Center w={"100%"} h={"100svh"} style={{ position: "sticky", top: 0 }}>
         <Flex
           w={{ base: "100%", md: "unset" }}
           p={{ base: "1rem", md: "unset" }}
