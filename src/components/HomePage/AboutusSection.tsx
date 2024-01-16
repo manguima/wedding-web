@@ -51,7 +51,33 @@ export const AboutusSection = ({ index }: { index: number }) => {
   const delay = 0.3;
 
   return (
-    <Container ref={targetRef} fluid p={0} w={"100%"} h={"200svh"}>
+    <Container
+      ref={targetRef}
+      fluid
+      p={0}
+      w={"100%"}
+      h={"200svh"}
+      style={{
+        position: "relative",
+        contain: "layout",
+        paddingBottom: "20svh",
+      }}
+    >
+      <Box
+        w={"50rem"}
+        right={{ base: "calc(100% - 20rem)", md: "-4vw" }}
+        style={{
+          position: "absolute",
+          bottom: "-4.5rem",
+          transition: "all ease 0.4s",
+          transitionDelay: "2s",
+          opacity: isInView ? 1 : 0,
+          transform: isInView ? "translateY(0)" : "translateY(200px)",
+        }}
+      >
+        <Image src={"images/tree2.png"} />
+      </Box>
+
       <Center
         w={"100%"}
         h={"100svh"}

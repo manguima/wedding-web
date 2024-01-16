@@ -23,7 +23,7 @@ export default function Home() {
   ];
 
   return (
-    <Container fluid p={0}>
+    <Container fluid p={0} style={{contain: "paint"}}>
       <KabukiRoll
         anchor="top"
         offset={80}

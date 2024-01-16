@@ -8,6 +8,7 @@ import {
   Center,
   Container,
   Flex,
+  Image,
   Text,
 } from "@mantine/core";
 import { useLayoutContext } from "../layouts/LayoutProvider";
@@ -61,6 +62,7 @@ export const HeaderSection = ({ index }: { index: number }) => {
         backgroundBlendMode: "overlay",
         backgroundAttachment: "fixed",
         position: "relative",
+        contain: "paint",
       }}
     >
       <Box
@@ -74,6 +76,24 @@ export const HeaderSection = ({ index }: { index: number }) => {
           background: `url(${noise})`,
         }}
       ></Box>
+
+      <Box
+        w={{ base: "18rem", md: "25rem" }}
+        h={{ base: "18rem", md: "25rem" }}
+        top={{ base: "85vh", md: "70vh" }}
+        style={{
+          position: "absolute",
+          left: "-4vw",
+          transition: "all ease 0.4s",
+          opacity: isInView ? 1 : 0,
+          transform: isInView
+            ? "translateX(0) translateY(0) rotate(0deg) scaleX(-1)"
+            : "translateX(-100px) translateY(-200px) rotate(-40deg) scaleX(-1)",
+        }}
+      >
+        <Image src={"images/tree1.png"} />
+      </Box>
+
       <Center w={"100%"} h={"100svh"} style={{ position: "sticky", top: 0 }}>
         <Flex
           direction={"column"}
@@ -84,7 +104,7 @@ export const HeaderSection = ({ index }: { index: number }) => {
           top={isInView ? "20vh" : "0vh"}
           style={{
             position: "relative",
-            transition: "all 0.9s cubic-bezier(0.17, 0.55, 0.55, 1) 0.5s",
+            transition: "all ease 1.2s",
           }}
         >
           <Flex
@@ -120,7 +140,11 @@ export const HeaderSection = ({ index }: { index: number }) => {
             </Text>
           </Flex>
           <Flex
-            style={{ position: "absolute", top: 0, left: "calc(100% + 2rem)" }}
+            style={{
+              position: "absolute",
+              top: 0,
+              left: "calc(100% + 2rem)",
+            }}
           >
             <Flex direction={"column"} gap={"1rem"}>
               {dateWedding.map((item, index) => (
@@ -142,7 +166,10 @@ export const HeaderSection = ({ index }: { index: number }) => {
                     {item.value}
                   </Text>
                   <Flex
-                    style={{ position: "absolute", left: "calc(100% + 1rem)" }}
+                    style={{
+                      position: "absolute",
+                      left: "calc(100% + 1rem)",
+                    }}
                   >
                     <Text
                       c={"white"}
@@ -156,6 +183,7 @@ export const HeaderSection = ({ index }: { index: number }) => {
               ))}
             </Flex>
           </Flex>
+
           <Button
             variant="outline"
             color="#E5C74D"
@@ -168,6 +196,23 @@ export const HeaderSection = ({ index }: { index: number }) => {
           </Button>
         </Flex>
       </Center>
+
+      <Box
+        w={"25rem"}
+        h={"25rem"}
+        style={{
+          position: "absolute",
+          top: "-20%",
+          right: "-7vw",
+          transition: "all ease 0.6s",
+          opacity: isInView ? 1 : 0,
+          transform: isInView
+            ? "translateX(0) translateY(0) rotate(0deg) scaleY(-1)"
+            : "translateX(100px) translateY(200px) rotate(40deg) scaleY(-1)",
+        }}
+      >
+        <Image src={"images/tree1.png"} />
+      </Box>
     </Container>
   );
 };
