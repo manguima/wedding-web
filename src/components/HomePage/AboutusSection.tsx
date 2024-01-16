@@ -65,7 +65,7 @@ export const AboutusSection = ({ index }: { index: number }) => {
     >
       <Box
         w={"50rem"}
-        right={{ base: "calc(100% - 20rem)", md: "-4vw" }}
+        right={{ base: "calc(100% - 20rem)", md: "calc(100% - 2rem)" }}
         style={{
           position: "absolute",
           bottom: "-4.5rem",
