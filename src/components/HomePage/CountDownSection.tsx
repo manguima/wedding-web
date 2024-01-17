@@ -7,6 +7,7 @@ import {
   Divider,
   Flex,
   Grid,
+  Image,
   Text,
   Title,
 } from "@mantine/core";
@@ -81,8 +82,9 @@ export const CountDownSection = ({ index }: { index: number }) => {
         background: `url(${noise})`,
         backgroundColor: "#E1F0D2",
         position: "relative",
+        contain: "layout",
       }}
-      h={"150vh"}
+      h={"150dvh"}
     >
       <Center w={"100%"} h={"100%"}>
         <Flex
@@ -91,6 +93,7 @@ export const CountDownSection = ({ index }: { index: number }) => {
           align={"center"}
           w="100%"
           direction={"column"}
+          style={{ overflow: "hidden" }}
         >
           <Divider
             style={{

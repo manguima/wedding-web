@@ -25,6 +25,8 @@ export default function RootLayout({
       {/* <html lang="en"> */}
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="mobile-web-app-capable" content="yes" />
         <link
           rel="preconnect"
           href="https://fonts.gstatic.com"

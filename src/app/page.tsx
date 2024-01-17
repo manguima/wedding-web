@@ -6,6 +6,7 @@ import { KabukiRoll } from "@/components/KabukiRoll/KabukiRoll";
 import { CountDownSection } from "@/components/HomePage/CountDownSection";
 import { ConfirmInviteSection } from "@/components/HomePage/ConfirmInviteSection";
 import { BuildingSection } from "@/components/HomePage/BuildingSection";
+import { useEffect } from "react";
 
 export const metadata: Metadata = {
   title: "Home - Deyse & Matheus",
@@ -22,7 +23,7 @@ export default function Home() {
   ];
 
   return (
-    <Container fluid p={0}>
+    <Container fluid p={0} style={{contain: "paint"}}>
       <KabukiRoll
         anchor="top"
         offset={80}

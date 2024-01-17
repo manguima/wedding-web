@@ -32,7 +32,8 @@ export const DefaultHeader = ({
     <Container
       fluid
       p={{ base: "1.5rem", sm: "2rem" }}
-      w={"100%"}
+      w={"100svw"}
+      top={0}
       style={{
         background: "linear-gradient(180deg, #0F1D1430 0%, #0F1D1400 90%)",
         position: position,
@@ -93,6 +94,7 @@ export const ButtonNav = ({
       ref={ref}
       key={index}
       fz={{ base: "1rem", md: "1rem" }}
+      fw={400}
       onClick={action}
       styles={{
         root: {
