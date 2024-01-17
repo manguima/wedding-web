@@ -159,9 +159,9 @@ export const HeaderSection = ({ index }: { index: number }) => {
           <Button
             variant="outline"
             color="#E5C74D"
-            component={Link}
+            // component={Link}
             onClick={() => menuToView.getState().invite.scrollIntoView()}
-            href={"#confirm"}
+            // href={"#confirm"}
             style={{ zIndex: 3 }}
           >
             Confirmar Presença
