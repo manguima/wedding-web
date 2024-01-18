@@ -434,6 +434,10 @@ const StepTwo = ({ index }: { index: number }) => {
     guestForm.setFieldValue("codeId", currentCode?.id);
   }, [currentCode]);
 
+  useEffect(() => {
+    console.log(guestForm.values);
+  }, [guestForm.values.guests?.[0]]);
+
   // GUEST SAVE
   const { createNewGuests } = useZustandContext();
 
@@ -453,6 +457,9 @@ const StepTwo = ({ index }: { index: number }) => {
               label: { color: "#fff" },
             }}
             {...guestForm.getInputProps(`guests.0.name`)}
+            onChange={(e) => {
+              guestForm.setFieldValue("guests.0.name", e.currentTarget.value);
+            }}
             label="Nome Completo"
             placeholder="Nome Completo"
           />
