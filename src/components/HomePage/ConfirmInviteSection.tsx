@@ -347,7 +347,7 @@ const StepOne = ({ index }: { index: number }) => {
             size="lg"
             value={inputCode.toUpperCase()}
             onChange={(e) => setInputCode(e.currentTarget.value.toUpperCase())}
-            label="Codígo do convite"
+            label="Código do convite"
             error={onError?.section === index ? onError?.message : ""}
           />
           <Flex w={"100%"} justify={"space-between"}>
@@ -665,8 +665,8 @@ const StepThre = ({ index }: { index: number }) => {
           rows={6}
           fz={"1rem"}
           {...messageForm.getInputProps(`message`)}
-          label="Nome Completo"
-          placeholder="Nome Completo"
+          label="Mensagem"
+          placeholder=""
         />
         <Flex w={"100%"} justify={"space-between"}>
           {/* <Button
