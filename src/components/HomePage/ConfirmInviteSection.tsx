@@ -345,7 +345,7 @@ const StepOne = ({ index }: { index: number }) => {
               label: { color: "#fff" },
             }}
             size="lg"
-            value={inputCode}
+            value={inputCode.toUpperCase()}
             onChange={(e) => setInputCode(e.currentTarget.value.toUpperCase())}
             label="Codígo do convite"
             error={onError?.section === index ? onError?.message : ""}
@@ -362,7 +362,7 @@ const StepOne = ({ index }: { index: number }) => {
             </Button>
             <Button
               onClick={() => {
-                validateCode(inputCode);
+                validateCode(inputCode.toUpperCase());
               }}
               c={"#000"}
               color="#F5D759"
