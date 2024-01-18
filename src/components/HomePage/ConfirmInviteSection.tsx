@@ -669,7 +669,7 @@ const StepThre = ({ index }: { index: number }) => {
           placeholder="Nome Completo"
         />
         <Flex w={"100%"} justify={"space-between"}>
-          <Button
+          {/* <Button
             onClick={() => {
               updateCurrentStep(index - 1);
             }}
@@ -677,7 +677,7 @@ const StepThre = ({ index }: { index: number }) => {
             variant="transparent"
           >
             Voltar
-          </Button>
+          </Button> */}
           <Button
             onClick={() => {
               createNewMessage(messageForm.values);
