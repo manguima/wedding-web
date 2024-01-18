@@ -346,7 +346,7 @@ const StepOne = ({ index }: { index: number }) => {
             }}
             size="lg"
             value={inputCode}
-            onChange={(e) => setInputCode(e.currentTarget.value)}
+            onChange={(e) => setInputCode(e.currentTarget.value.toUpperCase())}
             label="Codígo do convite"
             error={onError?.section === index ? onError?.message : ""}
           />
