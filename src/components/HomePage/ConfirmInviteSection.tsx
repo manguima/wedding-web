@@ -337,7 +337,11 @@ const StepOne = ({ index }: { index: number }) => {
           {/* DESKTOP */}
           <TextInput
             styles={{
-              input: { background: "transparent", color: "#fff" },
+              input: {
+                background: "transparent",
+                color: "#fff",
+                textTransform: "uppercase",
+              },
               label: { color: "#fff" },
             }}
             size="lg"
