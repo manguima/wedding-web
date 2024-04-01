@@ -42,8 +42,6 @@ export const LogoIcon = ({
               fill={primaryColor}
             />
             <path
-              fill-rule="evenodd"
-              clip-rule="evenodd"
               d="M24.5722 59.5954H25.0082L30.3681 51.601L30.6063 51.2376L38.71 38.9694L41.9687 51.2376L42.0777 51.601L44.9121 59.5954H48.0009L41.9687 34.1586H41.5011L32.9929 46.9496L24.5722 59.5954Z"
               fill={primaryColor}
             />

@@ -54,6 +54,7 @@ export const useCodeStore = create<CodeStoreProps>((set) => ({
     createdAt: "",
     id: "",
     total: 0,
+    Family: undefined,
     active: false,
   },
   updateCode: (data: any) => set(() => ({ code: data })),
@@ -80,7 +81,12 @@ export const ZustandProvider = ({ children }: { children: ReactNode }) => {
           useCurrentStep
             .getState()
             .updateCurrentStep(useCurrentStep.getState().currentStep + 1);
+
+          if (data?.Family?.[0]) {
+            useCodeStore.getState().updateFamily(data?.Family?.[0]);
+          }
         }
+
         return setInputLoading(false);
       },
       () => {
