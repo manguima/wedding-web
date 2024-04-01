@@ -75,6 +75,11 @@ export const StepTwo = ({ index }: { index: number }) => {
         );
       } else {
         const noHost = familyData?.guests?.filter((val: any) => !val?.isHost);
+        console.log(
+          "MAIOR ÏDADE: ",
+          noHost?.[index - 1]?.name,
+          Boolean(noHost?.[index - 1]?.isOldYear)
+        );
         guestForm.insertListItem(
           `guests`,
           {
@@ -82,7 +87,7 @@ export const StepTwo = ({ index }: { index: number }) => {
             name: noHost?.[index - 1]?.name || "",
             isHost:
               Boolean(noHost?.[index - 1]?.isHost) || index > 0 ? false : true,
-            isOldYear: noHost?.[index - 1]?.isOldYear || true,
+            isOldYear: Boolean(noHost?.[index - 1]?.isOldYear),
           },
           index
         );
@@ -182,37 +187,44 @@ export const StepTwo = ({ index }: { index: number }) => {
                 styles={{ control: { marginRight: "3rem" } }}
                 withControls={false}
               >
-                {[...Array(currentCode.total - 1)].map((n, index) => (
-                  <Carousel.Slide key={index}>
-                    <Flex direction={"column"} gap={"1rem"}>
-                      <Text fw={700} fz={"1.4rem"} c={"#fff"}>
-                        Convidado {index + 1}
-                      </Text>
-                      <TextInput
-                        styles={{
-                          input: { background: "transparent", color: "#fff" },
-                          label: { color: "#fff" },
-                        }}
-                        required
-                        fz={"1rem"}
-                        {...guestForm.getInputProps(`guests.${index + 1}.name`)}
-                        label="Nome Completo"
-                        placeholder="Nome Completo"
-                      />
-                      <Checkbox
-                        color="#F5D759"
-                        c={"#fff"}
-                        styles={{ icon: { color: "#000" } }}
-                        fz={"1rem"}
-                        defaultChecked
-                        {...guestForm.getInputProps(
-                          `guests.${index + 1}.isOldYear`
-                        )}
-                        label="É maior de 8 anos ?"
-                      />
-                    </Flex>
-                  </Carousel.Slide>
-                ))}
+                {[...Array(currentCode.total - 1)].map((n, index) => {
+                  console.log(guestForm?.values?.guests?.[1]?.isOldYear);
+                  return (
+                    <Carousel.Slide key={index}>
+                      <Flex direction={"column"} gap={"1rem"}>
+                        <Text fw={700} fz={"1.4rem"} c={"#fff"}>
+                          Convidado {index + 1}
+                        </Text>
+                        <TextInput
+                          styles={{
+                            input: { background: "transparent", color: "#fff" },
+                            label: { color: "#fff" },
+                          }}
+                          required
+                          fz={"1rem"}
+                          {...guestForm.getInputProps(
+                            `guests.${index + 1}.name`
+                          )}
+                          label="Nome Completo"
+                          placeholder="Nome Completo"
+                        />
+                        <Checkbox
+                          color="#F5D759"
+                          c={"#fff"}
+                          styles={{ icon: { color: "#000" } }}
+                          fz={"1rem"}
+                          checked={Boolean(
+                            guestForm?.values?.guests?.[index + 1]?.isOldYear
+                          )}
+                          {...guestForm.getInputProps(
+                            `guests.${index + 1}.isOldYear`
+                          )}
+                          label="É maior de 8 anos ?"
+                        />
+                      </Flex>
+                    </Carousel.Slide>
+                  );
+                })}
               </Carousel>
 
               {/* ARROWS CAROUSEL */}

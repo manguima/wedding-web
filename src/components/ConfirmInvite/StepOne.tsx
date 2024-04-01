@@ -38,6 +38,7 @@ export const StepOne = ({ index }: { index: number }) => {
             value={inputCode.toUpperCase()}
             onChange={(e) => setInputCode(e.currentTarget.value.toUpperCase())}
             label="Código do convite"
+            description="Depois de confirmado o convite ainda é possível voltar e editá-lo usando o mesmo código."
             error={onError?.section === index ? onError?.message : ""}
           />
           <Flex w={"100%"} justify={"space-between"}>
