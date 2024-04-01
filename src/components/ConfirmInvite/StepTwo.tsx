@@ -156,15 +156,28 @@ export const StepTwo = ({ index }: { index: number }) => {
                   ({currentCarousel + 1}/{currentCode.total - 1})
                 </Text>
               </Flex>
+              {/* <ActionIcon
+                hiddenFrom="md"
+                variant="filled"
+                color="#F5D759"
+                onClick={embla?.scrollNext}
+                style={{ position: "absolute", right: "-2rem" }}
+              >
+                <IconArrowRight />
+              </ActionIcon>
+              <ActionIcon
+                hiddenFrom="md"
+                color="#F5D759"
+                variant="filled"
+                onClick={embla?.scrollPrev}
+                style={{ position: "absolute", left: "-2rem" }}
+              >
+                <IconArrowLeft />
+              </ActionIcon> */}
               <Carousel
                 onSlideChange={setCurrentCarousel}
                 slideGap={"2rem"}
                 w={"100%"}
-                nextControlIcon={
-                  <ActionIcon style={{ position: "absolute", right: "-2rem" }}>
-                    <IconArrowRight />
-                  </ActionIcon>
-                }
                 getEmblaApi={setEmbla}
                 styles={{ control: { marginRight: "3rem" } }}
                 withControls={false}

@@ -80,7 +80,6 @@ export const ConfirmInviteSection = ({ index }: { index: number }) => {
         <Flex
           w={{ base: "100%", md: "unset" }}
           p={{ base: "1rem", md: "unset" }}
-          style={{ overflow: "hidden" }}
         >
           <Box
             w={{ base: "100%", md: "unset" }}
@@ -115,6 +114,7 @@ const StepLoading = () => {
         w={"30rem"}
         h={"30rem"}
         style={{
+          contain: "paint",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
           backgroundImage: "url(gifs/loading.gif)",
