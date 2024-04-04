@@ -9,6 +9,7 @@ import {
   Container,
   Flex,
   Image,
+  Portal,
   Text,
 } from "@mantine/core";
 import { useLayoutContext } from "../layouts/LayoutProvider";
@@ -28,10 +29,11 @@ export const HeaderSection = ({ index }: { index: number }) => {
 
   // VALIDE VALUES KABUKI WITH HOME PROVIDER AND CHANGE VALUES
   useEffect(() => {
-    if (currentSection === index) {
+    if (currentSection === index + 1) {
       setPrimaryColor?.("white");
       setSecondaryColor?.("#E5C74D");
     }
+    console.log(currentSection);
   }, [currentSection]);
 
   // MENU TO VIEW
@@ -50,15 +52,15 @@ export const HeaderSection = ({ index }: { index: number }) => {
       ref={targetRef}
       fluid
       p={0}
-      mih={"150dvh"}
+      mih={"150svh"}
       h={"100%"}
       w={"100%"}
+      bgsz={{ base: "auto 80svh", md: "cover" }}
       style={{
         background: "#15241795",
         backgroundImage: "url(images/img_header_section.jpg)",
-        backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
-        backgroundPosition: "top center",
+        backgroundPosition: " center 30%",
         backgroundBlendMode: "overlay",
         backgroundAttachment: "fixed",
         position: "relative",
@@ -77,22 +79,24 @@ export const HeaderSection = ({ index }: { index: number }) => {
         }}
       ></Box>
 
-      <Box
-        w={{ base: "18rem", md: "25rem" }}
-        h={{ base: "18rem", md: "25rem" }}
-        top={{ base: "85vh", md: "70vh" }}
-        style={{
-          position: "absolute",
-          left: "-4vw",
-          transition: "all ease 0.4s",
-          opacity: isInView ? 1 : 0,
-          transform: isInView
-            ? "translateX(0) translateY(0) rotate(0deg) scaleX(-1)"
-            : "translateX(-100px) translateY(-200px) rotate(-40deg) scaleX(-1)",
-        }}
-      >
-        <Image src={"images/tree1.png"} />
-      </Box>
+      <Portal>
+        <Box
+          w={{ base: "18rem", md: "25rem" }}
+          h={{ base: "18rem", md: "25rem" }}
+          top={{ base: "135svh", md: "70vh" }}
+          style={{
+            position: "absolute",
+            left: "-4vw",
+            transition: "all ease 0.4s",
+            opacity: isInView ? 1 : 0,
+            transform: isInView
+              ? "translateX(0) translateY(0) rotate(0deg) scaleX(-1)"
+              : "translateX(-100px) translateY(-200px) rotate(-40deg) scaleX(-1)",
+          }}
+        >
+          <Image src={"images/tree1.png"} />
+        </Box>
+      </Portal>
 
       <Center w={"100%"} h={"100svh"} style={{ position: "sticky", top: 0 }}>
         <Flex
@@ -101,7 +105,10 @@ export const HeaderSection = ({ index }: { index: number }) => {
           justify={"center"}
           align={"center"}
           opacity={isInView ? 1 : 0}
-          top={isInView ? "20vh" : "0vh"}
+          top={{
+            base: isInView ? "10vh" : "0vh",
+            md: isInView ? "20vh" : "0vh",
+          }}
           style={{
             position: "relative",
             transition: "all ease 1.2s",
@@ -140,13 +147,11 @@ export const HeaderSection = ({ index }: { index: number }) => {
             </Text>
           </Flex>
           <Flex
-            style={{
-              position: "absolute",
-              top: 0,
-              left: "calc(100% + 2rem)",
-            }}
+            top={{ base: 0, md: 0 }}
+            left={{ base: "0", md: "calc(100% + 2rem)" }}
+            pos={{ base: "unset", md: "absolute" }}
           >
-            <Flex direction={"column"} gap={"1rem"}>
+            <Flex direction={{ base: "row", md: "column" }} gap={"1rem"}>
               {dateWedding.map((item, index) => (
                 <Flex
                   key={index}
@@ -166,12 +171,14 @@ export const HeaderSection = ({ index }: { index: number }) => {
                     {item.value}
                   </Text>
                   <Flex
-                    style={{
-                      position: "absolute",
-                      left: "calc(100% + 1rem)",
-                    }}
+                    w={"100%"}
+                    top={{ base: "calc(100% + 0.5rem)", md: 0 }}
+                    left={{ base: "0", md: "calc(100% + 1rem)" }}
+                    pos={{ base: "absolute" }}
                   >
                     <Text
+                      w={{ base: "100%", md: "unset" }}
+                      ta={"center"}
                       c={"white"}
                       fz={{ base: "1rem", md: "1rem" }}
                       tt={"capitalize"}

@@ -48,7 +48,7 @@ export const ConfirmInviteSection = ({ index }: { index: number }) => {
 
   // VALIDE VALUES KABUKI WITH HOME PROVIDER AND CHANGE VALUES
   useEffect(() => {
-    if (currentSection === index) {
+    if (currentSection === index + 2) {
       setPrimaryColor?.("white");
       setSecondaryColor?.("#E5C74D");
     }
@@ -65,10 +65,10 @@ export const ConfirmInviteSection = ({ index }: { index: number }) => {
       p={0}
       w={"100%"}
       h={"150dvh"}
+      bgsz={{ base: "auto 100svh", md: "cover" }}
       style={{
         background: "#00000099",
         backgroundImage: "url(images/img_checkout_section.png)",
-        backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
         backgroundPosition: "center",
         backgroundBlendMode: "overlay",

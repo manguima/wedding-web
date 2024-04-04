@@ -23,7 +23,7 @@ export const BuildingSection = ({ index }: { index: number }) => {
 
   // VALIDE VALUES KABUKI WITH HOME PROVIDER AND CHANGE VALUES
   useEffect(() => {
-    if (currentSection === index) {
+    if (currentSection === index + 2) {
       setPrimaryColor?.("black");
       setSecondaryColor?.("#E5C74D");
     }

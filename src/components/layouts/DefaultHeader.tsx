@@ -1,7 +1,14 @@
 "use client";
-import { Box, Center, Container, Flex, UnstyledButton } from "@mantine/core";
+import {
+  Box,
+  Burger,
+  Center,
+  Container,
+  Flex,
+  UnstyledButton,
+} from "@mantine/core";
 import { LogoIcon } from "../icons/LogoIcon";
-import { useHover } from "@mantine/hooks";
+import { useDisclosure, useHover } from "@mantine/hooks";
 import { useLayoutContext } from "./LayoutProvider";
 import { create } from "zustand";
 
@@ -28,6 +35,8 @@ export const DefaultHeader = ({
 }) => {
   const { primaryColor, secondaryColor } = useLayoutContext();
 
+  const [opened, { toggle }] = useDisclosure();
+
   return (
     <Container
       fluid
@@ -48,7 +57,7 @@ export const DefaultHeader = ({
           w={"100%"}
           style={{ position: "relative" }}
         >
-          <Box w={{ base: "7rem", md: "8rem" }}>
+          <Box w={{ base: "7rem", md: "8rem" }} style={{ zIndex: 3 }}>
             <LogoIcon
               width={"100%"}
               primaryColor={primaryColor}
@@ -56,15 +65,39 @@ export const DefaultHeader = ({
             />
           </Box>
           <Flex gap={"1rem"}>
-            {listNav.map((item, index) => (
-              <ButtonNav
-                key={index}
-                {...item}
-                index={index}
-                primaryColor={primaryColor}
-                secondaryColor={secondaryColor}
-              />
-            ))}
+            <Burger
+              color={opened ? "#fff" : secondaryColor}
+              hiddenFrom="md"
+              size={"xl"}
+              style={{ zIndex: 3 }}
+              opened={opened}
+              onClick={toggle}
+            />
+            <Flex
+              top={0}
+              left={0}
+              display={{ base: opened ? "flex" : "none", md: "flex" }}
+              gap={{ base: "1rem", md: "2rem" }}
+              pt={{ base: "7rem", md: "unset" }}
+              p={{ base: "2rem", md: "unset" }}
+              w={{ base: "100%", md: "unset" }}
+              pos={{ base: "fixed", md: "unset" }}
+              bg={{ base: "#000", md: "unset" }}
+              direction={{ base: "column", md: "row" }}
+              justify={{ base: "center", md: "start" }}
+              align={{ base: "center", md: "start" }}
+              style={{ zIndex: "0" }}
+            >
+              {listNav.map((item, index) => (
+                <ButtonNav
+                  key={index}
+                  {...item}
+                  index={index}
+                  primaryColor={primaryColor}
+                  secondaryColor={secondaryColor}
+                />
+              ))}
+            </Flex>
           </Flex>
         </Flex>
       </Center>
@@ -93,7 +126,7 @@ export const ButtonNav = ({
     <UnstyledButton
       ref={ref}
       key={index}
-      fz={{ base: "1rem", md: "1rem" }}
+      fz={{ base: "2rem", md: "1rem" }}
       fw={400}
       onClick={action}
       styles={{

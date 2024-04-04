@@ -29,7 +29,7 @@ export const AboutusSection = ({ index }: { index: number }) => {
 
   // VALIDE VALUES KABUKI WITH HOME PROVIDER AND CHANGE VALUES
   useEffect(() => {
-    if (currentSection === index) {
+    if (currentSection === index + 1) {
       setPrimaryColor?.("black");
       setSecondaryColor?.("#E5C74D");
     }
@@ -95,7 +95,7 @@ export const AboutusSection = ({ index }: { index: number }) => {
             overflow: "hidden",
           }}
         >
-          <Grid.Col span={{ base: 12, md: 6 }}>
+          <Grid.Col visibleFrom="md" span={{ base: 12, md: 6 }}>
             <Center>
               <Box
                 style={{
