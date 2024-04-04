@@ -65,7 +65,7 @@ export const ConfirmInviteSection = ({ index }: { index: number }) => {
       p={0}
       w={"100%"}
       h={"150dvh"}
-      bgsz={{ base: "auto 100svh", md: "cover" }}
+      bgsz={{ base: "auto 100vh", md: "cover" }}
       style={{
         background: "#00000099",
         backgroundImage: "url(images/img_checkout_section.png)",

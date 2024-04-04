@@ -55,7 +55,7 @@ export const HeaderSection = ({ index }: { index: number }) => {
       mih={"150svh"}
       h={"100%"}
       w={"100%"}
-      bgsz={{ base: "auto 80svh", md: "cover" }}
+      bgsz={{ base: "auto 80vh", md: "cover" }}
       style={{
         background: "#15241795",
         backgroundImage: "url(images/img_header_section.jpg)",
