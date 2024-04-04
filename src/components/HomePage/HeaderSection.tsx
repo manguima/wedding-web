@@ -55,17 +55,18 @@ export const HeaderSection = ({ index }: { index: number }) => {
       mih={"150svh"}
       h={"100%"}
       w={"100%"}
-      bgsz={{ base: "auto 80vh", md: "cover" }}
       style={{
         background: "#15241795",
         backgroundImage: "url(images/img_header_section.jpg)",
         backgroundRepeat: "no-repeat",
-        backgroundPosition: " center 30%",
         backgroundBlendMode: "overlay",
+        // backgroundSize: "auto 100vh",
         backgroundAttachment: "fixed",
+        backgroundPosition: "center",
+        // WebkitBackgroundSize: "auto 100vh",
         position: "relative",
-        contain: "paint",
       }}
+      bgsz={{ base: "80vw", md: "100% auto" }}
     >
       <Box
         w={"100%"}
