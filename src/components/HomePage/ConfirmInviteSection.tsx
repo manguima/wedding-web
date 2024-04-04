@@ -64,7 +64,7 @@ export const ConfirmInviteSection = ({ index }: { index: number }) => {
       fluid
       p={0}
       w={"100%"}
-      h={"150dvh"}
+      h={"150vh"}
       bgsz={{ base: "auto 100vh", md: "cover" }}
       style={{
         background: "#00000099",

@@ -60,8 +60,8 @@ export const DefaultHeader = ({
           <Box w={{ base: "7rem", md: "8rem" }} style={{ zIndex: 3 }}>
             <LogoIcon
               width={"100%"}
-              primaryColor={primaryColor}
-              secondaryColor={secondaryColor}
+              primaryColor={opened ? "white" : primaryColor}
+              secondaryColor={opened ? "#E5C74D" : secondaryColor}
             />
           </Box>
           <Flex gap={"1rem"}>
@@ -127,13 +127,9 @@ export const ButtonNav = ({
       ref={ref}
       key={index}
       fz={{ base: "2rem", md: "1rem" }}
-      fw={400}
+      fw={{ base: 300, md: 400 }}
       onClick={action}
-      styles={{
-        root: {
-          color: hovered ? secondaryColor : primaryColor,
-        },
-      }}
+      c={{ base: "white", md: hovered ? secondaryColor : primaryColor }}
     >
       {label}
     </UnstyledButton>
