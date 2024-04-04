@@ -89,13 +89,15 @@ export const DefaultHeader = ({
               style={{ zIndex: "0" }}
             >
               {listNav.map((item, index) => (
-                <ButtonNav
-                  key={index}
-                  {...item}
-                  index={index}
-                  primaryColor={primaryColor}
-                  secondaryColor={secondaryColor}
-                />
+                <Box onClick={toggle}>
+                  <ButtonNav
+                    key={index}
+                    {...item}
+                    index={index}
+                    primaryColor={primaryColor}
+                    secondaryColor={secondaryColor}
+                  />
+                </Box>
               ))}
             </Flex>
           </Flex>
