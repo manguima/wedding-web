@@ -58,15 +58,19 @@ export const HeaderSection = ({ index }: { index: number }) => {
       style={{
         background: "#15241795",
         backgroundImage: "url(images/img_header_section.jpg)",
-        backgroundRepeat: "no-repeat",
+        // backgroundRepeat: "no-repeat",
         backgroundBlendMode: "overlay",
-        // backgroundSize: "auto 100vh",
-        backgroundAttachment: "fixed",
-        backgroundPosition: "center",
-        // WebkitBackgroundSize: "auto 100vh",
+        // backgroundSize: "auto 100%",
+        // backgroundAttachment: "fixed",
+        // backgroundPosition: "center",
+        // WebkitBackgroundSize: "auto 100%",
+        contain: "paint",
         position: "relative",
       }}
-      bgsz={{ base: "80vw", md: "100% auto" }}
+      bgp={"center"}
+      bga={"fixed"}
+      bgr={"no-repeat"}
+      bgsz={{ base: "auto 100vh", md: "100% auto" }}
     >
       <Box
         w={"100%"}
