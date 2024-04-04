@@ -65,16 +65,16 @@ export const ConfirmInviteSection = ({ index }: { index: number }) => {
       p={0}
       w={"100%"}
       h={"150vh"}
-      bgsz={{ base: "auto 100vh", md: "cover" }}
       style={{
         background: "#00000099",
         backgroundImage: "url(images/img_checkout_section.png)",
-        backgroundRepeat: "no-repeat",
-        backgroundPosition: "center",
         backgroundBlendMode: "overlay",
-        backgroundAttachment: "fixed",
         position: "relative",
       }}
+      bgsz={{ base: "auto 100vh", md: "cover" }}
+      bgp={"center"}
+      bga={"fixed"}
+      bgr={"no-repeat"}
     >
       <Center w={"100%"} h={"100svh"} style={{ position: "sticky", top: 0 }}>
         <Flex
