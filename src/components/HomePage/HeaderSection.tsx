@@ -71,18 +71,6 @@ export const HeaderSection = ({ index }: { index: number }) => {
         h={"100%"}
       >
         <Paper style={{ position: "sticky", top: 0 }} w={"100%"} h={"100vh"}>
-          <Box
-            w={"100%"}
-            h={"100%"}
-            style={{
-              opacity: 0.5,
-              position: "absolute",
-              zIndex: 3,
-              top: 0,
-              left: 0,
-              background: `url(${noise})`,
-            }}
-          ></Box>
           <Image
             style={{ zIndex: 2, filter: "brightness(50%)" }}
             height={"100%"}

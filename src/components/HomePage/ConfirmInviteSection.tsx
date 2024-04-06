@@ -1,5 +1,5 @@
 "use client";
-import { Box, Center, Container, Flex } from "@mantine/core";
+import { Box, Center, Container, Flex, Image, Paper } from "@mantine/core";
 import { useKabukiRoll } from "../KabukiRoll/KabukiRoll";
 import { useLayoutContext } from "../layouts/LayoutProvider";
 import { useEffect } from "react";
@@ -48,7 +48,7 @@ export const ConfirmInviteSection = ({ index }: { index: number }) => {
 
   // VALIDE VALUES KABUKI WITH HOME PROVIDER AND CHANGE VALUES
   useEffect(() => {
-    if (currentSection === index + 2) {
+    if (currentSection === index + 1) {
       setPrimaryColor?.("white");
       setSecondaryColor?.("#E5C74D");
     }
@@ -66,17 +66,18 @@ export const ConfirmInviteSection = ({ index }: { index: number }) => {
       w={"100%"}
       h={"150vh"}
       style={{
-        background: "#00000099",
-        backgroundImage: "url(images/img_checkout_section.png)",
-        backgroundBlendMode: "overlay",
         position: "relative",
       }}
-      bgsz={{ base: "auto 100vh", md: "cover" }}
-      bgp={"center"}
-      bga={"fixed"}
-      bgr={"no-repeat"}
     >
       <Center w={"100%"} h={"100svh"} style={{ position: "sticky", top: 0 }}>
+        <Paper style={{ position: "absolute", top: 0 }} w={"100%"} h={"100%"}>
+          <Image
+            style={{ zIndex: 2, filter: "brightness(50%)" }}
+            height={"100%"}
+            fit="cover"
+            src={"images/img_checkout_section.png"}
+          />
+        </Paper>
         <Flex
           w={{ base: "100%", md: "unset" }}
           p={{ base: "1rem", md: "unset" }}
