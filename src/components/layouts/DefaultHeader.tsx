@@ -64,6 +64,7 @@ export const DefaultHeader = ({
               secondaryColor={opened ? "#E5C74D" : secondaryColor}
             />
           </Box>
+
           <Flex gap={"1rem"}>
             <Burger
               color={opened ? "#fff" : secondaryColor}
@@ -89,7 +90,11 @@ export const DefaultHeader = ({
               style={{ zIndex: "0" }}
             >
               {listNav.map((item, index) => (
-                <Box key={index} fz={{ base: "2rem", md: "1rem" }} onClick={toggle}>
+                <Box
+                  key={index}
+                  fz={{ base: "2rem", md: "1rem" }}
+                  onClick={toggle}
+                >
                   <ButtonNav
                     key={index}
                     {...item}

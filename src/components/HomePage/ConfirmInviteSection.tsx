@@ -69,7 +69,7 @@ export const ConfirmInviteSection = ({ index }: { index: number }) => {
         position: "relative",
       }}
     >
-      <Center w={"100%"} h={"100svh"} style={{ position: "sticky", top: 0 }}>
+      <Center w={"100%"} h={"100dvh"} style={{ position: "sticky", top: 0 }}>
         <Paper style={{ position: "absolute", top: 0 }} w={"100%"} h={"100%"}>
           <Image
             style={{ zIndex: 2, filter: "brightness(50%)" }}

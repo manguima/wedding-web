@@ -1,11 +1,14 @@
 "use client";
 import {
   Dispatch,
+  MutableRefObject,
   SetStateAction,
   createContext,
   useContext,
+  useRef,
   useState,
 } from "react";
+import ReactPlayer from "react-player";
 
 export type LayoutInterface = {
   primaryColor: string;
@@ -14,6 +17,9 @@ export type LayoutInterface = {
   offsetKabuki?: number;
   secondaryColor?: string;
   setSecondaryColor?: Dispatch<SetStateAction<string>>;
+  togglePlay?: () => void;
+  playing?: boolean;
+  playerRef?: MutableRefObject<null>;
 };
 
 export const LayoutContext = createContext<LayoutInterface>({
@@ -26,6 +32,13 @@ export const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
   const [primaryColor, setPrimaryColor] = useState("white");
   const [secondaryColor, setSecondaryColor] = useState("white");
 
+  const [playing, setPlaying] = useState(true);
+  const playerRef = useRef(null);
+
+  const togglePlay = () => {
+    setPlaying(!playing);
+  };
+
   return (
     <LayoutContext.Provider
       value={{
@@ -33,6 +46,9 @@ export const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
         setPrimaryColor,
         secondaryColor,
         setSecondaryColor,
+        togglePlay,
+        playing,
+        playerRef,
       }}
     >
       {children}

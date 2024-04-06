@@ -1,17 +1,12 @@
-import { Container, Flex, ScrollArea } from "@mantine/core";
-import { Metadata } from "next";
+"use client";
+import { Container } from "@mantine/core";
 import { HeaderSection } from "../components/HomePage/HeaderSection";
 import { AboutusSection } from "@/components/HomePage/AboutusSection";
 import { KabukiRoll } from "@/components/KabukiRoll/KabukiRoll";
 import { CountDownSection } from "@/components/HomePage/CountDownSection";
 import { ConfirmInviteSection } from "@/components/HomePage/ConfirmInviteSection";
 import { BuildingSection } from "@/components/HomePage/BuildingSection";
-import { useEffect } from "react";
-
-export const metadata: Metadata = {
-  title: "Home - Deyse & Matheus",
-  description: "Site do casamento.",
-};
+import { useLayoutContext } from "@/components/layouts/LayoutProvider";
 
 export default function Home() {
   const pageSections = [
