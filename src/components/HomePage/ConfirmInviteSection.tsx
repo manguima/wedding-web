@@ -70,9 +70,13 @@ export const ConfirmInviteSection = ({ index }: { index: number }) => {
       }}
     >
       <Center w={"100%"} h={"100dvh"} style={{ position: "sticky", top: 0 }}>
-        <Paper style={{ position: "absolute", top: 0 }} w={"100%"} h={"100%"}>
+        <Paper
+          style={{ position: "absolute", zIndex: 0, top: 0 }}
+          w={"100%"}
+          h={"100%"}
+        >
           <Image
-            style={{ zIndex: 2, filter: "brightness(50%)" }}
+            style={{ filter: "brightness(50%)" }}
             height={"100%"}
             fit="cover"
             src={"images/img_checkout_section.png"}
@@ -81,6 +85,7 @@ export const ConfirmInviteSection = ({ index }: { index: number }) => {
         <Flex
           w={{ base: "100%", md: "unset" }}
           p={{ base: "1rem", md: "unset" }}
+          style={{ zIndex: 3 }}
         >
           <Box
             w={{ base: "100%", md: "unset" }}
