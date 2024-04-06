@@ -9,6 +9,7 @@ import {
   Container,
   Flex,
   Image,
+  Paper,
   Portal,
   Text,
 } from "@mantine/core";
@@ -55,29 +56,37 @@ export const HeaderSection = ({ index }: { index: number }) => {
       mih={"150svh"}
       h={"100%"}
       w={"100%"}
-      bgsz={{ base: "auto 80vh", md: "cover" }}
       style={{
-        background: "#15241795",
-        backgroundImage: "url(images/img_header_section.jpg)",
-        backgroundRepeat: "no-repeat",
-        backgroundPosition: " center 30%",
-        backgroundBlendMode: "overlay",
-        backgroundAttachment: "fixed",
         position: "relative",
         contain: "paint",
       }}
     >
-      <Box
+      <Flex
+        style={{ position: "fixed", top: 0, left: 0 }}
         w={"100%"}
         h={"100%"}
-        style={{
-          opacity: 0.5,
-          position: "absolute",
-          top: 0,
-          left: 0,
-          background: `url(${noise})`,
-        }}
-      ></Box>
+      >
+        <Paper style={{ position: "sticky", top: 0 }} w={"100%"} h={"100vh"}>
+          <Box
+            w={"100%"}
+            h={"100%"}
+            style={{
+              opacity: 0.5,
+              position: "absolute",
+              zIndex: 3,
+              top: 0,
+              left: 0,
+              background: `url(${noise})`,
+            }}
+          ></Box>
+          <Image
+            style={{ zIndex: 2, filter: "brightness(50%)" }}
+            height={"100%"}
+            fit="cover"
+            src={"images/img_header_section.jpg"}
+          />
+        </Paper>
+      </Flex>
 
       <Portal>
         <Box

@@ -89,7 +89,7 @@ export const DefaultHeader = ({
               style={{ zIndex: "0" }}
             >
               {listNav.map((item, index) => (
-                <Box onClick={toggle}>
+                <Box key={index} fz={{ base: "2rem", md: "1rem" }} onClick={toggle}>
                   <ButtonNav
                     key={index}
                     {...item}
@@ -128,7 +128,7 @@ export const ButtonNav = ({
     <UnstyledButton
       ref={ref}
       key={index}
-      fz={{ base: "2rem", md: "1rem" }}
+      fz={{ base: "unset", md: "1rem" }}
       fw={{ base: 300, md: 400 }}
       onClick={action}
       c={{ base: "white", md: hovered ? secondaryColor : primaryColor }}
