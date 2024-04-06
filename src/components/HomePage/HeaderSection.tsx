@@ -60,6 +60,10 @@ export const HeaderSection = ({ index }: { index: number }) => {
         position: "relative",
         contain: "paint",
       }}
+      bgp={"center"}
+      bga={"fixed"}
+      bgr={"no-repeat"}
+      bgsz={{ base: "auto 100vh", md: "100% auto" }}
     >
       <Flex
         style={{ position: "fixed", top: 0, left: 0 }}
