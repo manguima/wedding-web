@@ -9,10 +9,9 @@ import {
 import Link from "next/link";
 import { ButtonNav, listNav } from "./DefaultHeader";
 import { useLayoutContext } from "./LayoutProvider";
-import ReactPlayer from "react-player";
 
 export const DefaultFooter = () => {
-  const { togglePlay, playing, playerRef } = useLayoutContext();
+  const { togglePlay, playing } = useLayoutContext();
   return (
     <Container
       fluid
@@ -47,7 +46,7 @@ export const DefaultFooter = () => {
                     <IconBrandLinkedin color="#79630b" />
                   </ActionIcon>
                   <ActionIcon
-                    onClick={togglePlay}
+                    // onClick={togglePlay}
                     color={"#E5C74D"}
                     size={"3rem"}
                     title={playing ? "Parar" : "Iniciar"}
@@ -90,15 +89,6 @@ export const DefaultFooter = () => {
           </Flex>
         </Center>
       </Flex>
-      <ReactPlayer
-        ref={playerRef}
-        url="evoce.mp3"
-        playing={playing}
-        controls={false}
-        width="0"
-        height="0"
-        volume={0.6}
-      />
     </Container>
   );
 };

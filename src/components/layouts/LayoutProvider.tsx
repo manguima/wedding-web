@@ -1,14 +1,15 @@
 "use client";
 import {
   Dispatch,
-  MutableRefObject,
   SetStateAction,
   createContext,
   useContext,
+  useEffect,
   useRef,
   useState,
 } from "react";
-import ReactPlayer from "react-player";
+
+import ReactAudioPlayer from "react-audio-player";
 
 export type LayoutInterface = {
   primaryColor: string;
@@ -18,13 +19,13 @@ export type LayoutInterface = {
   secondaryColor?: string;
   setSecondaryColor?: Dispatch<SetStateAction<string>>;
   togglePlay?: () => void;
-  playing?: boolean;
-  playerRef?: MutableRefObject<null>;
+  playing: boolean;
 };
 
 export const LayoutContext = createContext<LayoutInterface>({
   primaryColor: "white",
   secondaryColor: "#E5C74D",
+  playing: true,
 });
 
 export const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
@@ -33,7 +34,7 @@ export const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
   const [secondaryColor, setSecondaryColor] = useState("white");
 
   const [playing, setPlaying] = useState(true);
-  const playerRef = useRef(null);
+  const playerRef = useRef<any>(null);
 
   const togglePlay = () => {
     setPlaying(!playing);
@@ -48,9 +49,25 @@ export const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
         setSecondaryColor,
         togglePlay,
         playing,
-        playerRef,
       }}
     >
+      <ReactAudioPlayer
+        style={{
+          width: 0,
+          height: 0,
+          padding: 0,
+          margin: 0,
+          position: "absolute",
+          userSelect: "none",
+          pointerEvents: "none",
+        }}
+        ref={playerRef}
+        src="evoce.mp3"
+        autoPlay={true}
+        controls={false}
+        volume={0.6}
+        loop={true}
+      />
       {children}
     </LayoutContext.Provider>
   );
