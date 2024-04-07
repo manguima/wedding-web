@@ -75,7 +75,6 @@ export const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
     if (!sound) {
       loadSound();
     }
-    sound?.play();
   }, [sound]);
 
   useEffect(() => {
@@ -86,7 +85,7 @@ export const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
         sound?.pause();
       }
     }
-  }, [acceptedToPlay, sound]);
+  }, [acceptedToPlay]);
 
   return (
     <LayoutContext.Provider
