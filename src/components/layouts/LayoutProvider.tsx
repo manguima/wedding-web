@@ -46,43 +46,50 @@ export const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
     key: "acceptedToPlay",
     defaultValue: true,
   });
-  const [modalToPlay, setModalToPlay] = useState(true);
-  let sound: Howl | null = null;
-
-  const play = () => {
-    if (sound) {
-      setAcceptedToPlay(true);
-      sound.play();
-    }
-  };
-
-  const stop = () => {
-    if (sound) {
-      setAcceptedToPlay(false);
-      sound.pause();
-    }
-  };
+  const [modalToPlay, setModalToPlay] = useLocalStorage({
+    key: "modalToPlay",
+    defaultValue: true,
+  });
+  const [sound, setSound] = useState<Howl | null>(null);
 
   const loadSound = () => {
     if (!audioLoaded) {
-      sound = new Howl({
-        src: ["https://deimatch.com.br/evoce.mp3"],
-        // onend: () => {
-        //   setIsPlaying(false);
-        // },
-        autoplay: true,
-        preload: true,
-        volume: 0.5,
-        loop: true,
-      });
+      setSound(
+        new Howl({
+          src: ["https://deimatch.com.br/evoce.mp3"],
+          // onend: () => {
+          //   setIsPlaying(false);
+          // },
+          // autoplay: true,
+          preload: true,
+          volume: 0.5,
+          loop: true,
+        })
+      );
       setAudioLoaded(true);
     }
   };
 
+  const play = () => {
+    setAcceptedToPlay(true);
+  };
+
+  const stop = () => {
+    setAcceptedToPlay(false);
+  };
+
   useEffect(() => {
-    if (acceptedToPlay) {
-      if (!sound) {
-        loadSound();
+    if (!sound) {
+      loadSound();
+    }
+  }, [sound]);
+
+  useEffect(() => {
+    if (sound) {
+      if (acceptedToPlay) {
+        sound.play();
+      } else {
+        sound.stop();
       }
     }
   }, [acceptedToPlay]);
@@ -97,48 +104,51 @@ export const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
         sound,
         play,
         stop,
+        acceptedToPlay,
+        setAcceptedToPlay,
       }}
     >
-      <Modal
-        styles={{
-          content: { background: "#000" },
-        }}
-        // title="Iniciar Música"
-        withCloseButton={false}
-        hiddenFrom="md"
-        opened={modalToPlay}
-        onClose={() => setModalToPlay(false)}
-        transitionProps={{ transition: "slide-up" }}
-      >
-        <Flex gap={"1rem"} direction={"column"}>
-          <Text c={"white"} size="lg">
-            Você gostaria de ouvir a música?
-          </Text>
-          <Flex gap={"1rem"}>
-            <Button
-              c={"#000"}
-              color="#F5D759"
-              onClick={() => {
-                play();
-                setModalToPlay(false);
-              }}
-            >
-              Sim
-            </Button>
-            <Button
-              c={"white"}
-              color="#F5D759"
-              variant="transparent"
-              onClick={() => {
-                stop();
-                setModalToPlay(false);
-              }}
-            >
-              Não
-            </Button>
+      {!acceptedToPlay && (
+        <Modal
+          styles={{
+            content: { background: "#000" },
+          }}
+          // title="Iniciar Música"
+          withCloseButton={false}
+          opened={modalToPlay}
+          onClose={() => setModalToPlay(false)}
+          transitionProps={{ transition: "slide-up" }}
+        >
+          <Flex gap={"1rem"} direction={"column"}>
+            <Text c={"white"} size="lg">
+              Você gostaria de ouvir a música?
+            </Text>
+            <Flex gap={"1rem"}>
+              <Button
+                c={"#000"}
+                color="#F5D759"
+                onClick={() => {
+                  play();
+                  setModalToPlay(false);
+                }}
+              >
+                Sim
+              </Button>
+              <Button
+                c={"white"}
+                color="#F5D759"
+                variant="transparent"
+                onClick={() => {
+                  stop();
+                  setModalToPlay(false);
+                }}
+              >
+                Não
+              </Button>
+            </Flex>
           </Flex>
-        </Flex>
-      </Modal>
+        </Modal>
+      )}
       {children}
     </LayoutContext.Provider>
   );
