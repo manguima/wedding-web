@@ -11,8 +11,8 @@ import { ZustandProvider } from "@/zustand/zustandProvider";
 import "@mantine/carousel/styles.css";
 
 export const metadata: Metadata = {
-  title: "Home - Deyse & Matheus",
-  description: "Site do casamento.",
+  title: "Deyse & Matheus",
+  description: "Você está convidado para o nosso grande dia!",
 };
 
 export default function RootLayout({
@@ -27,6 +27,18 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="mobile-web-app-capable" content="yes" />
+        <meta
+          property="og:image:url"
+          content="https://deimatch.com.br/backgroundUrl.jpg"
+        />
+        <meta property="og:title" content="Deyse & Matheus" />
+        <meta
+          property="og:description"
+          content="Você está convidado para o nosso grande dia!"
+        />
+        <meta property="og:image:width" content="400" />
+        <meta property="og:image:height" content="300" />
+        <meta property="og:type" content="website" />
         <link
           rel="preconnect"
           href="https://fonts.gstatic.com"

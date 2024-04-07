@@ -18,31 +18,14 @@ export default function Home() {
   ];
 
   return (
-    <>
-      <NextSeo
-        title={"Deyse & Matheus"}
-        description={"Você está convidado para o nosso grande dia!"}
-        openGraph={{
-          title: "Deyse & Matheus",
-          description: "Você está convidado para o nosso grande dia!",
-          images: [
-            {
-              url: "backgroundUrl.jpg",
-              alt: "Deyse & Matheus",
-            },
-          ],
-          url: `https://deimatch.com.br`,
-        }}
+    <Container fluid p={0} style={{ contain: "paint" }}>
+      <KabukiRoll
+        anchor="top"
+        offset={80}
+        sections={pageSections.map((Section, index) => {
+          return <Section key={index} index={index} />;
+        })}
       />
-      <Container fluid p={0} style={{ contain: "paint" }}>
-        <KabukiRoll
-          anchor="top"
-          offset={80}
-          sections={pageSections.map((Section, index) => {
-            return <Section key={index} index={index} />;
-          })}
-        />
-      </Container>
-    </>
+    </Container>
   );
 }
