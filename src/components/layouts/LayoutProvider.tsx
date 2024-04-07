@@ -8,8 +8,7 @@ import {
   useRef,
   useState,
 } from "react";
-
-import ReactAudioPlayer from "react-audio-player";
+import { Howl } from "howler";
 
 export type LayoutInterface = {
   primaryColor: string;
@@ -19,13 +18,13 @@ export type LayoutInterface = {
   secondaryColor?: string;
   setSecondaryColor?: Dispatch<SetStateAction<string>>;
   togglePlay?: () => void;
-  playing: boolean;
+  isPlaying: boolean;
 };
 
 export const LayoutContext = createContext<LayoutInterface>({
   primaryColor: "white",
   secondaryColor: "#E5C74D",
-  playing: true,
+  isPlaying: true,
 });
 
 export const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
@@ -33,12 +32,38 @@ export const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
   const [primaryColor, setPrimaryColor] = useState("white");
   const [secondaryColor, setSecondaryColor] = useState("white");
 
-  const [playing, setPlaying] = useState(true);
-  const playerRef = useRef<any>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const soundRef = useRef<Howl | null>(null);
+  let sound: Howl | null = null;
 
   const togglePlay = () => {
-    setPlaying(!playing);
+    if (soundRef.current) {
+      if (isPlaying) {
+        soundRef.current.pause();
+      } else {
+        soundRef.current.play();
+      }
+      setIsPlaying(!isPlaying);
+    }
   };
+
+  const loadSound = () => {
+    soundRef.current = new Howl({
+      src: ["https://deimatch.com.br/evoce.mp3"],
+      onend: () => {
+        setIsPlaying(false);
+      },
+      preload: true,
+    });
+    // soundRef.current.play(); // Inicia a reprodução automaticamente
+    // setIsPlaying(true); // Atualiza o estado para indicar que está reproduzindo
+  };
+
+  useEffect(() => {
+    if (!soundRef.current) {
+      loadSound();
+    }
+  }, []);
 
   return (
     <LayoutContext.Provider
@@ -48,26 +73,9 @@ export const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
         secondaryColor,
         setSecondaryColor,
         togglePlay,
-        playing,
+        isPlaying,
       }}
     >
-      <ReactAudioPlayer
-        style={{
-          width: 0,
-          height: 0,
-          padding: 0,
-          margin: 0,
-          position: "absolute",
-          userSelect: "none",
-          pointerEvents: "none",
-        }}
-        // ref={playerRef}
-        src="https://deimatch.com.br/evoce.mp3"
-        autoPlay={true}
-        controls={false}
-        volume={0.6}
-        loop={true}
-      />
       {children}
     </LayoutContext.Provider>
   );

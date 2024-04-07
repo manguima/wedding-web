@@ -11,7 +11,7 @@ import { ButtonNav, listNav } from "./DefaultHeader";
 import { useLayoutContext } from "./LayoutProvider";
 
 export const DefaultFooter = () => {
-  const { togglePlay, playing } = useLayoutContext();
+  const { togglePlay, isPlaying } = useLayoutContext();
   return (
     <Container
       fluid
@@ -46,12 +46,12 @@ export const DefaultFooter = () => {
                     <IconBrandLinkedin color="#79630b" />
                   </ActionIcon>
                   <ActionIcon
-                    // onClick={togglePlay}
+                    onClick={togglePlay}
                     color={"#E5C74D"}
                     size={"3rem"}
-                    title={playing ? "Parar" : "Iniciar"}
+                    title={isPlaying ? "Parar" : "Iniciar"}
                   >
-                    {playing ? (
+                    {isPlaying ? (
                       <IconPlayerStop color="#79630b" />
                     ) : (
                       <IconPlayerPlay color="#79630b" />
