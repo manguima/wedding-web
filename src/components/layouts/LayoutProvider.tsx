@@ -9,6 +9,8 @@ import {
   useState,
 } from "react";
 import { Howl } from "howler";
+import { Button, Flex, Modal, Text } from "@mantine/core";
+import { useLocalStorage } from "@mantine/hooks";
 
 export type LayoutInterface = {
   primaryColor: string;
@@ -33,37 +35,61 @@ export const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
   const [secondaryColor, setSecondaryColor] = useState("white");
 
   const [isPlaying, setIsPlaying] = useState(false);
-  const soundRef = useRef<Howl | null>(null);
+  const [audioLoaded, setAudioLoaded] = useState(false);
+  const [acceptedToPlay, setAcceptedToPlay] = useLocalStorage({
+    key: "acceptedToPlay",
+    defaultValue: true,
+  });
   let sound: Howl | null = null;
 
   const togglePlay = () => {
-    if (soundRef.current) {
+    if (sound) {
       if (isPlaying) {
-        soundRef.current.pause();
+        sound.pause();
       } else {
-        soundRef.current.play();
+        sound.play();
       }
       setIsPlaying(!isPlaying);
     }
   };
 
-  const loadSound = () => {
-    soundRef.current = new Howl({
-      src: ["https://deimatch.com.br/evoce.mp3"],
-      onend: () => {
-        setIsPlaying(false);
-      },
-      preload: true,
-    });
-    // soundRef.current.play(); // Inicia a reprodução automaticamente
-    // setIsPlaying(true); // Atualiza o estado para indicar que está reproduzindo
+  const play = () => {
+    if (sound) {
+      sound.play();
+    }
   };
 
-  useEffect(() => {
-    if (!soundRef.current) {
-      loadSound();
+  const stop = () => {
+    if (sound) {
+      sound.pause();
     }
-  }, []);
+  };
+
+  const loadSound = () => {
+    if (!audioLoaded) {
+      sound = new Howl({
+        src: ["https://deimatch.com.br/evoce.mp3"],
+        onend: () => {
+          setIsPlaying(false);
+        },
+        preload: true,
+      });
+      setAudioLoaded(true);
+    }
+  };
+
+  // const handleAccept = () => {
+  //   setAcceptedToPlay(true);
+  // };
+
+  useEffect(() => {
+    if (acceptedToPlay) {
+      if (!sound) {
+        loadSound();
+        play();
+      }
+    }
+  }, [acceptedToPlay]);
 
   return (
     <LayoutContext.Provider
@@ -76,6 +102,24 @@ export const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
         isPlaying,
       }}
     >
+      {/* {!acceptedToPlay && (
+        <Modal
+          styles={{
+            content: {},
+          }}
+          // title="Iniciar Música"
+          withCloseButton={false}
+          opened={!acceptedToPlay}
+          onClose={() => setAcceptedToPlay(true)}
+          transitionProps={{ transition: "slide-up" }}
+        >
+          <Flex direction={"column"}>
+            <Text size="lg">Você gostaria de ouvir a música?</Text>
+            <Button onClick={handleAccept}>Sim</Button>
+            <Button onClick={handleAccept}>Não</Button>
+          </Flex>
+        </Modal>
+      )} */}
       {children}
     </LayoutContext.Provider>
   );
