@@ -5,7 +5,6 @@ import {
   createContext,
   useContext,
   useEffect,
-  useRef,
   useState,
 } from "react";
 import { Howl } from "howler";
@@ -85,13 +84,17 @@ export const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
   }, [sound]);
 
   useEffect(() => {
-    if (sound) {
-      if (acceptedToPlay) {
-        sound.play();
-      } else {
-        sound.stop();
+    const startAudio = async () => {
+      if (sound) {
+        if (acceptedToPlay) {
+          await sound.play();
+        } else {
+          await sound.stop();
+        }
       }
-    }
+    };
+
+    startAudio();
   }, [acceptedToPlay, sound]);
 
   return (
