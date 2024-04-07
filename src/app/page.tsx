@@ -6,6 +6,7 @@ import { KabukiRoll } from "@/components/KabukiRoll/KabukiRoll";
 import { CountDownSection } from "@/components/HomePage/CountDownSection";
 import { ConfirmInviteSection } from "@/components/HomePage/ConfirmInviteSection";
 import { BuildingSection } from "@/components/HomePage/BuildingSection";
+import { NextSeo } from "next-seo";
 
 export default function Home() {
   const pageSections = [
@@ -17,14 +18,31 @@ export default function Home() {
   ];
 
   return (
-    <Container fluid p={0} style={{ contain: "paint" }}>
-      <KabukiRoll
-        anchor="top"
-        offset={80}
-        sections={pageSections.map((Section, index) => {
-          return <Section key={index} index={index} />;
-        })}
+    <>
+      <NextSeo
+        title={"Deyse & Matheus"}
+        description={"Você está convidado para o nosso grande dia!"}
+        openGraph={{
+          title: "Deyse & Matheus",
+          description: "Você está convidado para o nosso grande dia!",
+          images: [
+            {
+              url: "backgroundUrl.jpg",
+              alt: "Deyse & Matheus",
+            },
+          ],
+          url: `https://deimatch.com.br`,
+        }}
       />
-    </Container>
+      <Container fluid p={0} style={{ contain: "paint" }}>
+        <KabukiRoll
+          anchor="top"
+          offset={80}
+          sections={pageSections.map((Section, index) => {
+            return <Section key={index} index={index} />;
+          })}
+        />
+      </Container>
+    </>
   );
 }
