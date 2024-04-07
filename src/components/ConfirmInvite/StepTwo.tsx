@@ -55,7 +55,7 @@ export const StepTwo = ({ index }: { index: number }) => {
   });
 
   useEffect(() => {
-    let familyData = useCodeStore.getState().family;
+    const familyData = useCodeStore.getState().family;
 
     guestForm.reset();
     guestForm.setFieldValue("email", familyData?.email);
@@ -285,7 +285,6 @@ export const StepTwo = ({ index }: { index: number }) => {
               onClick={() => {
                 // console.log(guestForm.values);
                 createNewGuests(guestForm.values);
-                guestForm.reset();
               }}
               disabled={guestForm.isValid() || false}
               c={"#000"}
