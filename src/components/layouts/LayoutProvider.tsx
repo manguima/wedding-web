@@ -44,7 +44,7 @@ export const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
   const [audioLoaded, setAudioLoaded] = useState(false);
   const [acceptedToPlay, setAcceptedToPlay] = useLocalStorage({
     key: "acceptedToPlay",
-    defaultValue: true,
+    defaultValue: false,
   });
   const [modalToPlay, setModalToPlay] = useLocalStorage({
     key: "modalToPlay",
