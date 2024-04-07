@@ -116,6 +116,7 @@ export const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
           // title="Iniciar Música"
           withCloseButton={false}
           opened={modalToPlay}
+          closeOnClickOutside={false}
           onClose={() => setModalToPlay(false)}
           transitionProps={{ transition: "slide-up" }}
         >
