@@ -3,15 +3,15 @@ import { ActionIcon, Center, Container, Flex, Grid, Text } from "@mantine/core";
 import { LogoIcon } from "../icons/LogoIcon";
 import {
   IconBrandLinkedin,
+  IconPlayerPause,
   IconPlayerPlay,
-  IconPlayerStop,
 } from "@tabler/icons-react";
 import Link from "next/link";
 import { ButtonNav, listNav } from "./DefaultHeader";
 import { useLayoutContext } from "./LayoutProvider";
 
 export const DefaultFooter = () => {
-  const { togglePlay, isPlaying } = useLayoutContext();
+  const { sound, play, stop, acceptedToPlay } = useLayoutContext();
   return (
     <Container
       fluid
@@ -46,13 +46,19 @@ export const DefaultFooter = () => {
                     <IconBrandLinkedin color="#79630b" />
                   </ActionIcon>
                   <ActionIcon
-                    onClick={togglePlay}
+                    onClick={() => {
+                      if (acceptedToPlay) {
+                        stop();
+                      } else {
+                        play();
+                      }
+                    }}
                     color={"#E5C74D"}
                     size={"3rem"}
-                    title={isPlaying ? "Parar" : "Iniciar"}
+                    title={acceptedToPlay ? "Parar Música" : "Iniciar Música"}
                   >
-                    {isPlaying ? (
-                      <IconPlayerStop color="#79630b" />
+                    {acceptedToPlay ? (
+                      <IconPlayerPause color="#79630b" />
                     ) : (
                       <IconPlayerPlay color="#79630b" />
                     )}

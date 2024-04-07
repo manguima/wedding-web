@@ -19,14 +19,21 @@ export type LayoutInterface = {
   offsetKabuki?: number;
   secondaryColor?: string;
   setSecondaryColor?: Dispatch<SetStateAction<string>>;
-  togglePlay?: () => void;
-  isPlaying: boolean;
+  sound: Howl | null;
+  play: () => void;
+  stop: () => void;
+  acceptedToPlay?: boolean;
+  setAcceptedToPlay?: (
+    val: boolean | ((prevState: boolean) => boolean)
+  ) => void;
 };
 
 export const LayoutContext = createContext<LayoutInterface>({
   primaryColor: "white",
   secondaryColor: "#E5C74D",
-  isPlaying: true,
+  sound: null,
+  play: () => {},
+  stop: () => {},
 });
 
 export const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
@@ -34,33 +41,24 @@ export const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
   const [primaryColor, setPrimaryColor] = useState("white");
   const [secondaryColor, setSecondaryColor] = useState("white");
 
-  const [isPlaying, setIsPlaying] = useState(false);
   const [audioLoaded, setAudioLoaded] = useState(false);
   const [acceptedToPlay, setAcceptedToPlay] = useLocalStorage({
     key: "acceptedToPlay",
     defaultValue: true,
   });
+  const [modalToPlay, setModalToPlay] = useState(true);
   let sound: Howl | null = null;
-
-  const togglePlay = () => {
-    if (sound) {
-      if (isPlaying) {
-        sound.pause();
-      } else {
-        sound.play();
-      }
-      setIsPlaying(!isPlaying);
-    }
-  };
 
   const play = () => {
     if (sound) {
+      setAcceptedToPlay(true);
       sound.play();
     }
   };
 
   const stop = () => {
     if (sound) {
+      setAcceptedToPlay(false);
       sound.pause();
     }
   };
@@ -69,24 +67,22 @@ export const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
     if (!audioLoaded) {
       sound = new Howl({
         src: ["https://deimatch.com.br/evoce.mp3"],
-        onend: () => {
-          setIsPlaying(false);
-        },
+        // onend: () => {
+        //   setIsPlaying(false);
+        // },
+        autoplay: true,
         preload: true,
+        volume: 0.5,
+        loop: true,
       });
       setAudioLoaded(true);
     }
   };
 
-  // const handleAccept = () => {
-  //   setAcceptedToPlay(true);
-  // };
-
   useEffect(() => {
     if (acceptedToPlay) {
       if (!sound) {
         loadSound();
-        play();
       }
     }
   }, [acceptedToPlay]);
@@ -98,28 +94,51 @@ export const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
         setPrimaryColor,
         secondaryColor,
         setSecondaryColor,
-        togglePlay,
-        isPlaying,
+        sound,
+        play,
+        stop,
       }}
     >
-      {/* {!acceptedToPlay && (
-        <Modal
-          styles={{
-            content: {},
-          }}
-          // title="Iniciar Música"
-          withCloseButton={false}
-          opened={!acceptedToPlay}
-          onClose={() => setAcceptedToPlay(true)}
-          transitionProps={{ transition: "slide-up" }}
-        >
-          <Flex direction={"column"}>
-            <Text size="lg">Você gostaria de ouvir a música?</Text>
-            <Button onClick={handleAccept}>Sim</Button>
-            <Button onClick={handleAccept}>Não</Button>
+      <Modal
+        styles={{
+          content: { background: "#000" },
+        }}
+        // title="Iniciar Música"
+        withCloseButton={false}
+        hiddenFrom="md"
+        opened={modalToPlay}
+        onClose={() => setModalToPlay(false)}
+        transitionProps={{ transition: "slide-up" }}
+      >
+        <Flex gap={"1rem"} direction={"column"}>
+          <Text c={"white"} size="lg">
+            Você gostaria de ouvir a música?
+          </Text>
+          <Flex gap={"1rem"}>
+            <Button
+              c={"#000"}
+              color="#F5D759"
+              onClick={() => {
+                play();
+                setModalToPlay(false);
+              }}
+            >
+              Sim
+            </Button>
+            <Button
+              c={"white"}
+              color="#F5D759"
+              variant="transparent"
+              onClick={() => {
+                stop();
+                setModalToPlay(false);
+              }}
+            >
+              Não
+            </Button>
           </Flex>
-        </Modal>
-      )} */}
+        </Flex>
+      </Modal>
       {children}
     </LayoutContext.Provider>
   );
