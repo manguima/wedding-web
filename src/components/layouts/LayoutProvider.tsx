@@ -92,7 +92,7 @@ export const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
         sound.stop();
       }
     }
-  }, [acceptedToPlay]);
+  }, [acceptedToPlay, sound]);
 
   return (
     <LayoutContext.Provider
