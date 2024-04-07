@@ -60,7 +60,7 @@ export const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
           // onend: () => {
           //   setIsPlaying(false);
           // },
-          // autoplay: true,
+          autoplay: acceptedToPlay || false,
           preload: true,
           volume: 0.5,
           loop: true,
