@@ -41,14 +41,8 @@ export const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
   const [secondaryColor, setSecondaryColor] = useState("white");
 
   const [audioLoaded, setAudioLoaded] = useState(false);
-  const [acceptedToPlay, setAcceptedToPlay] = useLocalStorage({
-    key: "acceptedToPlay",
-    defaultValue: false,
-  });
-  const [modalToPlay, setModalToPlay] = useLocalStorage({
-    key: "modalToPlay",
-    defaultValue: true,
-  });
+  const [acceptedToPlay, setAcceptedToPlay] = useState(false);
+  const [modalToPlay, setModalToPlay] = useState(true);
   const [sound, setSound] = useState<Howl | null>(null);
 
   const loadSound = () => {
@@ -81,20 +75,17 @@ export const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
     if (!sound) {
       loadSound();
     }
+    sound?.play();
   }, [sound]);
 
   useEffect(() => {
-    const startAudio = async () => {
-      if (sound) {
-        if (acceptedToPlay) {
-          await sound.play();
-        } else {
-          await sound.stop();
-        }
+    if (sound) {
+      if (acceptedToPlay) {
+        sound?.play();
+      } else {
+        sound?.pause();
       }
-    };
-
-    startAudio();
+    }
   }, [acceptedToPlay, sound]);
 
   return (
