@@ -61,8 +61,8 @@ export const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
           userSelect: "none",
           pointerEvents: "none",
         }}
-        ref={playerRef}
-        src="evoce.mp3"
+        // ref={playerRef}
+        src="https://deimatch.com.br/evoce.mp3"
         autoPlay={true}
         controls={false}
         volume={0.6}
