@@ -47,16 +47,18 @@ type CodeStoreProps = {
   updateFamily: (data: any) => void;
 };
 
+const initialValues = {
+  codeKey: "",
+  createdAt: "",
+  id: "",
+  total: 0,
+  Family: undefined,
+  active: false,
+};
+
 export const useCodeStore = create<CodeStoreProps>((set) => ({
   // CODE VALUES
-  code: {
-    codeKey: "",
-    createdAt: "",
-    id: "",
-    total: 0,
-    Family: undefined,
-    active: false,
-  },
+  code: initialValues,
   updateCode: (data: any) => set(() => ({ code: data })),
 
   // MESSAGE ERROR
@@ -73,6 +75,7 @@ export const ZustandProvider = ({ children }: { children: ReactNode }) => {
 
   const validateCode = (code: string) => {
     setInputLoading(true);
+    useCodeStore.getState().updateCode(initialValues);
     loadInvite(
       { codeKey: code },
       (data) => {

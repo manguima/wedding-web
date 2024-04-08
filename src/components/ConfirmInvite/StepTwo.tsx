@@ -1,7 +1,7 @@
 import { useCodeStore, useZustandContext } from "@/zustand/zustandProvider";
 import { useCurrentStep } from "../HomePage/ConfirmInviteSection";
 import { useEffect, useState } from "react";
-import { useForm } from "@mantine/form";
+import { useForm, yupResolver } from "@mantine/form";
 import {
   ActionIcon,
   Button,
@@ -12,6 +12,8 @@ import {
 } from "@mantine/core";
 import { Carousel, Embla } from "@mantine/carousel";
 import { IconArrowLeft, IconArrowRight } from "@tabler/icons-react";
+import * as yup from "yup";
+import { values } from "lodash";
 
 export const StepTwo = ({ index }: { index: number }) => {
   const updateCurrentStep = useCurrentStep.getState().updateCurrentStep;
@@ -28,12 +30,50 @@ export const StepTwo = ({ index }: { index: number }) => {
     if (!currentCode) updateCurrentStep(1);
   }, [currentStep]);
 
-  type GuestFormProps = {
+  interface Guest {
+    name: string;
+    isOldYear: boolean;
+    isHost: boolean;
+  }
+
+  interface GuestFormProps {
     email: string;
     phone: string;
     codeId: string;
-    guests?: { name: string; isOldYear: boolean; isHost: boolean }[];
-  };
+    guests: Guest[];
+  }
+
+  // Defina o schema de validação com Yup
+  const validationSchema = yup.object().shape({
+    email: yup
+      .string()
+      .email("Digite um e-mail válido")
+      .required("O e-mail é obrigatório"),
+    phone: yup
+      .string()
+      .matches(
+        /^(\+?([0-9]{2})[-. ]?)?(\(?[0-9]{2,3}\)?[-. ]?)?([0-9]{4,5})[-. ]?([0-9]{4})$/,
+        "Número de telefone incorreto"
+      )
+      .required("O número de telefone é obrigatório"),
+    codeId: yup.string().required("O código ID é obrigatório"),
+    guests: yup
+      .array()
+      .of(
+        yup.object().shape({
+          name: yup.string(),
+          age: yup.boolean(),
+        })
+      )
+      .test(
+        "at-least-one-guest",
+        "Pelo menos um convidado é necessário",
+        function (value) {
+          if (!value) return false; // Retorna falso se value for undefined
+          return value.length > 0 && value[0].name !== "";
+        }
+      ),
+  });
 
   // GUEST FORM GENARATE
   const guestForm = useForm<GuestFormProps>({
@@ -43,15 +83,7 @@ export const StepTwo = ({ index }: { index: number }) => {
       codeId: "",
       guests: [],
     },
-    validate: {
-      phone: (value) =>
-        /^\+?([0-9]{2})\)?[-. ]?([0-9]{4})[-. ]?([0-9]{4})$/.test(value)
-          ? null
-          : "Número de telefone incorreto",
-      email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
-
-      // guests: () => (value < 18 ? 'You must be at least 18 to register' : null),
-    },
+    validate: yupResolver(validationSchema),
   });
 
   useEffect(() => {
@@ -69,17 +101,12 @@ export const StepTwo = ({ index }: { index: number }) => {
             id: host?.[index]?.id || "",
             name: host?.[index]?.name || "",
             isHost: index > 0 ? false : true,
-            isOldYear: host?.[index]?.isOldYear || true,
+            isOldYear: true,
           },
           index
         );
       } else {
         const noHost = familyData?.guests?.filter((val: any) => !val?.isHost);
-        console.log(
-          "MAIOR ÏDADE: ",
-          noHost?.[index - 1]?.name,
-          Boolean(noHost?.[index - 1]?.isOldYear)
-        );
         guestForm.insertListItem(
           `guests`,
           {
@@ -87,7 +114,7 @@ export const StepTwo = ({ index }: { index: number }) => {
             name: noHost?.[index - 1]?.name || "",
             isHost:
               Boolean(noHost?.[index - 1]?.isHost) || index > 0 ? false : true,
-            isOldYear: Boolean(noHost?.[index - 1]?.isOldYear),
+            isOldYear: noHost?.[index - 1]?.isOldYear,
           },
           index
         );
@@ -99,6 +126,16 @@ export const StepTwo = ({ index }: { index: number }) => {
 
   // GUEST SAVE
   const { createNewGuests } = useZustandContext();
+
+  const handleSubmit = () => {
+    guestForm.validate();
+    guestForm.errors;
+    createNewGuests(guestForm.values);
+  };
+
+  function isBoolean(value: boolean) {
+    return typeof value === "boolean";
+  }
 
   return (
     index === currentStep &&
@@ -144,7 +181,6 @@ export const StepTwo = ({ index }: { index: number }) => {
           />
           {currentCode.total > 1 && (
             <Flex
-              w={"100%"}
               direction={"column"}
               gap={"1rem"}
               justify={"center"}
@@ -157,38 +193,60 @@ export const StepTwo = ({ index }: { index: number }) => {
                 <Text c={"#fff"} fz={"1rem"}>
                   Quem estará com você?
                 </Text>
-                <Text c={"#F5D759"} fw={"bold"} fz={"1.2rem"}>
-                  ({currentCarousel + 1}/{currentCode.total - 1})
-                </Text>
+                <Flex
+                  gap={"1rem"}
+                  justify={"start"}
+                  style={{
+                    pointerEvents: "none",
+                    userSelect: "none",
+                  }}
+                >
+                  <ActionIcon
+                    color="#F5D759"
+                    size={"2rem"}
+                    variant="subtle"
+                    style={{
+                      pointerEvents: "all",
+                      userSelect: "all",
+                      boder: "1px solid #ffffff80",
+                    }}
+                    onClick={() => {
+                      embla?.scrollPrev();
+                    }}
+                  >
+                    <IconArrowLeft />
+                  </ActionIcon>
+
+                  <Text c={"#F5D759"} fw={"bold"} fz={"1.2rem"}>
+                    ({currentCarousel + 1}/{currentCode.total - 1})
+                  </Text>
+
+                  <ActionIcon
+                    color="#F5D759"
+                    size={"2rem"}
+                    variant="subtle"
+                    style={{
+                      pointerEvents: "all",
+                      userSelect: "all",
+                      boder: "1px solid #ffffff80",
+                    }}
+                    onClick={() => {
+                      embla?.scrollNext();
+                    }}
+                  >
+                    <IconArrowRight />
+                  </ActionIcon>
+                </Flex>
               </Flex>
-              {/* <ActionIcon
-                hiddenFrom="md"
-                variant="filled"
-                color="#F5D759"
-                onClick={embla?.scrollNext}
-                style={{ position: "absolute", right: "-2rem" }}
-              >
-                <IconArrowRight />
-              </ActionIcon>
-              <ActionIcon
-                hiddenFrom="md"
-                color="#F5D759"
-                variant="filled"
-                onClick={embla?.scrollPrev}
-                style={{ position: "absolute", left: "-2rem" }}
-              >
-                <IconArrowLeft />
-              </ActionIcon> */}
               <Carousel
                 onSlideChange={setCurrentCarousel}
                 slideGap={"2rem"}
-                w={"100%"}
+                loop
+                maw={"30rem"}
                 getEmblaApi={setEmbla}
-                styles={{ control: { marginRight: "3rem" } }}
                 withControls={false}
               >
                 {[...Array(currentCode.total - 1)].map((n, index) => {
-                  console.log(guestForm?.values?.guests?.[1]?.isOldYear);
                   return (
                     <Carousel.Slide key={index}>
                       <Flex direction={"column"} gap={"1rem"}>
@@ -200,7 +258,6 @@ export const StepTwo = ({ index }: { index: number }) => {
                             input: { background: "transparent", color: "#fff" },
                             label: { color: "#fff" },
                           }}
-                          required
                           fz={"1rem"}
                           {...guestForm.getInputProps(
                             `guests.${index + 1}.name`
@@ -213,9 +270,14 @@ export const StepTwo = ({ index }: { index: number }) => {
                           c={"#fff"}
                           styles={{ icon: { color: "#000" } }}
                           fz={"1rem"}
-                          checked={Boolean(
-                            guestForm?.values?.guests?.[index + 1]?.isOldYear
-                          )}
+                          checked={
+                            isBoolean(
+                              guestForm?.values?.guests?.[index + 1]?.isOldYear
+                            )
+                              ? guestForm?.values?.guests?.[index + 1]
+                                  ?.isOldYear
+                              : true
+                          }
                           {...guestForm.getInputProps(
                             `guests.${index + 1}.isOldYear`
                           )}
@@ -226,49 +288,6 @@ export const StepTwo = ({ index }: { index: number }) => {
                   );
                 })}
               </Carousel>
-
-              {/* ARROWS CAROUSEL */}
-              <Flex
-                w={"100%"}
-                justify={"space-between"}
-                style={{
-                  position: "absolute",
-                  pointerEvents: "none",
-                  userSelect: "none",
-                }}
-              >
-                <ActionIcon
-                  color="#000"
-                  size={"4rem"}
-                  ml={"-5rem"}
-                  style={{
-                    pointerEvents: "all",
-                    userSelect: "all",
-                    boder: "1px solid #ffffff80",
-                  }}
-                  onClick={() => {
-                    embla?.scrollPrev();
-                  }}
-                >
-                  <IconArrowLeft />
-                </ActionIcon>
-
-                <ActionIcon
-                  color="#000"
-                  size={"4rem"}
-                  mr={"-5rem"}
-                  style={{
-                    pointerEvents: "all",
-                    userSelect: "all",
-                    boder: "1px solid #ffffff80",
-                  }}
-                  onClick={() => {
-                    embla?.scrollNext();
-                  }}
-                >
-                  <IconArrowRight />
-                </ActionIcon>
-              </Flex>
             </Flex>
           )}
           <Flex w={"100%"} justify={"space-between"}>
@@ -282,11 +301,8 @@ export const StepTwo = ({ index }: { index: number }) => {
               Cancelar
             </Button>
             <Button
-              onClick={() => {
-                // console.log(guestForm.values);
-                createNewGuests(guestForm.values);
-              }}
-              disabled={guestForm.isValid() || false}
+              onClick={handleSubmit}
+              disabled={!guestForm.isValid()}
               c={"#000"}
               color="#F5D759"
             >
