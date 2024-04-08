@@ -10,6 +10,7 @@ import {
 import { Howl } from "howler";
 import { Button, Flex, Modal, Text } from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
+import useAudio from "@/hooks/useAudio";
 
 export type LayoutInterface = {
   primaryColor: string;
@@ -18,21 +19,14 @@ export type LayoutInterface = {
   offsetKabuki?: number;
   secondaryColor?: string;
   setSecondaryColor?: Dispatch<SetStateAction<string>>;
-  sound: Howl | null;
-  play: () => void;
-  stop: () => void;
   acceptedToPlay?: boolean;
-  setAcceptedToPlay?: (
-    val: boolean | ((prevState: boolean) => boolean)
-  ) => void;
+  setAcceptedToPlay: (val: boolean | ((prevState: boolean) => boolean)) => void;
 };
 
 export const LayoutContext = createContext<LayoutInterface>({
   primaryColor: "white",
   secondaryColor: "#E5C74D",
-  sound: null,
-  play: () => {},
-  stop: () => {},
+  setAcceptedToPlay: () => {},
 });
 
 export const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
@@ -40,52 +34,14 @@ export const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
   const [primaryColor, setPrimaryColor] = useState("white");
   const [secondaryColor, setSecondaryColor] = useState("white");
 
-  const [audioLoaded, setAudioLoaded] = useState(false);
-  const [acceptedToPlay, setAcceptedToPlay] = useState(false);
-  const [modalToPlay, setModalToPlay] = useState(true);
-  const [sound, setSound] = useState<Howl | null>(null);
-
-  const loadSound = () => {
-    if (!audioLoaded) {
-      setSound(
-        new Howl({
-          src: ["https://deimatch.com.br/evoce.mp3"],
-          // onend: () => {
-          //   setIsPlaying(false);
-          // },
-          autoplay: true,
-          preload: true,
-          volume: 0.5,
-          loop: true,
-        })
-      );
-      setAudioLoaded(true);
-    }
-  };
-
-  const play = () => {
-    setAcceptedToPlay(true);
-  };
-
-  const stop = () => {
-    setAcceptedToPlay(false);
-  };
-
-  useEffect(() => {
-    if (!sound) {
-      loadSound();
-    }
-  }, [sound]);
-
-  useEffect(() => {
-    if (sound) {
-      if (acceptedToPlay) {
-        sound?.play();
-      } else {
-        sound?.pause();
-      }
-    }
-  }, [acceptedToPlay]);
+  const [acceptedToPlay, setAcceptedToPlay] = useLocalStorage({
+    key: "acceptedToPlay",
+    defaultValue: false,
+  });
+  const [modalToPlay, setModalToPlay] = useLocalStorage({
+    key: "modalToPlay",
+    defaultValue: true,
+  });
 
   return (
     <LayoutContext.Provider
@@ -94,9 +50,6 @@ export const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
         setPrimaryColor,
         secondaryColor,
         setSecondaryColor,
-        sound,
-        play,
-        stop,
         acceptedToPlay,
         setAcceptedToPlay,
       }}
@@ -122,7 +75,7 @@ export const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
                 c={"#000"}
                 color="#F5D759"
                 onClick={() => {
-                  play();
+                  setAcceptedToPlay(true);
                   setModalToPlay(false);
                 }}
               >
@@ -133,7 +86,7 @@ export const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
                 color="#F5D759"
                 variant="transparent"
                 onClick={() => {
-                  stop();
+                  setAcceptedToPlay(false);
                   setModalToPlay(false);
                 }}
               >

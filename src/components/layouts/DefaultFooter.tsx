@@ -11,7 +11,7 @@ import { ButtonNav, listNav } from "./DefaultHeader";
 import { useLayoutContext } from "./LayoutProvider";
 
 export const DefaultFooter = () => {
-  const { sound, play, stop, acceptedToPlay } = useLayoutContext();
+  const { acceptedToPlay, setAcceptedToPlay } = useLayoutContext();
   return (
     <Container
       fluid
@@ -48,9 +48,9 @@ export const DefaultFooter = () => {
                   <ActionIcon
                     onClick={() => {
                       if (acceptedToPlay) {
-                        stop();
+                        setAcceptedToPlay(false);
                       } else {
-                        play();
+                        setAcceptedToPlay(true);
                       }
                     }}
                     color={"#E5C74D"}

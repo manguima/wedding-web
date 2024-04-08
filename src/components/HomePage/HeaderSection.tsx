@@ -34,7 +34,6 @@ export const HeaderSection = ({ index }: { index: number }) => {
       setPrimaryColor?.("white");
       setSecondaryColor?.("#E5C74D");
     }
-    console.log(currentSection);
   }, [currentSection]);
 
   // MENU TO VIEW
