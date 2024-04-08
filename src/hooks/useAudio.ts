@@ -15,6 +15,9 @@ export default function useAudio(srcPath: string) {
           acceptedToPlay && howl.play();
         });
       },
+      onunlock: () => {
+        acceptedToPlay && howl.play();
+      },
       loop: true,
       volume: 0.4,
       autoplay: true,
