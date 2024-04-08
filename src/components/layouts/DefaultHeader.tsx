@@ -43,16 +43,19 @@ export const DefaultHeader = ({
   const [sound] = useAudio("https://deimatch.com.br/evoce.mp3");
 
   useEffect(() => {
-    if (acceptedToPlay) {
-      sound?.play();
-    } else {
-      sound?.stop();
+    if (sound) {
+      if (acceptedToPlay) {
+        sound?.play();
+      } else {
+        sound?.stop();
+      }
     }
   }, [acceptedToPlay]);
 
   return (
     <Container
       fluid
+      id="headerMenu"
       p={{ base: "1.5rem", sm: "2rem" }}
       w={"100svw"}
       top={0}

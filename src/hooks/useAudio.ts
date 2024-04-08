@@ -10,13 +10,9 @@ export default function useAudio(srcPath: string) {
     const howl = new Howl({
       src: srcPath,
       onplayerror: (e, d) => {
-        console.log(e, d);
         howl.once("unlock", () => {
           acceptedToPlay && howl.play();
         });
-      },
-      onunlock: () => {
-        acceptedToPlay && howl.play();
       },
       loop: true,
       volume: 0.4,
