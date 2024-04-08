@@ -7,7 +7,6 @@ import {
   useEffect,
   useState,
 } from "react";
-import { Howl } from "howler";
 import { Button, Flex, Modal, Text } from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
 import useAudio from "@/hooks/useAudio";
@@ -42,6 +41,16 @@ export const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
     key: "modalToPlay",
     defaultValue: true,
   });
+
+  const [sound] = useAudio("https://deimatch.com.br/evoce.mp3");
+
+  useEffect(() => {
+    if (acceptedToPlay) {
+      sound?.play();
+    } else {
+      sound?.stop();
+    }
+  }, [acceptedToPlay]);
 
   return (
     <LayoutContext.Provider

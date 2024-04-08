@@ -6,9 +6,6 @@ import { KabukiRoll } from "@/components/KabukiRoll/KabukiRoll";
 import { CountDownSection } from "@/components/HomePage/CountDownSection";
 import { ConfirmInviteSection } from "@/components/HomePage/ConfirmInviteSection";
 import { BuildingSection } from "@/components/HomePage/BuildingSection";
-import { useEffect } from "react";
-import useAudio from "@/hooks/useAudio";
-import { useLayoutContext } from "@/components/layouts/LayoutProvider";
 
 export default function Home() {
   const pageSections = [
@@ -18,18 +15,6 @@ export default function Home() {
     ({ index }: { index: number }) => <ConfirmInviteSection index={index} />,
     ({ index }: { index: number }) => <BuildingSection index={index} />,
   ];
-
-  const [sound] = useAudio("https://deimatch.com.br/evoce.mp3");
-
-  const { acceptedToPlay } = useLayoutContext();
-
-  useEffect(() => {
-    if (acceptedToPlay) {
-      sound?.play();
-    } else {
-      sound?.stop();
-    }
-  }, [acceptedToPlay]);
 
   return (
     <Container fluid p={0} style={{ contain: "paint" }}>
