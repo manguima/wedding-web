@@ -19,7 +19,6 @@ export default function useAudio(srcPath: string) {
       },
       loop: true,
       volume: 0.4,
-      autoplay: true,
     });
     setAudio(howl);
 
