@@ -57,21 +57,6 @@ export const StepTwo = ({ index }: { index: number }) => {
       )
       .required("O número de telefone é obrigatório"),
     codeId: yup.string().required("O código ID é obrigatório"),
-    guests: yup
-      .array()
-      .of(
-        yup.object().shape({
-          name: yup.string(),
-        })
-      )
-      .test(
-        "at-least-one-guest",
-        "Pelo menos um convidado é necessário",
-        function (value) {
-          if (!value) return false; // Retorna falso se value for undefined
-          return value.length > 0 && value[0].name !== "";
-        }
-      ),
   });
 
   // GUEST FORM GENARATE
