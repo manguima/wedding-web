@@ -62,7 +62,6 @@ export const StepTwo = ({ index }: { index: number }) => {
       .of(
         yup.object().shape({
           name: yup.string(),
-          age: yup.boolean(),
         })
       )
       .test(
