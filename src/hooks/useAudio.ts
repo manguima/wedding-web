@@ -4,14 +4,17 @@ import { useLayoutContext } from "@/components/layouts/LayoutProvider";
 
 export default function useAudio(srcPath: string) {
   const [audio, setAudio] = useState<Howl>();
-  const { acceptedToPlay } = useLayoutContext();
+  const { acceptedToPlay, setAcceptedToPlay } = useLayoutContext();
 
   useEffect(() => {
     const howl = new Howl({
       src: srcPath,
       onplayerror: (e, d) => {
         howl.once("unlock", () => {
-          acceptedToPlay && howl.play();
+          if (acceptedToPlay) {
+            howl.play();
+            setAcceptedToPlay(true);
+          }
         });
       },
       loop: true,

@@ -11,8 +11,6 @@ import { LogoIcon } from "../icons/LogoIcon";
 import { useDisclosure, useHover } from "@mantine/hooks";
 import { useLayoutContext } from "./LayoutProvider";
 import { create } from "zustand";
-import useAudio from "@/hooks/useAudio";
-import { useEffect } from "react";
 
 type UniqueToView = {
   scrollIntoView: ({ alignment }?: any | undefined) => void;
@@ -38,19 +36,6 @@ export const DefaultHeader = ({
   const { primaryColor, secondaryColor, acceptedToPlay } = useLayoutContext();
 
   const [opened, { toggle }] = useDisclosure();
-
-  // MUSIC
-  const [sound] = useAudio("https://deimatch.com.br/evoce.mp3");
-
-  useEffect(() => {
-    if (sound) {
-      if (acceptedToPlay) {
-        sound?.play();
-      } else {
-        sound?.stop();
-      }
-    }
-  }, [acceptedToPlay]);
 
   return (
     <Container
