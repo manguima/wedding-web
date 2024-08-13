@@ -44,6 +44,38 @@ export const saveGuests = async (
     });
 };
 
+// FETCH PRODUCTS
+export const fetchProducts = async (
+  params: any,
+  onSuccess: (data: any) => void,
+  onError: (error: any) => void
+) => {
+  await api
+    .get("/products", { params })
+    .then((response: AxiosResponse) => {
+      return onSuccess(response);
+    })
+    .catch((e) => {
+      return onError(e);
+    });
+};
+
+// CREATE PAYMENT LINK (Asaas)
+export const createPaymentLink = async (
+  product: any,
+  onSuccess: (data: any) => void,
+  onError: (error: any) => void
+) => {
+  await api
+    .post("/payments/create", product)
+    .then((response: AxiosResponse) => {
+      return onSuccess(response);
+    })
+    .catch((e) => {
+      return onError(e);
+    });
+};
+
 // SAVE MESSAGE
 
 export const saveMessage = async (

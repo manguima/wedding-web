@@ -6,6 +6,8 @@ import { KabukiRoll } from "@/components/KabukiRoll/KabukiRoll";
 import { CountDownSection } from "@/components/HomePage/CountDownSection";
 import { ConfirmInviteSection } from "@/components/HomePage/ConfirmInviteSection";
 import { BuildingSection } from "@/components/HomePage/BuildingSection";
+import { DefaultHeader } from "@/components/layouts/DefaultHeader";
+import { DefaultFooter } from "@/components/layouts/DefaultFooter";
 
 export default function Home() {
   const pageSections = [
@@ -17,14 +19,18 @@ export default function Home() {
   ];
 
   return (
-    <Container fluid p={0} style={{ contain: "paint" }}>
-      <KabukiRoll
-        anchor="top"
-        offset={80}
-        sections={pageSections.map((Section, index) => {
-          return <Section key={index} index={index} />;
-        })}
-      />
-    </Container>
+    <>
+      <DefaultHeader />
+      <Container fluid p={0} style={{ contain: "paint" }}>
+        <KabukiRoll
+          anchor="top"
+          offset={80}
+          sections={pageSections.map((Section, index) => {
+            return <Section key={index} index={index} />;
+          })}
+        />
+      </Container>
+      <DefaultFooter />
+    </>
   );
 }

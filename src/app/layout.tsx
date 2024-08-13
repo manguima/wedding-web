@@ -53,11 +53,7 @@ export default function RootLayout({
       <body>
         <ZustandProvider>
           <MantineProvider theme={{ fontFamily: "Roboto, sans-serif" }}>
-            <LayoutProvider>
-              <DefaultHeader />
-              {children}
-              <DefaultFooter />
-            </LayoutProvider>
+            <LayoutProvider>{children}</LayoutProvider>
           </MantineProvider>
         </ZustandProvider>
       </body>

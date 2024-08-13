@@ -8,7 +8,13 @@ import {
   useState,
 } from "react";
 import { create } from "zustand";
-import { loadInvite, saveGuests, saveMessage } from "./rest_controllers";
+import {
+  createPaymentLink,
+  fetchProducts,
+  loadInvite,
+  saveGuests,
+  saveMessage,
+} from "./rest_controllers";
 import { useCurrentStep } from "@/components/HomePage/ConfirmInviteSection";
 
 // useCodeStore((state) => state.updateCode(response.data));
@@ -18,6 +24,8 @@ type ZustandProps = {
   validateCode: (code: string) => void;
   createNewGuests: (code: any) => void;
   createNewMessage: (data: any) => void;
+  fetchProductList: (params: any) => void;
+  buyProduct: (product: any) => void;
   inputLoading?: boolean;
   setInputLoading?: Dispatch<SetStateAction<boolean>>;
 };
@@ -26,6 +34,8 @@ const ZustandContext = createContext<ZustandProps>({
   validateCode: () => {},
   createNewGuests: () => {},
   createNewMessage: () => {},
+  fetchProductList: () => {},
+  buyProduct: () => {},
 });
 
 type CodeStoreProps = {
@@ -37,6 +47,9 @@ type CodeStoreProps = {
     active: boolean;
   };
   updateCode: (data: any) => void;
+
+  products: any[];
+  updateProducts: (data: any) => void;
 
   // ==================
   error: { section: number; message: string } | undefined;
@@ -64,6 +77,9 @@ export const useCodeStore = create<CodeStoreProps>((set) => ({
   // MESSAGE ERROR
   error: undefined,
   updateError: (data: any) => set(() => ({ error: data })),
+
+  products: [],
+  updateProducts: (data: any) => set(() => ({ products: data })),
 
   // FAMILY VALUES
   family: undefined,
@@ -98,6 +114,42 @@ export const ZustandProvider = ({ children }: { children: ReactNode }) => {
           message: "Código não existe ou está incorreto.",
         });
         return setInputLoading(false);
+      }
+    );
+  };
+
+  const buyProduct = (product: any) => {
+    setInputLoading(true);
+    createPaymentLink(
+      product,
+      (data) => {
+        window.location.href = data;
+        setInputLoading(false);
+      },
+      () => {
+        useCodeStore.getState().updateError({
+          section: 3,
+          message: "Erro ao criar link de pagamento.",
+        });
+        setInputLoading(false);
+      }
+    );
+  };
+
+  const fetchProductList = (params: any) => {
+    setInputLoading(true);
+    fetchProducts(
+      params,
+      (data) => {
+        useCodeStore.getState().updateProducts(data);
+        setInputLoading(false);
+      },
+      () => {
+        useCodeStore.getState().updateError({
+          section: 2,
+          message: "Erro ao carregar a lista de produtos.",
+        });
+        setInputLoading(false);
       }
     );
   };
@@ -157,6 +209,8 @@ export const ZustandProvider = ({ children }: { children: ReactNode }) => {
         inputLoading,
         setInputLoading,
         createNewMessage,
+        fetchProductList,
+        buyProduct,
       }}
     >
       {children}
