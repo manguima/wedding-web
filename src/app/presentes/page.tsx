@@ -91,7 +91,7 @@ export default () => {
       maxInstallmentCount: product.maxInstallmentCount,
     };
 
-    if (product.productLink) {
+    if (!!product.productLink) {
       router.push(product.productLink);
     } else {
       buyProduct(productData);

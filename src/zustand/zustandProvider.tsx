@@ -125,6 +125,7 @@ export const ZustandProvider = ({ children }: { children: ReactNode }) => {
     createPaymentLink(
       product,
       (data) => {
+        // console.log(data);
         window.location.href = data;
         setInputLoading(false);
       },
