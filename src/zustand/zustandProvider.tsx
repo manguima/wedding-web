@@ -4,6 +4,7 @@ import {
   ReactNode,
   SetStateAction,
   createContext,
+  useCallback,
   useContext,
   useState,
 } from "react";
@@ -16,6 +17,7 @@ import {
   saveMessage,
 } from "./rest_controllers";
 import { useCurrentStep } from "@/components/HomePage/ConfirmInviteSection";
+import { Product } from "./types/product.type";
 
 // useCodeStore((state) => state.updateCode(response.data));
 // console.log(useCodeStore((state) => state.code));
@@ -48,7 +50,7 @@ type CodeStoreProps = {
   };
   updateCode: (data: any) => void;
 
-  products: any[];
+  products: Partial<Product>[];
   updateProducts: (data: any) => void;
 
   // ==================
@@ -136,23 +138,26 @@ export const ZustandProvider = ({ children }: { children: ReactNode }) => {
     );
   };
 
-  const fetchProductList = (params: any) => {
-    setInputLoading(true);
-    fetchProducts(
-      params,
-      (data) => {
-        useCodeStore.getState().updateProducts(data);
-        setInputLoading(false);
-      },
-      () => {
-        useCodeStore.getState().updateError({
-          section: 2,
-          message: "Erro ao carregar a lista de produtos.",
-        });
-        setInputLoading(false);
-      }
-    );
-  };
+  const fetchProductList = useCallback(
+    async (params: any) => {
+      setInputLoading(true);
+      await fetchProducts(
+        params,
+        (data) => {
+          useCodeStore.getState().updateProducts(data);
+          setInputLoading(false);
+        },
+        () => {
+          useCodeStore.getState().updateError({
+            section: 2,
+            message: "Erro ao carregar a lista de produtos.",
+          });
+          setInputLoading(false);
+        }
+      );
+    },
+    [useCodeStore.getState().products]
+  );
 
   const createNewGuests = (data: any) => {
     setInputLoading(true);

@@ -59,32 +59,31 @@ export const categories = [
     id: "15",
     name: "Itens Personalizados",
   },
+];
+
+export const department = [
   {
-    id: "16",
+    id: "1",
     name: "Sala de estar",
   },
   {
-    id: "17",
+    id: "2",
     name: "Cozinha",
   },
   {
-    id: "18",
+    id: "3",
     name: "Lavanderia",
   },
   {
-    id: "19",
+    id: "4",
     name: "Quarto",
   },
   {
-    id: "20",
+    id: "5",
     name: "Banheiro",
   },
   {
-    id: "21",
+    id: "6",
     name: "Escritório",
-  },
-  {
-    id: "22",
-    name: "Departamento",
   },
 ];

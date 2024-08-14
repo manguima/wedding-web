@@ -11,6 +11,8 @@ import { LogoIcon } from "../icons/LogoIcon";
 import { useDisclosure, useHover } from "@mantine/hooks";
 import { useLayoutContext } from "./LayoutProvider";
 import { create } from "zustand";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 type UniqueToView = {
   scrollIntoView: ({ alignment }?: any | undefined) => void;
@@ -20,6 +22,7 @@ type StateToView = {
   home: UniqueToView;
   aboutus: UniqueToView;
   invite: UniqueToView;
+  gift?: any;
 };
 
 export const menuToView = create<StateToView>((set) => ({
@@ -124,19 +127,23 @@ export const ButtonNav = ({
   label: string;
   url: string;
   index: number;
-  action: () => void;
+  action?: any;
   primaryColor?: string | undefined;
   secondaryColor?: string | undefined;
 }) => {
-  const { hovered, ref } = useHover<HTMLButtonElement>();
+  const { hovered, ref } = useHover<HTMLAnchorElement>();
+
+  const router = useRouter();
 
   return (
     <UnstyledButton
       ref={ref}
       key={index}
+      component={Link}
+      href={url}
       fz={{ base: "unset", md: "1rem" }}
       fw={{ base: 300, md: 400 }}
-      onClick={action}
+      onClick={!!action && action}
       c={{ base: "white", md: hovered ? secondaryColor : primaryColor }}
     >
       {label}
@@ -159,6 +166,11 @@ export const listNav = [
     label: "Sobre Nós",
     url: "#aboutus",
     action: () => menuToView.getState().aboutus?.scrollIntoView(),
+  },
+  {
+    label: "Lista de Presentes",
+    url: "/presentes",
+    // action: () => menuToView.getState().aboutus?.scrollIntoView(),
   },
   // { label: "Lista de presentes", url: "#gifts" },
 ];

@@ -1,8 +1,11 @@
 "use client";
+import { ThankYouModal } from "@/components/Gifts/ThankYouModal";
 import { LogoIcon } from "@/components/icons/LogoIcon";
 import { useLayoutContext } from "@/components/layouts/LayoutProvider";
-import { categories } from "@/utils/categories";
+import { categories, department } from "@/utils/categories";
 import { convertToFloat, parseToFloat } from "@/utils/convertCurrency";
+import { debounceInput } from "@/utils/debounceInput";
+import { Product } from "@/zustand/types/product.type";
 import { useCodeStore, useZustandContext } from "@/zustand/zustandProvider";
 import {
   AspectRatio,
@@ -22,11 +25,14 @@ import {
   Title,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useMemo } from "react";
 
 export default () => {
   // GET VALUES HOME PROVIDER
   const { setPrimaryColor, setSecondaryColor } = useLayoutContext();
+
+  const router = useRouter();
 
   useEffect(() => {
     setPrimaryColor?.("white");
@@ -36,6 +42,7 @@ export default () => {
   const formProducts = useForm({
     initialValues: {
       categ: "0",
+      department: "0",
       name: "",
     },
   });
@@ -44,40 +51,87 @@ export default () => {
 
   const { products } = useCodeStore();
 
-  const groupedProducts = products.reduce((acc, product) => {
-    const category = product.category || "Outros";
-    if (!acc[category]) acc[category] = [];
-    acc[category].push(product);
-    return acc;
-  }, {} as Record<string, any[]>);
+  const groupedProducts = useMemo(() => {
+    return products.reduce((acc, product) => {
+      const category = product.category || "Todos";
+      if (!acc[category]) acc[category] = [];
+      acc[category].push(product);
+      return acc;
+    }, {} as Record<string, any[]>);
+  }, [products]);
 
   useEffect(() => {
     fetchProductList({
       where: {
-        category: {
-          contains:
-            formProducts.values.categ === "0" ? "" : formProducts.values.categ,
-        },
+        category:
+          formProducts.values.categ !== "0"
+            ? {
+                equals: formProducts.values.categ,
+              }
+            : undefined,
+        department:
+          formProducts.values.department !== "0"
+            ? {
+                equals: formProducts.values.department,
+              }
+            : undefined,
         name: {
           contains: !formProducts.values.name ? "" : formProducts.values.name,
         },
       },
     });
-  }, []);
+  }, [formProducts.values.categ, formProducts.values.department]);
 
-  const handleBuyClick = async (product: any) => {
+  const handleBuyClick = async (product: Product) => {
     const productData = {
       value: parseToFloat(convertToFloat(product.price)),
       description: product.description,
       id: product.id,
       name: product.name,
+      maxInstallmentCount: product.maxInstallmentCount,
     };
 
-    await buyProduct(productData);
+    if (product.productLink) {
+      router.push(product.productLink);
+    } else {
+      buyProduct(productData);
+    }
+  };
+
+  const handleInputChange = useCallback(
+    debounceInput((value: string) => {
+      fetchProductList({
+        where: {
+          category:
+            formProducts.values.categ !== "0"
+              ? {
+                  equals: formProducts.values.categ,
+                }
+              : undefined,
+          department:
+            formProducts.values.department !== "0"
+              ? {
+                  equals: formProducts.values.department,
+                }
+              : undefined,
+          name: {
+            contains: !value ? "" : value,
+          },
+        },
+      });
+    }, 1000),
+    []
+  );
+
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    formProducts.setFieldValue("name", value);
+    handleInputChange(value);
   };
 
   return (
     <Container p={0} fluid>
+      <ThankYouModal />
       <Flex direction={"column"} style={{ position: "relative" }}>
         <Flex
           gap={"2rem"}
@@ -86,7 +140,7 @@ export default () => {
             position: "absolute",
             zIndex: 2,
             background:
-              "linear-gradient(0deg, rgba(0,0,0,0) 0, rgba(0,0,0,0.7) 100%);",
+              "linear-gradient(0deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.7) 100%)",
           }}
           p={"2rem"}
           align={"center"}
@@ -134,9 +188,10 @@ export default () => {
                 <Flex gap={"2rem"}>
                   <TextInput
                     c={"white"}
-                    label="Nome"
                     placeholder="Nome do produto.."
+                    label="Nome"
                     {...formProducts.getInputProps("name")}
+                    onChange={onChange}
                   />
                   <Select
                     c={"white"}
@@ -149,6 +204,18 @@ export default () => {
                       })),
                     ]}
                     {...formProducts.getInputProps("categ")}
+                  />
+                  <Select
+                    c={"white"}
+                    label="Departamento"
+                    data={[
+                      { label: "Todos", value: "0" },
+                      ...department.map((dep) => ({
+                        label: dep.name,
+                        value: dep.id,
+                      })),
+                    ]}
+                    {...formProducts.getInputProps("department")}
                   />
                 </Flex>
               </Flex>
