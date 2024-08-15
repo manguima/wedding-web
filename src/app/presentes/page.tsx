@@ -53,7 +53,7 @@ export default () => {
 
   const groupedProducts = useMemo(() => {
     return products.reduce((acc, product) => {
-      const category = product.category || "Todos";
+      const category = product.category || "0";
       if (!acc[category]) acc[category] = [];
       acc[category].push(product);
       return acc;
@@ -149,7 +149,21 @@ export default () => {
           <Divider c={"white"} bg={"white"} orientation="vertical" />
           <Text c={"white"}>Lista de Presentes</Text>
         </Flex>
-        <Flex w={"100%"}>
+        <Flex hiddenFrom="sm" w={"100%"}>
+          <AspectRatio
+            style={{ pointerEvents: "none", userSelect: "none" }}
+            w={"100%"}
+            ratio={10 / 10}
+          >
+            <Image
+              style={{ filter: "brightness(60%)" }}
+              w={"100%"}
+              h={"100%"}
+              src={"/images/bg-product.png"}
+            />
+          </AspectRatio>
+        </Flex>
+        <Flex visibleFrom="sm" w={"100%"}>
           <AspectRatio
             style={{ pointerEvents: "none", userSelect: "none" }}
             w={"100%"}
@@ -163,7 +177,7 @@ export default () => {
             />
           </AspectRatio>
         </Flex>
-        <Flex px={"3rem"} w={"100%"} justify={"end"}>
+        <Flex px={{ base: "1rem", sm: "3rem" }} w={"100%"} justify={"end"}>
           <Box
             style={{
               borderRadius: "0.5rem",
@@ -174,7 +188,7 @@ export default () => {
             mt={"-100px"}
             bg={"#152814"}
           >
-            <Flex gap={"2rem"}>
+            <Flex direction={{ base: "column", sm: "row" }} gap={"2rem"}>
               <Flex direction={"column"} gap={"1rem"}>
                 <Flex direction={"column"}>
                   <Title c={"white"} order={2}>
@@ -185,7 +199,7 @@ export default () => {
                     filtre aqui.
                   </Text>
                 </Flex>
-                <Flex gap={"2rem"}>
+                <Flex direction={{ base: "column", sm: "row" }} gap={"2rem"}>
                   <TextInput
                     c={"white"}
                     placeholder="Nome do produto.."
@@ -220,6 +234,7 @@ export default () => {
                 </Flex>
               </Flex>
               <AspectRatio
+                visibleFrom="sm"
                 style={{ marginTop: "-200px" }}
                 w={"20rem"}
                 ratio={10 / 10}
@@ -232,9 +247,9 @@ export default () => {
 
         {Object.keys(groupedProducts).map((category) => (
           <Flex
-            p={"3rem"}
+            p={{ base: "1rem", sm: "3rem" }}
             gap={"2rem"}
-            mt={"3rem"}
+            mt={{ base: "1rem", sm: "3rem" }}
             direction={"column"}
             key={category}
           >
@@ -249,7 +264,7 @@ export default () => {
             <Grid>
               {groupedProducts[category].map((product: any) => (
                 <Grid.Col
-                  span={{ md: 3, sm: 3, xs: 6, lg: 2 }}
+                  span={{ md: 3, sm: 3, base: 6, lg: 2 }}
                   key={product.id}
                 >
                   <Card

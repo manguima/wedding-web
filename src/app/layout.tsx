@@ -11,7 +11,7 @@ import { ZustandProvider } from "@/zustand/zustandProvider";
 import "@mantine/carousel/styles.css";
 
 export const metadata: Metadata = {
-  title: "Deyse & Matheus",
+  title: "Deyse & Matheus - Casamento",
   description: "Você está convidado para o nosso grande dia!",
 };
 
