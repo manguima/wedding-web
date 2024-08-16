@@ -285,11 +285,7 @@ export default () => {
                           <Image
                             width={"100%"}
                             style={{ objectFit: "contain" }}
-                            src={`${
-                              process.env.NEXT_PUBLIC_URL_API
-                            }/media/uploads/${
-                              product?.imageUrl?.split("/")[2]
-                            }`}
+                            src={product?.imageUrl}
                             height={160}
                             alt={product.name}
                           />
