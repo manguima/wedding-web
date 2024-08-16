@@ -2,14 +2,20 @@ import { useCodeStore, useZustandContext } from "@/zustand/zustandProvider";
 import { useCurrentStep } from "../HomePage/ConfirmInviteSection";
 import { useState } from "react";
 import { Button, Flex, TextInput } from "@mantine/core";
+import { useGuestStore } from "@/zustand/slices/guestStore";
 
 export const StepOne = ({ index }: { index: number }) => {
-  const updateCurrentStep = useCurrentStep.getState().updateCurrentStep;
-  const currentStep = useCurrentStep.getState().currentStep;
+  const { currentStep, updateCurrentStep } = useCurrentStep();
 
-  const { validateCode } = useZustandContext();
+  const [onError, setOnError] = useState();
 
-  const onError = useCodeStore.getState().error;
+  const { validateCode } = useGuestStore();
+
+  const handleSubmit = () => {
+    validateCode(inputCode.toUpperCase()).then(() => {
+      updateCurrentStep(currentStep + 1);
+    });
+  };
 
   const [inputCode, setInputCode] = useState("");
 
@@ -33,13 +39,16 @@ export const StepOne = ({ index }: { index: number }) => {
                 textTransform: "uppercase",
               },
               label: { color: "#fff" },
+              description: {
+                color: "#ffffff99",
+              },
             }}
             size="lg"
             value={inputCode.toUpperCase()}
             onChange={(e) => setInputCode(e.currentTarget.value.toUpperCase())}
             label="Código do convite"
             description="Depois de confirmado o convite ainda é possível voltar e editá-lo usando o mesmo código."
-            error={onError?.section === index ? onError?.message : ""}
+            error={onError || ""}
           />
           <Flex w={"100%"} justify={"space-between"}>
             <Button
@@ -51,13 +60,7 @@ export const StepOne = ({ index }: { index: number }) => {
             >
               Cancelar
             </Button>
-            <Button
-              onClick={() => {
-                validateCode(inputCode.toUpperCase());
-              }}
-              c={"#000"}
-              color="#F5D759"
-            >
+            <Button onClick={handleSubmit} c={"#000"} color="#F5D759">
               Próximo
             </Button>
           </Flex>

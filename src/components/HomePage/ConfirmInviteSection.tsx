@@ -76,7 +76,7 @@ export const ConfirmInviteSection = ({ index }: { index: number }) => {
           h={"100%"}
         >
           <Image
-            style={{ filter: "brightness(50%)" }}
+            style={{ filter: "brightness(25%)" }}
             height={"100%"}
             fit="cover"
             src={"images/img_checkout_section.png"}
@@ -95,7 +95,7 @@ export const ConfirmInviteSection = ({ index }: { index: number }) => {
               transition: "all ease 0.4s",
               background:
                 currentStep !== 0 && !inputLoading
-                  ? "#00000099"
+                  ? "transparent"
                   : "transparent",
             }}
           >

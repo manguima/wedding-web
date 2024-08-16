@@ -143,7 +143,7 @@ export const ButtonNav = ({
       href={url}
       fz={{ base: "unset", md: "1rem" }}
       fw={{ base: 300, md: 400 }}
-      onClick={!!action && action}
+      // onClick={!!action ? action : undefined}
       c={{ base: "white", md: hovered ? secondaryColor : primaryColor }}
     >
       {label}

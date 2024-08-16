@@ -1,38 +1,50 @@
 "use client";
+import ProductFilter from "@/components/Gifts/ProductFilter";
+import ProductList from "@/components/Gifts/ProductList";
 import { ThankYouModal } from "@/components/Gifts/ThankYouModal";
 import { LogoIcon } from "@/components/icons/LogoIcon";
 import { useLayoutContext } from "@/components/layouts/LayoutProvider";
 import { categories, department } from "@/utils/categories";
 import { convertToFloat, parseToFloat } from "@/utils/convertCurrency";
 import { debounceInput } from "@/utils/debounceInput";
+import { useProductStore } from "@/zustand/slices/productStore";
 import { Product } from "@/zustand/types/product.type";
 import { useCodeStore, useZustandContext } from "@/zustand/zustandProvider";
 import {
   AspectRatio,
-  Badge,
   Box,
-  Button,
-  Card,
   Container,
   Divider,
   Flex,
-  Grid,
-  Group,
   Image,
-  Select,
   Text,
-  TextInput,
-  Title,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
+import { useInView } from "framer-motion";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+
+const takeSize = 100;
 
 export default () => {
-  // GET VALUES HOME PROVIDER
   const { setPrimaryColor, setSecondaryColor } = useLayoutContext();
+  const {
+    fetchProductList,
+    products,
+    buyProduct,
+    loadProductList,
+    updateProducts,
+    count,
+  } = useProductStore();
+
+  const [skip, setSkip] = useState(0);
+  const [currentCategoryIndex, setCurrentCategoryIndex] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
 
   const router = useRouter();
+
+  const ref = useRef(null);
+  const isInView = useInView(ref);
 
   useEffect(() => {
     setPrimaryColor?.("white");
@@ -47,27 +59,42 @@ export default () => {
     },
   });
 
-  const { fetchProductList, buyProduct } = useZustandContext();
-
-  const { products } = useCodeStore();
-
   const groupedProducts = useMemo(() => {
-    return products.reduce((acc, product) => {
-      const category = product.category || "0";
-      if (!acc[category]) acc[category] = [];
-      acc[category].push(product);
-      return acc;
-    }, {} as Record<string, any[]>);
+    if (Number(formProducts.values.department) > 0) {
+      return products.reduce((acc, product) => {
+        const department = product.department || "0";
+        if (!acc[department]) acc[department] = [];
+        acc[department].push(product);
+        return acc;
+      }, {} as Record<string, Partial<Product>[]>);
+    } else {
+      return products.reduce((acc, product) => {
+        const category = product.category || "0";
+        if (!acc[category]) acc[category] = [];
+        acc[category].push(product);
+        return acc;
+      }, {} as Record<string, Partial<Product>[]>);
+    }
   }, [products]);
 
-  useEffect(() => {
-    fetchProductList({
+  const handleProducts = async (
+    take: number = 100,
+    skip: number = 0,
+    currentCategoryIndex = 1
+  ) => {
+    await loadProductList({
+      skip,
+      take,
       where: {
         category:
           formProducts.values.categ !== "0"
             ? {
                 equals: formProducts.values.categ,
               }
+            : !formProducts.values.name &&
+              formProducts.values.department === "0" &&
+              formProducts.values.categ === "0"
+            ? { equals: currentCategoryIndex }
             : undefined,
         department:
           formProducts.values.department !== "0"
@@ -80,27 +107,38 @@ export default () => {
         },
       },
     });
-  }, [formProducts.values.categ, formProducts.values.department]);
 
-  const handleBuyClick = async (product: Product) => {
-    const productData = {
-      value: parseToFloat(convertToFloat(product.price)),
-      description: product.description,
-      id: product.id,
-      name: product.name,
-      maxInstallmentCount: product.maxInstallmentCount,
-    };
-
-    if (!!product.productLink) {
-      router.push(product.productLink);
-    } else {
-      buyProduct(productData);
+    if (
+      categories.length > currentCategoryIndex &&
+      formProducts.values.categ === "0"
+    ) {
+      setCurrentCategoryIndex(currentCategoryIndex + 1);
     }
   };
 
-  const handleInputChange = useCallback(
-    debounceInput((value: string) => {
+  useEffect(() => {
+    if (
+      categories.length > currentCategoryIndex &&
+      currentCategoryIndex !== 1 &&
+      formProducts.values.categ === "0"
+    ) {
+      if (count < 3) {
+        handleProducts(undefined, undefined, currentCategoryIndex + 1);
+      }
+    }
+  }, [count]);
+
+  useEffect(() => {
+    if (
+      formProducts.values.categ !== "0" ||
+      formProducts.values.name ||
+      formProducts.values.department !== "0"
+    ) {
+      setCurrentCategoryIndex(0);
+      updateProducts([]);
       fetchProductList({
+        skip: 0,
+        take: 100,
         where: {
           category:
             formProducts.values.categ !== "0"
@@ -115,18 +153,45 @@ export default () => {
                 }
               : undefined,
           name: {
-            contains: !value ? "" : value,
+            contains: !formProducts.values.name ? "" : formProducts.values.name,
           },
         },
       });
-    }, 1000),
-    []
-  );
+    }
+  }, [
+    formProducts.values.categ,
+    formProducts.values.name,
+    formProducts.values.department,
+  ]);
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    formProducts.setFieldValue("name", value);
-    handleInputChange(value);
+  useEffect(() => {
+    if (
+      isInView &&
+      categories.length > currentCategoryIndex &&
+      formProducts.values.categ === "0" &&
+      !formProducts.values.name &&
+      formProducts.values.department === "0"
+    ) {
+      handleProducts(takeSize, skip, currentCategoryIndex);
+    } else if (categories.length < currentCategoryIndex) {
+      setHasMore(false);
+    }
+  }, [isInView]);
+
+  const handleBuyClick = async (product: Partial<Product>) => {
+    const productData = {
+      value: parseToFloat(convertToFloat(product.price as number)),
+      description: product.description,
+      id: product.id,
+      name: product.name,
+      maxInstallmentCount: product.maxInstallmentCount,
+    };
+
+    if (!!product.productLink) {
+      router.push(product.productLink);
+    } else {
+      buyProduct(productData);
+    }
   };
 
   return (
@@ -142,12 +207,16 @@ export default () => {
             background:
               "linear-gradient(0deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.7) 100%)",
           }}
-          p={"2rem"}
+          p={"3rem"}
           align={"center"}
         >
-          <LogoIcon />
+          <Box w={"8rem"}>
+            <LogoIcon width={"100%"} />
+          </Box>
           <Divider c={"white"} bg={"white"} orientation="vertical" />
-          <Text c={"white"}>Lista de Presentes</Text>
+          <Text fz={"1.4rem"} c={"white"}>
+            Lista de Presentes
+          </Text>
         </Flex>
         <Flex hiddenFrom="sm" w={"100%"}>
           <AspectRatio
@@ -177,158 +246,21 @@ export default () => {
             />
           </AspectRatio>
         </Flex>
-        <Flex px={{ base: "1rem", sm: "3rem" }} w={"100%"} justify={"end"}>
-          <Box
-            style={{
-              borderRadius: "0.5rem",
-              position: "relative",
-              boxShadow: "0 4px 8px 0px #00000080",
+        <Flex direction={"column"}>
+          <ProductFilter
+            onFilterChange={(filters) => {
+              updateProducts([]);
+              formProducts.setFieldValue("categ", filters.categ);
+              formProducts.setFieldValue("name", filters.name);
+              formProducts.setFieldValue("department", filters.department);
             }}
-            p={"2rem"}
-            mt={"-100px"}
-            bg={"#152814"}
-          >
-            <Flex direction={{ base: "column", sm: "row" }} gap={"2rem"}>
-              <Flex direction={"column"} gap={"1rem"}>
-                <Flex direction={"column"}>
-                  <Title c={"white"} order={2}>
-                    Mais fácil de achar!
-                  </Title>
-                  <Text c={"#ffffff8a"}>
-                    Já sabe o que dar de presente ? Não perca tempo procurando,
-                    filtre aqui.
-                  </Text>
-                </Flex>
-                <Flex direction={{ base: "column", sm: "row" }} gap={"2rem"}>
-                  <TextInput
-                    c={"white"}
-                    placeholder="Nome do produto.."
-                    label="Nome"
-                    {...formProducts.getInputProps("name")}
-                    onChange={onChange}
-                  />
-                  <Select
-                    c={"white"}
-                    label="Categoria"
-                    data={[
-                      { label: "Todos", value: "0" },
-                      ...categories.map((categ) => ({
-                        label: categ.name,
-                        value: categ.id,
-                      })),
-                    ]}
-                    {...formProducts.getInputProps("categ")}
-                  />
-                  <Select
-                    c={"white"}
-                    label="Departamento"
-                    data={[
-                      { label: "Todos", value: "0" },
-                      ...department.map((dep) => ({
-                        label: dep.name,
-                        value: dep.id,
-                      })),
-                    ]}
-                    {...formProducts.getInputProps("department")}
-                  />
-                </Flex>
-              </Flex>
-              <AspectRatio
-                visibleFrom="sm"
-                style={{ marginTop: "-200px" }}
-                w={"20rem"}
-                ratio={10 / 10}
-              >
-                <Image src={"images/chair.png"} />
-              </AspectRatio>
-            </Flex>
-          </Box>
+          />
+          <ProductList
+            groupedProducts={groupedProducts}
+            onBuyClick={handleBuyClick}
+          />
+          {hasMore && <Flex ref={ref} w={"100%"} h={"2rem"}></Flex>}
         </Flex>
-
-        {Object.keys(groupedProducts).map((category) => (
-          <Flex
-            p={{ base: "1rem", sm: "3rem" }}
-            gap={"2rem"}
-            mt={{ base: "1rem", sm: "3rem" }}
-            direction={"column"}
-            key={category}
-          >
-            <Flex direction={"column"}>
-              <Divider />
-              <Text fw={700} size="xl" mt="md" mb="sm">
-                {categories.filter((value) => value.id == category)[0]?.name}
-              </Text>
-              <Divider />
-            </Flex>
-
-            <Grid>
-              {groupedProducts[category].map((product: any) => (
-                <Grid.Col
-                  span={{ md: 3, sm: 3, base: 6, lg: 2 }}
-                  key={product.id}
-                >
-                  <Card
-                    h={"100%"}
-                    shadow="sm"
-                    padding="lg"
-                    radius="md"
-                    withBorder
-                  >
-                    <Flex
-                      gap={"2rem"}
-                      justify={"space-between"}
-                      direction={"column"}
-                      h={"100%"}
-                    >
-                      <Flex direction={"column"}>
-                        <AspectRatio w={"100%"} ratio={10 / 10}>
-                          <Image
-                            width={"100%"}
-                            style={{ objectFit: "contain" }}
-                            src={product?.imageUrl}
-                            height={160}
-                            alt={product.name}
-                          />
-                        </AspectRatio>
-                        <Text fz={"1rem"} fw={800}>
-                          {product.name}
-                        </Text>
-                        <Text
-                          size="sm"
-                          style={{
-                            WebkitLineClamp: 3,
-                            overflow: "hidden",
-                            textOverflow: "ellipsis",
-                            display: "-webkit-box",
-                            WebkitBoxOrient: "vertical",
-                          }}
-                        >
-                          {product.description}
-                        </Text>
-                      </Flex>
-                      <Flex direction={"column"}>
-                        <Text fz={"1.7rem"} fw={900} size="lg" mt="md">
-                          R$ {convertToFloat(product.price)}
-                        </Text>
-                        <Button
-                          variant="light"
-                          color="#aee7b6"
-                          c={"dark"}
-                          fullWidth
-                          mt="md"
-                          radius="md"
-                          onClick={() => handleBuyClick(product)}
-                        >
-                          Presentear
-                        </Button>
-                      </Flex>
-                    </Flex>
-                  </Card>
-                </Grid.Col>
-              ))}
-            </Grid>
-          </Flex>
-        ))}
       </Flex>
     </Container>
   );

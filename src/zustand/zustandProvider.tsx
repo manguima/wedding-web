@@ -27,6 +27,7 @@ type ZustandProps = {
   createNewGuests: (code: any) => void;
   createNewMessage: (data: any) => void;
   fetchProductList: (params: any) => void;
+  loadProductList: (params: any) => void;
   buyProduct: (product: any) => void;
   inputLoading?: boolean;
   setInputLoading?: Dispatch<SetStateAction<boolean>>;
@@ -37,6 +38,7 @@ const ZustandContext = createContext<ZustandProps>({
   createNewGuests: () => {},
   createNewMessage: () => {},
   fetchProductList: () => {},
+  loadProductList: () => {},
   buyProduct: () => {},
 });
 
@@ -160,6 +162,30 @@ export const ZustandProvider = ({ children }: { children: ReactNode }) => {
     [useCodeStore.getState().products]
   );
 
+  const loadProductList = useCallback(
+    async (params: any) => {
+      setInputLoading(true);
+      await fetchProducts(
+        params,
+        (data) => {
+          // useCodeStore
+          //   .getState()
+          //   .updateProducts([...useCodeStore.getState().products, ...data]);
+          setInputLoading(false);
+          return data;
+        },
+        () => {
+          useCodeStore.getState().updateError({
+            section: 2,
+            message: "Erro ao carregar a lista de produtos.",
+          });
+          setInputLoading(false);
+        }
+      );
+    },
+    [useCodeStore.getState().products]
+  );
+
   const createNewGuests = (data: any) => {
     setInputLoading(true);
     saveGuests(
@@ -216,6 +242,7 @@ export const ZustandProvider = ({ children }: { children: ReactNode }) => {
         setInputLoading,
         createNewMessage,
         fetchProductList,
+        loadProductList,
         buyProduct,
       }}
     >
