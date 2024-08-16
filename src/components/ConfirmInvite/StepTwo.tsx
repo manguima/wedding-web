@@ -14,7 +14,7 @@ import { Carousel, Embla } from "@mantine/carousel";
 import { IconArrowLeft, IconArrowRight } from "@tabler/icons-react";
 import * as yup from "yup";
 import { useGuestStore } from "@/zustand/slices/guestStore";
-import { GuestProps } from "@/zustand/types/guest.type";
+import { Guest, GuestProps } from "@/zustand/types/guest.type";
 
 export const StepTwo = ({ index }: { index: number }) => {
   const { updateCurrentStep, currentStep } = useCurrentStep();
@@ -28,11 +28,6 @@ export const StepTwo = ({ index }: { index: number }) => {
     code: currentCode,
     loading: inputLoading,
   } = useGuestStore();
-
-  useEffect(() => {
-    console.log(familyData);
-  }, [familyData]);
-  // const { code: currentCode } = useCodeStore();
 
   useEffect(() => {
     if (!currentCode) updateCurrentStep(1);
@@ -62,48 +57,59 @@ export const StepTwo = ({ index }: { index: number }) => {
       codeKey: "",
       guests: [],
     },
+    onValuesChange: (value) => {
+      console.log(value);
+    },
     validate: yupResolver(validationSchema),
   });
 
   useEffect(() => {
-    console.log(familyData);
+    guestForm.reset();
+
+    guestForm.setFieldValue("codeKey", currentCode?.codeKey);
+    guestForm.setFieldValue("email", familyData?.email);
+    guestForm.setFieldValue("phone", familyData?.phone);
+
+    // Crie placeholders para todos os guests com base no total
+    const totalGuests = currentCode?.total || 0;
+    console.log(totalGuests);
+
+    guestForm.setValues({
+      guests: [...Array(totalGuests)].map((value, index) => ({
+        id: "",
+        name: "",
+        isHost: index === 0 ? true : false,
+        isOldYear: true,
+      })) as Guest[],
+    });
+
     if (familyData) {
-      guestForm.reset();
-      guestForm.setFieldValue("email", familyData.email);
-      guestForm.setFieldValue("phone", familyData.phone);
-      [...Array(currentCode?.total)].map((n, index) => {
-        if (index === 0) {
-          const host = familyData.guests?.filter((val: any) => val?.isHost);
-          guestForm.insertListItem(
-            `guests`,
-            {
-              id: host?.[index]?.id || "",
-              name: host?.[index]?.name || "",
-              isHost: index > 0 ? false : true,
-              isOldYear: true,
-            },
-            index
-          );
-        } else {
-          const noHost = familyData.guests?.filter((val: any) => !val?.isHost);
-          guestForm.insertListItem(
-            `guests`,
-            {
-              id: noHost?.[index - 1]?.id || "",
-              name: noHost?.[index - 1]?.name || "",
-              isHost:
-                Boolean(noHost?.[index - 1]?.isHost) || index > 0
-                  ? false
-                  : true,
-              isOldYear: noHost?.[index - 1]?.isOldYear,
-            },
-            index
-          );
-        }
+      // Preencha os placeholders com os dados existentes
+      const host: Guest = familyData.guests?.filter(
+        (val: any) => val?.isHost
+      )[0];
+      const noHost: Guest[] = familyData.guests?.filter(
+        (val: any) => !val?.isHost
+      );
+
+      guestForm.setFieldValue("guests.0", {
+        id: host?.id || "",
+        name: host?.name || "",
+        isHost: true,
+        isOldYear: true,
       });
 
-      guestForm.setFieldValue("codeKey", currentCode?.id);
+      for (let i = 1; i < totalGuests; i++) {
+        guestForm.setFieldValue(`guests.${i}`, {
+          id: noHost?.[i - 1]?.id || "",
+          name: noHost?.[i - 1]?.name || "",
+          isHost: false,
+          isOldYear: noHost?.[i - 1]?.isOldYear || true,
+        });
+      }
     }
+
+    console.log(guestForm.values);
   }, [familyData]);
 
   // GUEST SAVE
@@ -229,6 +235,14 @@ export const StepTwo = ({ index }: { index: number }) => {
                   withControls={false}
                 >
                   {[...Array(currentCode.total - 1)].map((n, index) => {
+                    if (!guestForm.values.guests?.[index + 1]) {
+                      guestForm.insertListItem("guests", {
+                        id: "",
+                        name: "",
+                        isHost: false,
+                        isOldYear: true,
+                      });
+                    }
                     return (
                       <Carousel.Slide key={index}>
                         <Flex direction={"column"} gap={"1rem"}>
