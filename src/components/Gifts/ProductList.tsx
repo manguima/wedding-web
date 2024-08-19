@@ -30,11 +30,19 @@ const ProductList = ({ groupedProducts, onBuyClick }: ProductListProps) => (
         </Flex>
 
         <Grid>
-          {groupedProducts[category].map((product) => (
-            <Grid.Col span={{ md: 3, sm: 3, base: 6, lg: 2 }} key={product.id}>
-              <ProductCard product={product} onBuyClick={onBuyClick} />
-            </Grid.Col>
-          ))}
+          {groupedProducts[category]
+            .filter(
+              (product) =>
+                product?.quantityAvailable && product?.quantityAvailable > 0
+            )
+            .map((product) => (
+              <Grid.Col
+                span={{ md: 3, sm: 3, base: 6, lg: 2 }}
+                key={product.id}
+              >
+                <ProductCard product={product} onBuyClick={onBuyClick} />
+              </Grid.Col>
+            ))}
         </Grid>
       </Flex>
     ))}
