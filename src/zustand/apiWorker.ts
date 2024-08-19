@@ -44,7 +44,7 @@ export const apiWorker = {
 
   createPaymentLink: async ({ data, onSuccess, onError }: ApiWorkerParams) => {
     try {
-      const response = await api.post("/payment/create", data);
+      const response = await api.post("/payments/create", data);
       onSuccess?.(response);
     } catch (error) {
       onError?.(error);
