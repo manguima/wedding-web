@@ -11,8 +11,22 @@ import { ZustandProvider } from "@/zustand/zustandProvider";
 import "@mantine/carousel/styles.css";
 
 export const metadata: Metadata = {
-  title: "Deyse & Matheus - Casamento",
+  title: "Deyse & Matheus",
   description: "Você está convidado para o nosso grande dia!",
+  openGraph: {
+    title: "Deyse & Matheus",
+    description: "Você está convidado para o nosso grande dia!",
+    url: "https://deimatch.com.br",
+    images: [
+      {
+        url: "https://deimatch.com.br/backgroundUrl.jpg",
+        width: 400,
+        height: 300,
+      },
+    ],
+    type: "website",
+  },
+  viewport: "width=device-width, initial-scale=1",
 };
 
 export default function RootLayout({
@@ -27,18 +41,6 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="mobile-web-app-capable" content="yes" />
-        <meta
-          property="og:image:url"
-          content="https://deimatch.com.br/backgroundUrl.jpg"
-        />
-        <meta property="og:title" content="Deyse & Matheus" />
-        <meta
-          property="og:description"
-          content="Você está convidado para o nosso grande dia!"
-        />
-        <meta property="og:image:width" content="400" />
-        <meta property="og:image:height" content="300" />
-        <meta property="og:type" content="website" />
         <link
           rel="preconnect"
           href="https://fonts.gstatic.com"
