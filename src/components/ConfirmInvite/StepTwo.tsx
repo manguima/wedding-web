@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useForm, yupResolver } from "@mantine/form";
 import {
   ActionIcon,
+  Alert,
   Button,
   Checkbox,
   Flex,
@@ -21,6 +22,8 @@ export const StepTwo = ({ index }: { index: number }) => {
 
   const [embla, setEmbla] = useState<Embla | null>(null);
   const [currentCarousel, setCurrentCarousel] = useState(0);
+
+  const [onError, setOnError] = useState<string>();
 
   const {
     guests: familyData,
@@ -115,9 +118,16 @@ export const StepTwo = ({ index }: { index: number }) => {
   // GUEST SAVE
 
   const handleSubmit = async () => {
-    await createNewGuests(guestForm.values).then(() => {
-      updateCurrentStep(currentStep + 1);
-    });
+    await createNewGuests(guestForm.values)
+      .then((data) => {
+        if (data.error) {
+          throw Error(data.error);
+        }
+        updateCurrentStep(currentStep + 1);
+      })
+      .catch((err) => {
+        setOnError(err?.message);
+      });
   };
 
   function isBoolean(value: boolean) {
@@ -128,7 +138,12 @@ export const StepTwo = ({ index }: { index: number }) => {
     index === currentStep &&
     !inputLoading && (
       <form onSubmit={guestForm.onSubmit(handleSubmit)}>
-        <Flex direction={"column"} p={{ base: "2rem", md: 0 }} miw={"25rem"}>
+        <Flex
+          direction={"column"}
+          p={{ base: "2rem", md: 0 }}
+          maw={"30rem"}
+          miw={"25rem"}
+        >
           <Flex w={"100%"} direction={"column"} gap={"1rem"}>
             <Text fw={700} fz={{ base: "1.4rem", md: "1.4rem" }} c={"#fff"}>
               Cadastro de convidado
@@ -290,24 +305,38 @@ export const StepTwo = ({ index }: { index: number }) => {
                 </Carousel>
               </Flex>
             )}
-            <Flex w={"100%"} justify={"space-between"}>
-              <Button
-                onClick={() => {
-                  updateCurrentStep(0);
-                }}
-                c={"#fff"}
-                variant="transparent"
-              >
-                Cancelar
-              </Button>
-              <Button
-                disabled={!guestForm.isValid()}
-                c={"#000"}
-                color="#F5D759"
-                type="submit"
-              >
-                Próximo
-              </Button>
+            <Flex gap={"1rem"} w={"100%"} direction={"column"}>
+              {onError && (
+                <Alert
+                  w={"100%"}
+                  variant="filled"
+                  styles={{ message: { wordBreak: "break-word" } }}
+                  color="red"
+                  title="Erro ao enviar dados."
+                >
+                  Aconteceu algum problema no lado do servidor, por favor, tente
+                  novamente mais tarde.
+                </Alert>
+              )}
+              <Flex w={"100%"} justify={"space-between"}>
+                <Button
+                  onClick={() => {
+                    updateCurrentStep(0);
+                  }}
+                  c={"#fff"}
+                  variant="transparent"
+                >
+                  Cancelar
+                </Button>
+                <Button
+                  disabled={!guestForm.isValid()}
+                  c={"#000"}
+                  color="#F5D759"
+                  type="submit"
+                >
+                  Próximo
+                </Button>
+              </Flex>
             </Flex>
           </Flex>
         </Flex>

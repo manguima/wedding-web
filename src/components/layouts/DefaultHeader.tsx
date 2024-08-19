@@ -131,19 +131,30 @@ export const ButtonNav = ({
   primaryColor?: string | undefined;
   secondaryColor?: string | undefined;
 }) => {
-  const { hovered, ref } = useHover<HTMLAnchorElement>();
+  const { hovered, ref } = useHover<HTMLButtonElement>();
 
   const router = useRouter();
 
-  return (
+  return action ? (
     <UnstyledButton
       ref={ref}
       key={index}
-      component={Link}
-      href={url}
       fz={{ base: "unset", md: "1rem" }}
       fw={{ base: 300, md: 400 }}
-      // onClick={!!action ? action : undefined}
+      onClick={!!action && action}
+      c={{ base: "white", md: hovered ? secondaryColor : primaryColor }}
+    >
+      {label}
+    </UnstyledButton>
+  ) : (
+    <UnstyledButton
+      ref={ref}
+      key={index}
+      fz={{ base: "unset", md: "1rem" }}
+      fw={{ base: 300, md: 400 }}
+      onClick={() => {
+        router.push(`http://localhost:3000/${url}`);
+      }}
       c={{ base: "white", md: hovered ? secondaryColor : primaryColor }}
     >
       {label}

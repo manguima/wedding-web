@@ -7,14 +7,21 @@ import { useGuestStore } from "@/zustand/slices/guestStore";
 export const StepOne = ({ index }: { index: number }) => {
   const { currentStep, updateCurrentStep } = useCurrentStep();
 
-  const [onError, setOnError] = useState();
+  const [onError, setOnError] = useState<string>();
 
   const { validateCode } = useGuestStore();
 
   const handleSubmit = () => {
-    validateCode(inputCode.toUpperCase()).then(() => {
-      updateCurrentStep(currentStep + 1);
-    });
+    validateCode(inputCode.toUpperCase())
+      .then((data) => {
+        if (data.error) {
+          throw Error(data.error);
+        }
+        updateCurrentStep(currentStep + 1);
+      })
+      .catch((err) => {
+        setOnError(err?.message);
+      });
   };
 
   const [inputCode, setInputCode] = useState("");

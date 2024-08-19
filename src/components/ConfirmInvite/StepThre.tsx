@@ -1,8 +1,8 @@
 import { useCodeStore, useZustandContext } from "@/zustand/zustandProvider";
 import { useCurrentStep } from "../HomePage/ConfirmInviteSection";
 import { useForm } from "@mantine/form";
-import { useEffect } from "react";
-import { Button, Flex, Text, Textarea } from "@mantine/core";
+import { useEffect, useState } from "react";
+import { Alert, Button, Flex, Text, Textarea } from "@mantine/core";
 import { useGuestStore } from "@/zustand/slices/guestStore";
 import { Guest } from "@/zustand/types/guest.type";
 
@@ -19,6 +19,8 @@ export const StepThre = ({ index }: { index: number }) => {
   const guestName = guests?.guests
     ?.filter((guest: Partial<Guest>) => guest?.isHost)?.[0]
     .name.split(" ")[0];
+
+  const [onError, setOnError] = useState<string>();
 
   // useEffect(() => {
   //   if (!useCodeStore.getState().code) {
@@ -51,9 +53,16 @@ export const StepThre = ({ index }: { index: number }) => {
   }, [guests]);
 
   const handleSubmit = () => {
-    createNewMessage(messageForm.values).then(() => {
-      updateCurrentStep(currentStep + 1);
-    });
+    createNewMessage(messageForm.values)
+      .then((data) => {
+        if (data.error) {
+          throw Error(data.error);
+        }
+        updateCurrentStep(currentStep + 1);
+      })
+      .catch((err) => {
+        setOnError(err?.message);
+      });
   };
 
   return (
@@ -81,8 +90,21 @@ export const StepThre = ({ index }: { index: number }) => {
             label="Mensagem"
             placeholder=""
           />
-          <Flex w={"100%"} justify={"space-between"}>
-            {/* <Button
+          <Flex direction={"column"} gap={"1rem"}>
+            {onError && (
+              <Alert
+                w={"100%"}
+                variant="filled"
+                styles={{ message: { wordBreak: "break-word" } }}
+                color="red"
+                title="Erro ao enviar mensagem."
+              >
+                Aconteceu algum problema no lado do servidor, por favor, tente
+                novamente mais tarde.
+              </Alert>
+            )}
+            <Flex w={"100%"} justify={"space-between"}>
+              {/* <Button
             onClick={() => {
               updateCurrentStep(index - 1);
             }}
@@ -91,9 +113,10 @@ export const StepThre = ({ index }: { index: number }) => {
           >
             Voltar
           </Button> */}
-            <Button type="submit" c={"#000"} color="#F5D759">
-              Próximo
-            </Button>
+              <Button type="submit" c={"#000"} color="#F5D759">
+                Próximo
+              </Button>
+            </Flex>
           </Flex>
         </Flex>
       </form>

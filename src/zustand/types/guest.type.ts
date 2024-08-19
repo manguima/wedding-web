@@ -39,9 +39,15 @@ export type MainState = {
   code: CodeProps;
   guests: GuestProps | null;
   loading: boolean;
-  validateCode: (code: string) => Promise<void>;
-  saveGuest: (guest: Partial<GuestProps>) => Promise<void>;
-  saveMessage: (message: Partial<MessageProps>) => Promise<void>;
+  validateCode: (code: string) => Promise<ApiResult>;
+  saveGuest: (guest: Partial<GuestProps>) => Promise<ApiResult>;
+  saveMessage: (message: Partial<MessageProps>) => Promise<ApiResult>;
   updateCode: (data: CodeProps) => void;
   updateGuests: (data: GuestProps) => void;
+};
+
+export type ApiResult = {
+  success: boolean;
+  response?: any;
+  error?: any;
 };

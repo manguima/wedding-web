@@ -1,6 +1,7 @@
 // src/stores/mainStore.ts
 import { create } from "zustand";
 import {
+  ApiResult,
   CodeProps,
   GuestProps,
   MainState,
@@ -22,58 +23,69 @@ export const useGuestStore = create<MainState>((set) => ({
   guests: null,
   loading: false,
 
-  validateCode: async (code: string) => {
+  validateCode: async (code: string): Promise<ApiResult> => {
     set({ loading: true });
 
-    await apiWorker
-      .loadInvite({
-        data: { codeKey: code },
-        onSuccess: (response) => {
-          set({ code: response, guests: response?.Family[0] });
-        },
-        onError: (error) => {
-          console.error("Código não existe ou está incorreto.", error);
-        },
-      })
-      .finally(() => {
-        set({ loading: false });
+    try {
+      const response: any = await new Promise((resolve, reject) => {
+        apiWorker.loadInvite({
+          data: { codeKey: code },
+          onSuccess: (response) => resolve(response),
+          onError: (error) => reject(error),
+        });
       });
+
+      set({ code: response, guests: response?.Family[0] });
+      return { success: true, response };
+    } catch (error) {
+      return { success: false, error: "Código não existe ou está incorreto." };
+    } finally {
+      set({ loading: false });
+    }
   },
 
-  saveGuest: async (guest: Partial<GuestProps>) => {
+  saveGuest: async (guest: Partial<GuestProps>): Promise<ApiResult> => {
     set({ loading: true });
 
-    await apiWorker
-      .saveGuests({
-        data: guest,
-        onSuccess: (response) => {
-          set({ guests: response });
-        },
-        onError: (error) => {
-          console.error("Erro ao salvar convidado.", error);
-        },
-      })
-      .finally(() => {
-        set({ loading: false });
+    try {
+      const response: any = await new Promise((resolve, reject) => {
+        apiWorker.saveGuests({
+          data: guest,
+          onSuccess: (response) => resolve(response),
+          onError: (error) => reject(error),
+        });
       });
+
+      set({ guests: response });
+      return { success: true, response };
+    } catch (error) {
+      return { success: false, error: "Erro ao salvar convidado." };
+    } finally {
+      set({ loading: false });
+    }
   },
 
-  saveMessage: async (message: Partial<MessageProps>) => {
+  saveMessage: async (message: Partial<MessageProps>): Promise<ApiResult> => {
     set({ loading: true });
 
-    await apiWorker
-      .saveMessage({
-        data: message,
-        onSuccess: (response) => {
-          // set((state) => ({ messages: [...state.messages, response] }));
-        },
-        onError: (error) => {
-          console.error("Erro ao salvar mensagem.", error);
-        },
-      })
-      .finally(() => {
-        set({ loading: false });
+    try {
+      const response = await new Promise((resolve, reject) => {
+        apiWorker.saveMessage({
+          data: message,
+          onSuccess: (response) => resolve(response),
+          onError: (error) => reject(error),
+        });
       });
+
+      // Exemplo de manipulação da resposta:
+      // set((state) => ({ messages: [...state.messages, response] }));
+
+      return { success: true, response };
+    } catch (error) {
+      return { success: false, error: "Erro ao salvar mensagem." };
+    } finally {
+      set({ loading: false });
+    }
   },
 
   updateCode: (data: CodeProps) => set({ code: data }),
