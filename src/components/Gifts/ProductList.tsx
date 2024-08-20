@@ -17,7 +17,7 @@ const ProductList = ({ groupedProducts, onBuyClick }: ProductListProps) => (
         w={"100%"}
         p={{ base: "1rem", sm: "3rem" }}
         gap={"2rem"}
-        mt={{ base: "1rem", sm: "3rem" }}
+        mt={{ base: "1rem", sm: "1.5rem" }}
         direction={"column"}
         key={category}
       >
