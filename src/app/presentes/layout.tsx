@@ -18,7 +18,6 @@ export const metadata: Metadata = {
     ],
     type: "website",
   },
-  viewport: "width=device-width, initial-scale=1",
 };
 
 export default ({ children }: { children: React.ReactNode }) => {

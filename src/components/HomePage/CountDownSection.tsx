@@ -7,7 +7,6 @@ import {
   Divider,
   Flex,
   Grid,
-  Image,
   Text,
   Title,
 } from "@mantine/core";
@@ -48,29 +47,30 @@ export const CountDownSection = ({ index }: { index: number }) => {
     seconds: 0,
   });
 
-  const IntervalDate = setInterval(() => {
-    const now = new Date().getTime();
+  useEffect(() => {
+    const IntervalDate = setInterval(() => {
+      const now = new Date().getTime();
 
-    const distance = countDownDate - now;
+      const distance = countDownDate - now;
 
-    changeDateTimeNow({
-      days: Math.floor(distance / (1000 * 60 * 60 * 24)),
-    });
-    changeDateTimeNow({
-      hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-    });
-    changeDateTimeNow({
-      minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
-    });
-    changeDateTimeNow({
-      seconds: Math.floor((distance % (1000 * 60)) / 1000),
-    });
+      changeDateTimeNow({
+        days: Math.floor(distance / (1000 * 60 * 60 * 24)),
+        hours: Math.floor(
+          (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+        ),
+        minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
+        seconds: Math.floor((distance % (1000 * 60)) / 1000),
+      });
 
-    // If the count down is finished, write some text
-    if (distance < 0) {
-      clearInterval(IntervalDate);
-    }
-  });
+      // If the countdown is finished, clear the interval
+      if (distance < 0) {
+        clearInterval(IntervalDate);
+      }
+    }, 1000);
+
+    // Clean up the interval on component unmount
+    return () => clearInterval(IntervalDate);
+  }, [countDownDate]);
 
   return (
     <Container
