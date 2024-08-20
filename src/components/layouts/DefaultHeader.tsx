@@ -153,7 +153,7 @@ export const ButtonNav = ({
       fz={{ base: "unset", md: "1rem" }}
       fw={{ base: 300, md: 400 }}
       onClick={() => {
-        router.push(`http://localhost:3000/${url}`);
+        router.push(url);
       }}
       c={{ base: "white", md: hovered ? secondaryColor : primaryColor }}
     >
