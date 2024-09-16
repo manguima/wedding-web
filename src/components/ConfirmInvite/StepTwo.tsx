@@ -60,9 +60,7 @@ export const StepTwo = ({ index }: { index: number }) => {
       codeKey: "",
       guests: [],
     },
-    onValuesChange: (value) => {
-      console.log(value);
-    },
+    onValuesChange: (value) => {},
     validate: yupResolver(validationSchema),
   });
 
@@ -75,7 +73,6 @@ export const StepTwo = ({ index }: { index: number }) => {
 
     // Crie placeholders para todos os guests com base no total
     const totalGuests = currentCode?.total || 0;
-    console.log(totalGuests);
 
     guestForm.setValues({
       guests: [...Array(totalGuests)].map((value, index) => ({
@@ -111,8 +108,6 @@ export const StepTwo = ({ index }: { index: number }) => {
         });
       }
     }
-
-    console.log(guestForm.values);
   }, [familyData]);
 
   // GUEST SAVE

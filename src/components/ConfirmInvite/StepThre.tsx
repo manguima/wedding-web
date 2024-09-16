@@ -16,9 +16,10 @@ export const StepThre = ({ index }: { index: number }) => {
     loading: inputLoading,
   } = useGuestStore();
 
-  const guestName = guests?.guests
-    ?.filter((guest: Partial<Guest>) => guest?.isHost)?.[0]
-    .name.split(" ")[0];
+  const guestName =
+    guests?.guests
+      ?.filter((guest: Partial<Guest>) => guest?.isHost)?.[0]
+      .name.split(" ")[0] || "";
 
   const [onError, setOnError] = useState<string>();
 
@@ -37,7 +38,6 @@ export const StepThre = ({ index }: { index: number }) => {
   });
 
   useEffect(() => {
-    console.log(guests);
     if (guests) {
       messageForm.reset();
       messageForm.setFieldValue(
@@ -77,7 +77,7 @@ export const StepThre = ({ index }: { index: number }) => {
           p={{ base: "2rem", md: 0 }}
         >
           <Text c={"#fff"} fz={"1.4rem"}>
-            Olá {guestName}! Deseja deixar uma mensagem para os noivos?
+            Olá {!!guestName}! Deseja deixar uma mensagem para os noivos?
           </Text>
           <Textarea
             styles={{
