@@ -55,6 +55,7 @@ export const StepTwo = ({ index }: { index: number }) => {
   // GUEST FORM GENARATE
   const guestForm = useForm<Partial<GuestProps>>({
     initialValues: {
+      id: "",
       email: "",
       phone: "",
       codeKey: "",
@@ -70,6 +71,7 @@ export const StepTwo = ({ index }: { index: number }) => {
     guestForm.setFieldValue("codeKey", currentCode?.codeKey);
     guestForm.setFieldValue("email", familyData?.email);
     guestForm.setFieldValue("phone", familyData?.phone);
+    guestForm.setFieldValue("id", familyData?.id);
 
     // Crie placeholders para todos os guests com base no total
     const totalGuests = currentCode?.total || 0;
