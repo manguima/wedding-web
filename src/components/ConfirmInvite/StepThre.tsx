@@ -77,7 +77,8 @@ export const StepThre = ({ index }: { index: number }) => {
           p={{ base: "2rem", md: 0 }}
         >
           <Text c={"#fff"} fz={"1.4rem"}>
-            Olá {!!guestName}! Deseja deixar uma mensagem para os noivos?
+            Olá {!!guestName && guestName}! Deseja deixar uma mensagem para os
+            noivos?
           </Text>
           <Textarea
             styles={{
