@@ -29,7 +29,7 @@ const ProductList = ({ groupedProducts, onBuyClick }: ProductListProps) => {
       <InputWrapper
         label="Visualizar como"
         mt={{ base: "3rem" }}
-        mb={{ base: "-1rem" }}
+        mb={{ base: "1rem", md: 0 }}
         c={"#00000080"}
         w={"100%"}
         px={{ base: "1rem", sm: "3rem" }}
