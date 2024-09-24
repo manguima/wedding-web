@@ -57,7 +57,7 @@ const ProductFilter = ({ onFilterChange }: ProductFilterProps) => {
               </Text>
             </Flex>
             <Flex direction={{ base: "column", sm: "row" }} gap={"2rem"}>
-              <TextInput
+              {/* <TextInput
                 c={"white"}
                 placeholder="Nome do produto.."
                 label="Nome"
@@ -75,7 +75,7 @@ const ProductFilter = ({ onFilterChange }: ProductFilterProps) => {
                   })),
                 ]}
                 {...form.getInputProps("categ")}
-              />
+              /> */}
               <Select
                 c={"white"}
                 label="Departamento"

@@ -259,7 +259,9 @@ export default () => {
             groupedProducts={groupedProducts}
             onBuyClick={handleBuyClick}
           />
-          {hasMore && <Flex ref={ref} w={"100%"} h={"2rem"}></Flex>}
+          {hasMore && (
+            <Flex mt={"-30rem"} ref={ref} w={"100%"} h={"2rem"}></Flex>
+          )}
         </Flex>
       </Flex>
     </Container>
