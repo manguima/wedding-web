@@ -42,9 +42,31 @@ export const apiWorker = {
     }
   },
 
+  fetchPayment: async ({ params, onSuccess, onError }: ApiWorkerParams) => {
+    try {
+      const response = await api.get("/payments", { params });
+      onSuccess?.(response);
+    } catch (error) {
+      onError?.(error);
+    }
+  },
+
+  createPaymentHistory: async ({
+    data,
+    onSuccess,
+    onError,
+  }: ApiWorkerParams) => {
+    try {
+      const response = await api.post("/payments", data);
+      onSuccess?.(response);
+    } catch (error) {
+      onError?.(error);
+    }
+  },
+
   createPaymentLink: async ({ data, onSuccess, onError }: ApiWorkerParams) => {
     try {
-      const response = await api.post("/payments/create", data);
+      const response = await api.post("/payments/link", data);
       onSuccess?.(response);
     } catch (error) {
       onError?.(error);

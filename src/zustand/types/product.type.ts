@@ -1,5 +1,3 @@
-import { department } from "./../../utils/categories";
-// Tipagem do Product
 export interface Product {
   id: string;
   name: string;
@@ -23,7 +21,6 @@ export interface Product {
   paymentHistories: PaymentHistory[];
 }
 
-// Tipagem do PaymentHistory
 export interface PaymentHistory {
   id: string;
   productId: string;
@@ -32,7 +29,9 @@ export interface PaymentHistory {
   dueDate: Date;
   paymentLink: string;
   status: string;
+  name?: string; // opcional
+  color?: string; // opcional
   createdAt: Date;
   updatedAt: Date;
-  product: Product;
+  product: Product; // relacionamento com Product
 }

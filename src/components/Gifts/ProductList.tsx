@@ -118,6 +118,7 @@ const ProductList = ({ groupedProducts, onBuyClick }: ProductListProps) => {
               <Table.Tbody>
                 {groupedProducts[category].map((product) => (
                   <ProductCard
+                    key={product.id}
                     onBuyClick={onBuyClick}
                     product={product}
                     type="table"
