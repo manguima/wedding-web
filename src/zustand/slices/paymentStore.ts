@@ -40,22 +40,17 @@ export const usePaymentStore = create<PaymentState>((set) => ({
 
   createPayment: async (data: any): Promise<FetchResult> => {
     try {
-      const response: Partial<PaymentHistory>[] = await new Promise(
-        (resolve, reject) => {
-          apiWorker.createPaymentHistory({
-            data,
-            onSuccess: (response) => resolve(response),
-            onError: (error) => reject(error),
-          });
-        }
-      );
+      const response = await apiWorker.createPaymentHistory({
+        data,
+        onSuccess: (res: any) => res,
+        onError: (err: any) => {
+          throw err; // Lançar erro se ocorrer falha
+        },
+      });
 
-      set((state) => ({
-        payments: [...state.payments, ...response],
-      }));
       return { success: true, response };
     } catch (error) {
-      return { success: false, error: "Erro ao carregar a lista de produtos." };
+      return { success: false, error: "Erro ao criar pagamento" };
     }
   },
 }));

@@ -23,12 +23,13 @@ export const ThankYouModal = () => {
   }, [params]);
 
   const handleClose = () => {
+    router.replace("/presentes");
     setOpened(false);
 
-    // Remover o fragmento do URL
-    const currentUrlWithoutHash =
-      window.location.pathname + window.location.search;
-    router.replace(currentUrlWithoutHash);
+    // // Remover o fragmento do URL
+    // const currentUrlWithoutHash =
+    //   window.location.pathname + window.location.search;
+    // router.replace(currentUrlWithoutHash);
   };
 
   return (
@@ -90,7 +91,7 @@ export const ThankYouModal = () => {
             color="#93BE98"
             variant="outline"
             c={"#93BE98"}
-            onClick={() => setOpened(false)}
+            onClick={() => handleClose()}
           >
             Fechar
           </Button>

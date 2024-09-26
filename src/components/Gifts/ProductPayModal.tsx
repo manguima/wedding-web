@@ -97,31 +97,32 @@ export const ProductPayModal = ({
   ) => {
     try {
       setLoadingCheckout(true);
-      // Se a quantidade permitir, criar o novo pagamento
       const paymentData = {
         productId: product.id,
         productName: product.name,
         amount: product.price,
-        dueDate: new Date(), // Definir a data de vencimento conforme necessário
-        // paymentLink: null, // Pode ser gerado via outra lógica
+        dueDate: new Date(),
         status: "physical",
-        name, // Nome opcional fornecido pelo usuário
+        name,
       };
+
       const createResult = await createPayment(paymentData);
       if (!createResult.success) {
-        throw createResult.error;
+        console.error("Erro ao criar pagamento físico:", createResult.error);
+        throw new Error(createResult.error || "Erro desconhecido");
       } else {
+        router.push("#agradecer");
         console.log(
           "Pagamento físico criado com sucesso:",
           createResult.response
         );
-        router.push("#agradecer");
       }
-    } catch (error) {
+    } catch (error: any) {
+      console.error("Erro no pagamento:", error);
       setErrorMessage(
-        "Erro ao criar pagamento físico, tente novamente mais tarde."
+        error.message ||
+          "Erro ao criar pagamento físico, tente novamente mais tarde."
       );
-      throw error;
     } finally {
       setLoadingCheckout(false);
       toggle();
@@ -214,31 +215,47 @@ export const ProductPayModal = ({
             />
           </Paper>
           <Flex direction={"column"}>
-            {
-              // Verificar se a quantidade de pagamentos físicos é menor do que a quantidade desejada
-              physicalPayments.length < (product.quantityDesired || 0) && (
-                <>
-                  <InputWrapper label="Deseja nos presentear comprando o produto você mesmo ? Clique no botão abaixo.">
-                    <Button
-                      mt={"1rem"}
-                      w={"100%"}
-                      fz={"1.2rem"}
-                      h={"4rem"}
-                      variant="outline"
-                      c={"#fff"}
-                      color="#fff"
-                      onClick={handlePhysicalGift}
-                    >
-                      Presentear Físico
-                    </Button>
-                  </InputWrapper>
+            <InputWrapper label="Deseja nos presentear comprando o produto você mesmo ? Clique no botão abaixo.">
+              <Button
+                mt={"1rem"}
+                w={"100%"}
+                fz={"1.2rem"}
+                h={"4rem"}
+                style={{ position: "relative" }}
+                variant="outline"
+                c={"#fff"}
+                color="#fff"
+                disabled={
+                  !(physicalPayments.length < (product.quantityDesired || 0))
+                }
+                onClick={handlePhysicalGift}
+              >
+                {!(
+                  physicalPayments.length < (product.quantityDesired || 0)
+                ) && (
+                  <Flex
+                    style={{
+                      top: 0,
+                      left: 0,
+                      position: "absolute",
+                      width: "100%",
+                      height: "100%",
+                    }}
+                    justify={"center"}
+                    align={"center"}
+                  >
+                    <Text fw={"bold"} c={"dark"}>
+                      Físico não disponível
+                    </Text>
+                  </Flex>
+                )}
+                Presentear Físico
+              </Button>
+            </InputWrapper>
 
-                  <Title order={3} ta={"center"}>
-                    ou
-                  </Title>
-                </>
-              )
-            }
+            <Title order={3} ta={"center"}>
+              ou
+            </Title>
 
             <InputWrapper>
               <Button
