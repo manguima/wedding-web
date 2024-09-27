@@ -40,10 +40,13 @@ export const StepTwo = ({ index }: { index: number }) => {
   const validationSchema = yup.object().shape({
     email: yup
       .string()
+      .transform((value) => value.trim())
       .email("Digite um e-mail válido")
       .required("O e-mail é obrigatório"),
     phone: yup
       .string()
+      .transform((value) => value.trim())
+
       .matches(
         /^(\+?([0-9]{2})[-. ]?)?(\(?[0-9]{2,3}\)?[-. ]?)?([0-9]{4,5})[-. ]?([0-9]{4})$/,
         "Número de telefone incorreto"
