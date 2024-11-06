@@ -81,4 +81,31 @@ export const apiWorker = {
       onError?.(error);
     }
   },
+
+  getStories: async ({ params, onSuccess, onError }: ApiWorkerParams) => {
+    try {
+      const response = await api.get("/stories", { params });
+      onSuccess?.(response);
+    } catch (error) {
+      onError?.(error);
+    }
+  },
+
+  saveStory: async ({ data, onSuccess, onError }: ApiWorkerParams) => {
+    try {
+      const binaryImage = Buffer.from(data.file.split(",")[1], "base64");
+      const formData = new FormData();
+      formData.append("file", new Blob([binaryImage], { type: "image/png" }));
+
+      const response = await api.post("/stories/create", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          codekey: data.codeKey,
+        },
+      });
+      onSuccess?.(response);
+    } catch (error) {
+      onError?.(error);
+    }
+  },
 };

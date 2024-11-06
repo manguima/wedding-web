@@ -1,6 +1,6 @@
 "use client";
 import { Container } from "@mantine/core";
-import { HeaderSection } from "../components/HomePage/HeaderSection";
+import { HeaderSection } from "../../components/HomePage/HeaderSection";
 import { AboutusSection } from "@/components/HomePage/AboutusSection";
 import { KabukiRoll } from "@/components/KabukiRoll/KabukiRoll";
 import { CountDownSection } from "@/components/HomePage/CountDownSection";

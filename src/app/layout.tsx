@@ -3,10 +3,7 @@ import "../styles/globals.css";
 
 import "@mantine/core/styles.css";
 import { ColorSchemeScript, MantineProvider } from "@mantine/core";
-import { DefaultHeader } from "@/components/layouts/DefaultHeader";
 import { responsive } from "@/utils/responsive";
-import { LayoutProvider } from "@/components/layouts/LayoutProvider";
-import { DefaultFooter } from "@/components/layouts/DefaultFooter";
 import { ZustandProvider } from "@/zustand/zustandProvider";
 import "@mantine/carousel/styles.css";
 
@@ -55,7 +52,7 @@ export default function RootLayout({
       <body>
         <ZustandProvider>
           <MantineProvider theme={{ fontFamily: "Roboto, sans-serif" }}>
-            <LayoutProvider>{children}</LayoutProvider>
+            {children}
           </MantineProvider>
         </ZustandProvider>
       </body>
