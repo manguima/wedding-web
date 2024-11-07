@@ -1,9 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useCamera } from "./useCameraHook";
 import { apiWorker } from "@/zustand/apiWorker";
 
 const allowedPhotoFormats = ["image/jpeg", "image/png"];
-const maxPhotoFiles = 10;
+const maxPhotoFiles = 1;
 
 export interface Photo {
   imageUrl: string;
@@ -11,13 +10,68 @@ export interface Photo {
 }
 
 export function useStockPhoto() {
-  const { hasCamera, deviceCount, changeDevice, stopCamera, isStarted } =
-    useCamera();
+  const [hasCamera, setHasCamera] = useState<boolean>(false);
+  const [deviceCount, setDeviceCount] = useState<number>(0);
+  const [tempPhoto, setTempPhoto] = useState<string>("");
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [isStarted, setIsStarted] = useState<boolean>(false);
+  const cameraRef = useRef<MediaStream | null>(null);
+
+  async function getVideoDevices(): Promise<MediaDeviceInfo[]> {
+    const devices = await navigator.mediaDevices.enumerateDevices();
+    return devices.filter((device) => device.kind === "videoinput");
+  }
+
+  async function getVideoStream(device: MediaDeviceInfo): Promise<MediaStream> {
+    const constraints = { video: { deviceId: device.deviceId } };
+    const stream = await navigator.mediaDevices.getUserMedia(constraints);
+    return stream;
+  }
+
+  useEffect(() => {
+    async function checkCameraAvailability() {
+      try {
+        const devices = await getVideoDevices();
+        setDeviceCount(devices.length);
+
+        setHasCamera(devices.length > 0);
+      } catch (error) {
+        setHasCamera(false);
+        setDeviceCount(0);
+      }
+    }
+
+    checkCameraAvailability();
+    return () => {
+      stopCamera();
+    };
+  }, []);
+
+  async function changeDevice(index: number) {
+    if (index >= 0 && index < deviceCount) {
+      const device = (await getVideoDevices())[index];
+      cameraRef.current = await getVideoStream(device);
+      setIsStarted(true);
+
+      return cameraRef.current;
+    }
+    return null;
+  }
+
+  async function stopCamera() {
+    if (cameraRef.current) {
+      cameraRef.current.getTracks().forEach((track) => {
+        track.stop();
+      });
+      cameraRef.current = null;
+      setIsStarted(false);
+    }
+  }
 
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [takePhotoOpen, setTakePhotoOpen] = useState(false);
   const [previewPhotoOpen, setPreviewPhotoOpen] = useState(false);
-  const [galleryOpen, setGalleryOpen] = useState(false);
+  const [tempSubmitOpen, setTempSubmitOpen] = useState(false);
   const [currentPhoto, setCurrentPhoto] = useState<string>("");
   const defaultDevice = 0;
 
@@ -67,9 +121,32 @@ export function useStockPhoto() {
     );
   }
 
-  const handleUploadPhotos = useCallback(async (photo: string) => {
+  function getCodeKey() {
+    return localStorage ? localStorage.getItem("codeKey") : null;
+  }
+
+  function saveCodeKey(codeKey: string) {
+    return new Promise<void>((resolve, reject) => {
+      // TODO: validate codeKey in the backend
+      // apiWorker.validateCodeKey({
+      //	 data: { codeKey },
+      //	 onSuccess: (response) => {
+      localStorage.setItem("codeKey", codeKey);
+      //	 resolve();
+      //	 },
+      //	 onError: (error) => {
+      //	 reject();
+      //	 },
+      // });
+      //
+      resolve();
+    });
+  }
+
+  const handleUploadPhotos = useCallback(async () => {
+    setIsSubmitting(true);
     return apiWorker.saveStory({
-      data: { file: photo, codeKey: "AAAA" },
+      data: { file: tempPhoto, codeKey: getCodeKey() },
       onSuccess: (response) => {
         handleGalleryClose();
       },
@@ -77,10 +154,10 @@ export function useStockPhoto() {
         handleGalleryClose();
       },
     });
-  }, []);
+  }, [tempPhoto, getCodeKey]);
 
   function handleOpenPhotoDialog() {
-    setGalleryOpen(false);
+    setTempSubmitOpen(false);
     if (hasCamera) {
       handleStartCamera();
       setTakePhotoOpen(true);
@@ -105,11 +182,11 @@ export function useStockPhoto() {
         const file = files[i];
         const reader = new FileReader();
         reader.onload = () => {
-          handleUploadPhotos(reader.result as string);
+          setTempPhoto(reader.result as string);
         };
         reader.readAsDataURL(file);
       }
-      setGalleryOpen(true);
+      setTempSubmitOpen(true);
     });
     fileInput.click();
   }
@@ -134,37 +211,38 @@ export function useStockPhoto() {
       context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
       const dataURL = canvas.toDataURL("image/png");
-      handleUploadPhotos(dataURL);
+      setTempPhoto(dataURL);
 
       handleCloseCamera();
     }
 
-    setGalleryOpen(true);
+    setTempSubmitOpen(true);
   }
 
   function handleCloseCamera() {
     setTakePhotoOpen(false);
     stopCamera();
-    if (photos && photos.length > 0) {
-      setGalleryOpen(true);
+    if (tempPhoto) {
+      setTempSubmitOpen(true);
     }
   }
 
   function handlePreviewPhoto(photo: string) {
-    setGalleryOpen(false);
+    setTempSubmitOpen(false);
     setCurrentPhoto(photo);
     setPreviewPhotoOpen(true);
   }
 
   function handlePreviewClose() {
-    setGalleryOpen(true);
     setPreviewPhotoOpen(false);
     setCurrentPhoto("");
   }
 
   function handleGalleryClose() {
-    setGalleryOpen(false);
+    setIsSubmitting(false);
+    setTempSubmitOpen(false);
     setCurrentPhoto("");
+    setTempPhoto("");
     reloadPhotos();
   }
 
@@ -188,8 +266,14 @@ export function useStockPhoto() {
     handlePreviewPhoto,
     handlePreviewClose,
 
-    galleryOpen,
+    tempSubmitOpen,
     handleGalleryClose,
     photos,
+
+    saveCodeKey,
+    getCodeKey,
+
+    tempPhoto,
+    isSubmitting,
   };
 }

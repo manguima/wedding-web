@@ -22,8 +22,6 @@ export function CameraModal({
         width: "100vw",
         height: "100vh",
         backgroundColor: "black",
-        userSelect: "none",
-        pointerEvents: "none",
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "flex-end",

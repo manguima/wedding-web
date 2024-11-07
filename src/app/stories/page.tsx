@@ -1,12 +1,13 @@
 "use client";
 
+import { ActionBar } from "@/components/Stories/ActionBar";
 import { PreviewPhotoDialog } from "@/components/Stories/camera/PreviewPhotoDialog";
+import { SubmitPhotoDialog } from "@/components/Stories/camera/SubmitPhotoDialog";
 import { TakePhotoDialog } from "@/components/Stories/camera/TakePhotoDialog";
-import {
-  Photo,
-  useStockPhoto,
-} from "@/components/Stories/camera/useStockPhotoHook";
-import { Button, Flex, Grid, Text } from "@mantine/core";
+import { useStockPhoto } from "@/components/Stories/camera/useStockPhotoHook";
+import { CodeKeyModal } from "@/components/Stories/CodeKeyModal";
+import { PhotoThumbnail } from "@/components/Stories/PhotoThumbnail";
+import { Flex, Grid } from "@mantine/core";
 
 export default function StoriesPage() {
   const {
@@ -25,6 +26,13 @@ export default function StoriesPage() {
     previewPhotoOpen,
     takePhotoOpen,
     videoRef,
+    saveCodeKey,
+    getCodeKey,
+    tempSubmitOpen,
+    handleGalleryClose,
+    handleUploadPhotos,
+    tempPhoto,
+    isSubmitting,
   } = useStockPhoto();
 
   function handlePhotoPreview(imageUrl: string) {
@@ -63,126 +71,20 @@ export default function StoriesPage() {
         videoRef={videoRef}
       />
 
+      <SubmitPhotoDialog
+        open={tempSubmitOpen}
+        onClose={handleGalleryClose}
+        onSubmit={handleUploadPhotos}
+        photo={tempPhoto}
+        isSubmitting={isSubmitting}
+      />
+
       <PreviewPhotoDialog
         onClose={handlePreviewClose}
         open={previewPhotoOpen}
         photo={currentPhoto}
       />
+      <CodeKeyModal saveCodeKey={saveCodeKey} getCodeKey={getCodeKey} />
     </Flex>
-  );
-}
-
-function ActionBar({ onPost }: { onPost: () => void }) {
-  return (
-    <Flex
-      style={{
-        position: "fixed",
-        zIndex: 1000,
-        bottom: 0,
-        left: 0,
-        right: 0,
-        background:
-          "linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.8) 100%)",
-        padding: "10px",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      <Button
-        style={{
-          color: "#ffde22",
-          backgroundColor: "transparent",
-          fontSize: "1.2rem",
-          borderColor: "#ffde22",
-          borderStyle: "solid",
-          borderWidth: "2px",
-        }}
-        onClick={onPost}
-      >
-        Poste seu momento
-      </Button>
-    </Flex>
-  );
-}
-
-function PhotoThumbnail({
-  photo,
-  onSelect,
-}: {
-  photo: Photo;
-  onSelect: () => void;
-}) {
-  return (
-    <Grid.Col
-      span={4}
-      key={photo.imageUrl}
-      onClick={onSelect}
-      style={{
-        paddingBottom: "40%",
-        position: "relative",
-        overflow: "hidden",
-        cursor: "pointer",
-      }}
-    >
-      <div
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          backgroundImage: `url(${photo.imageUrl})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          width: "100%",
-          height: "100%",
-          filter: "grayscale(1) blur(5px) ",
-          zIndex: 0,
-          opacity: 0.2,
-          userSelect: "none",
-          pointerEvents: "none",
-        }}
-      />
-      <img
-        src={photo.imageUrl}
-        alt="photo"
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
-          objectFit: "contain",
-          zIndex: 1,
-          userSelect: "none",
-          pointerEvents: "none",
-        }}
-      />
-      <Text
-        style={{
-          position: "absolute",
-          bottom: 0,
-          left: 0,
-          zIndex: 2,
-          color: "white",
-          padding: "5px",
-          width: "100%",
-          textAlign: "center",
-          fontSize: "1.1rem",
-          fontWeight: 700,
-          userSelect: "none",
-          pointerEvents: "none",
-          background:
-            "linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.8) 100%)",
-        }}
-      >
-        {new Date(photo.createdAt).toLocaleDateString("pt-BR", {
-          day: "2-digit",
-          month: "short",
-          year: "numeric",
-          hour: "2-digit",
-          minute: "2-digit",
-        })}{" "}
-      </Text>
-    </Grid.Col>
   );
 }

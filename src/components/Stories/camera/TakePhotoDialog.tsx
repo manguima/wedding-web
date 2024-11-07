@@ -46,7 +46,17 @@ export function TakePhotoDialog({
       open={open}
       actionButtons={
         <>
-          <Button size="large" onClick={onClose} style={{ color: "white" }}>
+          <Button
+            size="large"
+            onClick={onClose}
+            style={{
+              color: "#ffde22",
+              backgroundColor: "transparent",
+              borderColor: "#ffde22",
+              borderStyle: "solid",
+              borderWidth: "2px",
+            }}
+          >
             <IconArrowBack />
           </Button>
 
@@ -76,7 +86,13 @@ export function TakePhotoDialog({
                 size="large"
                 onClick={onDeviceCycle}
                 title={cameraDeviceCount.toString()}
-                style={{ color: "white" }}
+                style={{
+                  color: "#ffde22",
+                  backgroundColor: "transparent",
+                  borderColor: "#ffde22",
+                  borderStyle: "solid",
+                  borderWidth: "2px",
+                }}
               >
                 <IconCameraRotate />
               </Button>

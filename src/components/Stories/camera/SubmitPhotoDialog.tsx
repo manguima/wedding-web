@@ -1,19 +1,22 @@
 import { Button } from "@mantine/core";
 import { CameraModal } from "./CameraModal";
-import { IconCheck } from "@tabler/icons-react";
 import { useEffect } from "react";
 
-interface PreviewPhotoDialogProps {
+interface SubmitPhotoDialogProps {
   open: boolean;
   onClose: () => void;
   photo: string;
+  onSubmit: () => void;
+  isSubmitting: boolean;
 }
 
-export function PreviewPhotoDialog({
+export function SubmitPhotoDialog({
   open,
   photo,
   onClose,
-}: PreviewPhotoDialogProps) {
+  onSubmit,
+  isSubmitting,
+}: SubmitPhotoDialogProps) {
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape" && open) {
@@ -33,7 +36,8 @@ export function PreviewPhotoDialog({
         <>
           <Button
             size="large"
-            onClick={onClose}
+            onClick={onSubmit}
+            disabled={isSubmitting}
             style={{
               color: "#ffde22",
               backgroundColor: "transparent",
@@ -42,12 +46,33 @@ export function PreviewPhotoDialog({
               borderWidth: "2px",
             }}
           >
-            <IconCheck />
+            {isSubmitting ? "Enviando..." : "Enviar Foto"}
+          </Button>
+
+          <Button
+            size="large"
+            onClick={onClose}
+            disabled={isSubmitting}
+            style={{
+              color: "#ffde22",
+              backgroundColor: "transparent",
+              borderColor: "#ffde22",
+              borderStyle: "solid",
+              borderWidth: "2px",
+            }}
+          >
+            Cancelar
           </Button>
         </>
       }
     >
-      {photo && <img src={photo} alt="Preview" style={{ width: "100%" }} />}
+      {photo && (
+        <img
+          src={photo}
+          alt="Preview"
+          style={{ width: "100%", opacity: isSubmitting ? 0.5 : 1 }}
+        />
+      )}
     </CameraModal>
   );
 }
