@@ -2,19 +2,19 @@ import { useState } from "react";
 import { Modal, Button, TextInput, Text } from "@mantine/core";
 
 export function CodeKeyModal({
-  getCodeKey,
   saveCodeKey,
+  codeKey,
 }: {
-  getCodeKey: () => string | null;
   saveCodeKey: (codeKey: string) => Promise<void>;
+  codeKey: string | null;
 }) {
-  const [opened, setOpened] = useState(!getCodeKey());
-  const [codeKey, setCodeKey] = useState("");
+  const [opened, setOpened] = useState(true);
+  const [_codeKey, setCodeKey] = useState("");
   const [errorModal, setErrorModal] = useState(false);
 
   const handleSaveCodeKey = async () => {
     try {
-      await saveCodeKey(codeKey);
+      await saveCodeKey(_codeKey);
       setOpened(false);
     } catch {
       setErrorModal(true);
@@ -24,7 +24,7 @@ export function CodeKeyModal({
   return (
     <>
       <Modal
-        opened={opened}
+        opened={opened && !codeKey}
         onClose={() => {}}
         title="Acessar Stories"
         withCloseButton={false}
@@ -36,7 +36,7 @@ export function CodeKeyModal({
         <TextInput
           label="Digite o código de convite"
           placeholder="Digite o código de convite"
-          value={codeKey}
+          value={_codeKey}
           onChange={(event) => setCodeKey(event.currentTarget.value)}
         />
         <Button

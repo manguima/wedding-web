@@ -1,5 +1,8 @@
+"use client";
+
 import { useCallback, useEffect, useRef, useState } from "react";
 import { apiWorker } from "@/zustand/apiWorker";
+import { useLocalStorage } from "@mantine/hooks";
 
 const allowedPhotoFormats = ["image/jpeg", "image/png"];
 const maxPhotoFiles = 1;
@@ -121,17 +124,18 @@ export function useStockPhoto() {
     );
   }
 
-  function getCodeKey() {
-    return localStorage ? localStorage.getItem("codeKey") : null;
-  }
+  const [codeKey, setCodeKey] = useLocalStorage<string | null>({
+    key: "codeKey",
+    defaultValue: null,
+  });
 
-  function saveCodeKey(codeKey: string) {
+  function saveCodeKey(_codeKey: string) {
     return new Promise<void>((resolve, reject) => {
       // TODO: validate codeKey in the backend
       // apiWorker.validateCodeKey({
       //	 data: { codeKey },
       //	 onSuccess: (response) => {
-      localStorage.setItem("codeKey", codeKey);
+      setCodeKey(_codeKey);
       //	 resolve();
       //	 },
       //	 onError: (error) => {
@@ -146,7 +150,7 @@ export function useStockPhoto() {
   const handleUploadPhotos = useCallback(async () => {
     setIsSubmitting(true);
     return apiWorker.saveStory({
-      data: { file: tempPhoto, codeKey: getCodeKey() },
+      data: { file: tempPhoto, codeKey: codeKey },
       onSuccess: (response) => {
         handleGalleryClose();
       },
@@ -154,7 +158,7 @@ export function useStockPhoto() {
         handleGalleryClose();
       },
     });
-  }, [tempPhoto, getCodeKey]);
+  }, [tempPhoto]);
 
   function handleOpenPhotoDialog() {
     setTempSubmitOpen(false);
@@ -271,7 +275,7 @@ export function useStockPhoto() {
     photos,
 
     saveCodeKey,
-    getCodeKey,
+    codeKey,
 
     tempPhoto,
     isSubmitting,

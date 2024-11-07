@@ -27,12 +27,12 @@ export default function StoriesPage() {
     takePhotoOpen,
     videoRef,
     saveCodeKey,
-    getCodeKey,
     tempSubmitOpen,
     handleGalleryClose,
     handleUploadPhotos,
     tempPhoto,
     isSubmitting,
+    codeKey,
   } = useStockPhoto();
 
   function handlePhotoPreview(imageUrl: string) {
@@ -84,7 +84,7 @@ export default function StoriesPage() {
         open={previewPhotoOpen}
         photo={currentPhoto}
       />
-      <CodeKeyModal saveCodeKey={saveCodeKey} getCodeKey={getCodeKey} />
+      <CodeKeyModal saveCodeKey={saveCodeKey} codeKey={codeKey} />
     </Flex>
   );
 }
