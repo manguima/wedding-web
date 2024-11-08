@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { apiWorker } from "@/zustand/apiWorker";
 import { useLocalStorage } from "@mantine/hooks";
+import useCamera from "./useCameraHook";
 
 const allowedPhotoFormats = ["image/jpeg", "image/png"];
 const maxPhotoFiles = 1;
@@ -13,115 +14,69 @@ export interface Photo {
 }
 
 export function useStockPhoto() {
-  const [hasCamera, setHasCamera] = useState<boolean>(false);
-  const [deviceCount, setDeviceCount] = useState<number>(0);
-  const [tempPhoto, setTempPhoto] = useState<string>("");
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const [isStarted, setIsStarted] = useState<boolean>(false);
-  const cameraRef = useRef<MediaStream | null>(null);
-
-  async function getVideoDevices(): Promise<MediaDeviceInfo[]> {
-    const devices = await navigator.mediaDevices.enumerateDevices();
-    return devices.filter((device) => device.kind === "videoinput");
-  }
-
-  async function getVideoStream(device: MediaDeviceInfo): Promise<MediaStream> {
-    const constraints = { video: { deviceId: device.deviceId } };
-    const stream = await navigator.mediaDevices.getUserMedia(constraints);
-    return stream;
-  }
-
-  useEffect(() => {
-    async function checkCameraAvailability() {
-      try {
-        const devices = await getVideoDevices();
-        setDeviceCount(devices.length);
-
-        setHasCamera(devices.length > 0);
-      } catch (error) {
-        setHasCamera(false);
-        setDeviceCount(0);
-      }
-    }
-
-    checkCameraAvailability();
-    return () => {
-      stopCamera();
-    };
-  }, []);
-
-  async function changeDevice(index: number) {
-    if (index >= 0 && index < deviceCount) {
-      const device = (await getVideoDevices())[index];
-      cameraRef.current = await getVideoStream(device);
-      setIsStarted(true);
-
-      return cameraRef.current;
-    }
-    return null;
-  }
-
-  async function stopCamera() {
-    if (cameraRef.current) {
-      cameraRef.current.getTracks().forEach((track) => {
-        track.stop();
-      });
-      cameraRef.current = null;
-      setIsStarted(false);
-    }
-  }
+  const {
+    cameraRef,
+    changeDevice,
+    deviceCount,
+    getVideoStream,
+    hasCamera,
+    isStarted,
+    stopCamera,
+    getVideoDevices,
+  } = useCamera();
 
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [takePhotoOpen, setTakePhotoOpen] = useState(false);
   const [previewPhotoOpen, setPreviewPhotoOpen] = useState(false);
   const [tempSubmitOpen, setTempSubmitOpen] = useState(false);
   const [currentPhoto, setCurrentPhoto] = useState<string>("");
+  const [tempPhoto, setTempPhoto] = useState<string>("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const defaultDevice = 0;
 
-  const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [deviceIndex, setDeviceIndex] = useState<number>();
 
-  function getPhotos(): Promise<Photo[]> {
+  const getPhotos = (): Promise<Photo[]> => {
     return new Promise((resolve, reject) =>
       apiWorker.getStories({
         onSuccess: (response) => resolve(response),
         onError: (error) => reject(error),
       })
     );
-  }
+  };
 
-  function reloadPhotos() {
+  const reloadPhotos = () => {
     setTimeout(() => {
       getPhotos().then((response) => setPhotos(response));
     }, 1000);
-  }
+  };
 
   useEffect(() => {
     getPhotos().then((response) => setPhotos(response));
   }, []);
 
   const handleStartCamera = useCallback(async () => {
-    if (!videoRef.current) return;
-    videoRef.current.srcObject = await changeDevice(
-      deviceIndex === undefined ? defaultDevice : deviceIndex
-    );
-  }, [changeDevice, deviceIndex, defaultDevice]);
+    await getVideoStream();
+  }, [getVideoStream]);
+
+  // useEffect(() => {
+  //   handleStartCamera();
+
+  //   return () => {
+  //     stopCamera();
+  //   };
+  // }, [deviceIndex]);
 
   useEffect(() => {
-    handleStartCamera();
-
-    return () => {
-      stopCamera();
-    };
-    // The camera should only be started once, otherwise it will loop infinite rendering
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [deviceIndex]);
+    // Ensure camera availability is checked on mount
+    (async () => {
+      await getVideoDevices(); // Get camera devices and permissions
+    })();
+  }, []);
 
   function handleDeviceCycle() {
-    setDeviceIndex((prev) =>
-      prev === undefined ? 0 : (prev + 1) % deviceCount
-    );
+    changeDevice();
   }
 
   const [codeKey, setCodeKey] = useLocalStorage<string | null>({
@@ -132,12 +87,12 @@ export function useStockPhoto() {
   function saveCodeKey(_codeKey: string) {
     return new Promise<void>((resolve, reject) => {
       apiWorker.validateCodeKey({
-        data: { codeKey },
-        onSuccess: (response) => {
+        data: { codeKey: _codeKey },
+        onSuccess: () => {
           setCodeKey(_codeKey);
           resolve();
         },
-        onError: (error) => {
+        onError: () => {
           setCodeKey(null);
           reject();
         },
@@ -148,24 +103,21 @@ export function useStockPhoto() {
   const handleUploadPhotos = useCallback(async () => {
     setIsSubmitting(true);
     return apiWorker.saveStory({
-      data: { file: tempPhoto, codeKey: codeKey },
-      onSuccess: (response) => {
-        handleGalleryClose();
-      },
-      onError: (error) => {
-        handleGalleryClose();
-      },
+      data: { file: tempPhoto, codeKey },
+      onSuccess: handleGalleryClose,
+      onError: handleGalleryClose,
     });
   }, [tempPhoto]);
 
   function handleOpenPhotoDialog() {
     setTempSubmitOpen(false);
-    if (hasCamera) {
-      handleStartCamera();
-      setTakePhotoOpen(true);
-    } else {
-      handleAddPhotos();
-    }
+    handleStartCamera();
+    setTakePhotoOpen(true);
+    // if (hasCamera) {
+
+    // } else {
+    //   handleAddPhotos();
+    // }
   }
 
   function handleAddPhotos() {
@@ -195,7 +147,7 @@ export function useStockPhoto() {
 
   function handleTakePicture() {
     const canvas = canvasRef.current;
-    const video = videoRef.current;
+    const video = cameraRef.current;
 
     if (video && canvas) {
       const context = canvas.getContext("2d");
@@ -260,7 +212,7 @@ export function useStockPhoto() {
     hasCamera,
     isCameraStarted: isStarted,
     cameraDeviceCount: deviceCount,
-    videoRef,
+    videoRef: cameraRef,
     canvasRef,
 
     previewPhotoOpen,

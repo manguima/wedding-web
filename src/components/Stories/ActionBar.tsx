@@ -1,6 +1,12 @@
 import { Button, Flex } from "@mantine/core";
 
-export function ActionBar({ onPost }: { onPost: () => void }) {
+export function ActionBar({
+  onPost,
+  codeKey,
+}: {
+  onPost: () => void;
+  codeKey: string | null;
+}) {
   return (
     <Flex
       style={{
@@ -17,19 +23,21 @@ export function ActionBar({ onPost }: { onPost: () => void }) {
         justifyContent: "center",
       }}
     >
-      <Button
-        style={{
-          color: "#ffde22",
-          backgroundColor: "transparent",
-          borderColor: "#ffde22",
-          borderStyle: "solid",
-          borderWidth: "2px",
-          fontSize: "1.2rem",
-        }}
-        onClick={onPost}
-      >
-        Poste seu momento
-      </Button>
+      {codeKey && (
+        <Button
+          style={{
+            color: "#ffde22",
+            backgroundColor: "transparent",
+            borderColor: "#ffde22",
+            borderStyle: "solid",
+            borderWidth: "2px",
+            fontSize: "1.2rem",
+          }}
+          onClick={onPost}
+        >
+          Poste seu momento
+        </Button>
+      )}
     </Flex>
   );
 }

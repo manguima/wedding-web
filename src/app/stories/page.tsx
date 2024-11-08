@@ -57,12 +57,12 @@ export default function StoriesPage() {
         ))}
       </Grid>
 
-      <ActionBar onPost={() => handleOpenPhotoDialog()} />
+      <ActionBar codeKey={codeKey} onPost={() => handleOpenPhotoDialog()} />
 
       <TakePhotoDialog
         cameraDeviceCount={cameraDeviceCount}
         canvasRef={canvasRef}
-        hasCamera={hasCamera}
+        hasCamera={!!hasCamera}
         isCameraStarted={isCameraStarted}
         onClose={handleCloseCamera}
         onDeviceCycle={handleDeviceCycle}

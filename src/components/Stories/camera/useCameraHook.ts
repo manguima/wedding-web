@@ -1,62 +1,85 @@
-import { useEffect, useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
-export function useCamera() {
-  const [hasCamera, setHasCamera] = useState<boolean>(false);
+interface UseCameraReturn {
+  hasCamera: boolean | null;
+  deviceCount: number;
+  cameraRef: React.RefObject<HTMLVideoElement>;
+  changeDevice: () => void;
+  stopCamera: () => void;
+  getVideoDevices: () => Promise<MediaDeviceInfo[]>;
+  getVideoStream: () => Promise<void>;
+  isStarted: boolean;
+}
+
+const useCamera = (): UseCameraReturn => {
+  const [hasCamera, setHasCamera] = useState<boolean | null>(null);
   const [deviceCount, setDeviceCount] = useState<number>(0);
-
+  const [currentDeviceIndex, setCurrentDeviceIndex] = useState<number>(0);
   const [isStarted, setIsStarted] = useState<boolean>(false);
-  const cameraRef = useRef<MediaStream | null>(null);
+  const cameraRef = useRef<HTMLVideoElement>(null);
+  const streamRef = useRef<MediaStream | null>(null);
 
-  async function getVideoDevices(): Promise<MediaDeviceInfo[]> {
+  // Fetch available video input devices (cameras)
+  const getVideoDevices = async (): Promise<MediaDeviceInfo[]> => {
     const devices = await navigator.mediaDevices.enumerateDevices();
-    return devices.filter((device) => device.kind === "videoinput");
-  }
+    const videoDevices = devices.filter(
+      (device) => device.kind === "videoinput"
+    );
+    setDeviceCount(videoDevices.length);
+    return videoDevices;
+  };
 
-  async function getVideoStream(device: MediaDeviceInfo): Promise<MediaStream> {
-    const constraints = { video: { deviceId: device.deviceId } };
-    const stream = await navigator.mediaDevices.getUserMedia(constraints);
-    return stream;
-  }
-
-  useEffect(() => {
-    async function checkCameraAvailability() {
-      try {
-        const devices = await getVideoDevices();
-        setDeviceCount(devices.length);
-
-        setHasCamera(devices.length > 0);
-      } catch (error) {
+  // Start camera feed with the selected device
+  const getVideoStream = async () => {
+    try {
+      const videoDevices = await getVideoDevices();
+      if (videoDevices.length === 0) {
         setHasCamera(false);
-        setDeviceCount(0);
+        console.error("No camera devices found.");
+        return;
       }
-    }
 
-    checkCameraAvailability();
-    return () => {
-      stopCamera();
-    };
-  }, []);
+      const selectedDeviceId =
+        videoDevices[currentDeviceIndex % videoDevices.length].deviceId;
+      const mediaStream = await navigator.mediaDevices.getUserMedia({
+        video: { deviceId: selectedDeviceId },
+      });
 
-  async function changeDevice(index: number) {
-    if (index >= 0 && index < deviceCount) {
-      const device = (await getVideoDevices())[index];
-      cameraRef.current = await getVideoStream(device);
+      streamRef.current = mediaStream;
+      setHasCamera(true);
       setIsStarted(true);
 
-      return cameraRef.current;
+      if (cameraRef.current) {
+        cameraRef.current.srcObject = mediaStream;
+      }
+    } catch (error) {
+      console.error("Error accessing camera:", error);
+      setHasCamera(false);
     }
-    return null;
-  }
+  };
 
-  async function stopCamera() {
-    if (cameraRef.current) {
-      cameraRef.current.getTracks().forEach((track) => {
-        track.stop();
-      });
-      cameraRef.current = null;
-      setIsStarted(false);
+  // Stop the camera feed
+  const stopCamera = () => {
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach((track) => track.stop());
+      streamRef.current = null;
     }
-  }
+    setIsStarted(false);
+  };
+
+  // Change to the next video device (camera)
+  const changeDevice = () => {
+    stopCamera();
+    setCurrentDeviceIndex((prevIndex) => prevIndex + 1);
+  };
+
+  // Restart camera feed when device index changes
+  useEffect(() => {
+    if (isStarted) {
+      getVideoStream();
+    }
+    return () => stopCamera();
+  }, [currentDeviceIndex]);
 
   return {
     hasCamera,
@@ -68,4 +91,6 @@ export function useCamera() {
     getVideoStream,
     isStarted,
   };
-}
+};
+
+export default useCamera;
