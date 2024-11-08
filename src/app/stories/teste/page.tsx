@@ -83,7 +83,7 @@ export default function CameraComponent() {
           <button onClick={takePicture}>Take Picture</button>
           <div>
             <video ref={videoRef} autoPlay playsInline />
-            <canvas ref={canvasRef} style={{ display: "none" }} />
+            <canvas ref={canvasRef} style={{}} />
           </div>
         </div>
       )}
