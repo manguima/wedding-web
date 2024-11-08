@@ -58,9 +58,23 @@ export function CodeKeyModal({
         opened={errorModal}
         onClose={() => setErrorModal(false)}
         title="Código inválido"
+        styles={{
+          content: { background: "#000" },
+          header: { background: "#000", color: "#fff" },
+        }}
       >
         <Text color="red">Código de convite inválido, tente novamente</Text>
-        <Button onClick={() => setErrorModal(false)} mt="md">
+        <Button
+          onClick={() => setErrorModal(false)}
+          mt="md"
+          style={{
+            color: "#ffde22",
+            backgroundColor: "transparent",
+            borderColor: "#ffde22",
+            borderStyle: "solid",
+            borderWidth: "2px",
+          }}
+        >
           Close
         </Button>
       </Modal>

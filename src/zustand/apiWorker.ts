@@ -108,4 +108,13 @@ export const apiWorker = {
       onError?.(error);
     }
   },
+
+  validateCodeKey: async ({ data, onSuccess, onError }: ApiWorkerParams) => {
+    try {
+      const response = await api.post("/invite/validate", data);
+      onSuccess?.(response);
+    } catch (error) {
+      onError?.(error);
+    }
+  },
 };

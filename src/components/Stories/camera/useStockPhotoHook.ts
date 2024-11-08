@@ -131,19 +131,17 @@ export function useStockPhoto() {
 
   function saveCodeKey(_codeKey: string) {
     return new Promise<void>((resolve, reject) => {
-      // TODO: validate codeKey in the backend
-      // apiWorker.validateCodeKey({
-      //	 data: { codeKey },
-      //	 onSuccess: (response) => {
-      setCodeKey(_codeKey);
-      //	 resolve();
-      //	 },
-      //	 onError: (error) => {
-      //	 reject();
-      //	 },
-      // });
-      //
-      resolve();
+      apiWorker.validateCodeKey({
+        data: { codeKey },
+        onSuccess: (response) => {
+          setCodeKey(_codeKey);
+          resolve();
+        },
+        onError: (error) => {
+          setCodeKey(null);
+          reject();
+        },
+      });
     });
   }
 
