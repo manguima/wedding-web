@@ -22,7 +22,6 @@ export function useStockPhoto() {
     hasCamera,
     isStarted,
     stopCamera,
-    getVideoDevices,
   } = useCamera();
 
   const [photos, setPhotos] = useState<Photo[]>([]);
@@ -60,20 +59,13 @@ export function useStockPhoto() {
     await getVideoStream();
   }, [getVideoStream]);
 
-  // useEffect(() => {
-  //   handleStartCamera();
-
-  //   return () => {
-  //     stopCamera();
-  //   };
-  // }, [deviceIndex]);
-
   useEffect(() => {
-    // Ensure camera availability is checked on mount
-    (async () => {
-      await getVideoDevices(); // Get camera devices and permissions
-    })();
-  }, []);
+    handleStartCamera();
+
+    return () => {
+      stopCamera();
+    };
+  }, [deviceIndex]);
 
   function handleDeviceCycle() {
     changeDevice();
@@ -111,13 +103,12 @@ export function useStockPhoto() {
 
   function handleOpenPhotoDialog() {
     setTempSubmitOpen(false);
-    handleStartCamera();
-    setTakePhotoOpen(true);
-    // if (hasCamera) {
-
-    // } else {
-    //   handleAddPhotos();
-    // }
+    if (hasCamera) {
+      handleStartCamera();
+      setTakePhotoOpen(true);
+    } else {
+      handleAddPhotos();
+    }
   }
 
   function handleAddPhotos() {
