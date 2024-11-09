@@ -47,6 +47,8 @@ export const CountDownSection = ({ index }: { index: number }) => {
     seconds: 0,
   });
 
+  const hasPassed = countDownDate - new Date().getTime() < 0;
+
   useEffect(() => {
     const IntervalDate = setInterval(() => {
       const now = new Date().getTime();
@@ -141,66 +143,94 @@ export const CountDownSection = ({ index }: { index: number }) => {
               p={{ base: "2rem", md: 0 }}
               gutter={{ base: "1rem", md: 0 }}
             >
-              {[...Array(4)].map((a, index) => (
+              {hasPassed && (
                 <Grid.Col
                   key={index}
-                  span={{ base: 6, md: 3 }}
-                  style={{
-                    transition: "all ease 0.2s",
-                    transitionDelay: `${index * 0.2}s`,
-                    transform: isInView
-                      ? "translateY(0)"
-                      : "translateY(-100px)",
-                    opacity: isInView ? 1 : 0,
-                  }}
+                  span={{ base: 12 }}
+                  style={{ marginTop: 20 }}
                 >
-                  <AspectRatio w={"100%"} ratio={10 / 10}>
-                    <Flex w={"100%"} h={"100%"} p={"2.5rem"}>
-                      <Center
-                        w={"100%"}
-                        h={"100%"}
-                        style={{
-                          border: "0.2rem solid #000000",
-                          borderRadius: "1rem",
-                          rotate: "45deg",
-                        }}
-                      >
-                        <Flex
-                          direction={"column"}
-                          align={"center"}
-                          justify={"center"}
-                          style={{ rotate: "-45deg" }}
-                        >
-                          <Text
-                            lh={{ base: "2rem", md: "2rem" }}
-                            fw={500}
-                            fz={{ base: "2rem", md: "2.4rem" }}
-                          >
-                            {
-                              {
-                                0: dateTimeNow.days,
-                                1: dateTimeNow.hours,
-                                2: dateTimeNow.minutes,
-                                3: dateTimeNow.seconds,
-                              }[index]
-                            }
-                          </Text>
-                          <Text fw={500} fz={{ base: "1rem", md: "1.2rem" }}>
-                            {
-                              {
-                                0: "DIAS",
-                                1: "HORAS",
-                                2: "MINUTOS",
-                                3: "SEGUNDOS",
-                              }[index]
-                            }
-                          </Text>
-                        </Flex>
-                      </Center>
-                    </Flex>
+                  <AspectRatio w={"100%"} ratio={16 / 9}>
+                    <iframe
+                      width="100%"
+                      height="100%"
+                      src="https://www.youtube.com/embed/pFg0FCx4FGs?si=qdHoad7xU9qQSW7F"
+                      title="YouTube video player"
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      allowFullScreen
+                      referrerPolicy="strict-origin-when-cross-origin"
+                    ></iframe>
                   </AspectRatio>
                 </Grid.Col>
-              ))}
+              )}
+
+              {!hasPassed && (
+                <>
+                  {[...Array(4)].map((a, index) => (
+                    <Grid.Col
+                      key={index}
+                      span={{ base: 6, md: 3 }}
+                      style={{
+                        transition: "all ease 0.2s",
+                        transitionDelay: `${index * 0.2}s`,
+                        transform: isInView
+                          ? "translateY(0)"
+                          : "translateY(-100px)",
+                        opacity: isInView ? 1 : 0,
+                      }}
+                    >
+                      <AspectRatio w={"100%"} ratio={10 / 10}>
+                        <Flex w={"100%"} h={"100%"} p={"2.5rem"}>
+                          <Center
+                            w={"100%"}
+                            h={"100%"}
+                            style={{
+                              border: "0.2rem solid #000000",
+                              borderRadius: "1rem",
+                              rotate: "45deg",
+                            }}
+                          >
+                            <Flex
+                              direction={"column"}
+                              align={"center"}
+                              justify={"center"}
+                              style={{ rotate: "-45deg" }}
+                            >
+                              <Text
+                                lh={{ base: "2rem", md: "2rem" }}
+                                fw={500}
+                                fz={{ base: "2rem", md: "2.4rem" }}
+                              >
+                                {
+                                  {
+                                    0: dateTimeNow.days,
+                                    1: dateTimeNow.hours,
+                                    2: dateTimeNow.minutes,
+                                    3: dateTimeNow.seconds,
+                                  }[index]
+                                }
+                              </Text>
+                              <Text
+                                fw={500}
+                                fz={{ base: "1rem", md: "1.2rem" }}
+                              >
+                                {
+                                  {
+                                    0: "DIAS",
+                                    1: "HORAS",
+                                    2: "MINUTOS",
+                                    3: "SEGUNDOS",
+                                  }[index]
+                                }
+                              </Text>
+                            </Flex>
+                          </Center>
+                        </Flex>
+                      </AspectRatio>
+                    </Grid.Col>
+                  ))}
+                </>
+              )}
             </Grid>
           </Flex>
         </Flex>
