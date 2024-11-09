@@ -14,15 +14,74 @@ export interface Photo {
 }
 
 export function useStockPhoto() {
-  const {
-    cameraRef,
-    changeDevice,
-    deviceCount,
-    getVideoStream,
-    hasCamera,
-    isStarted,
-    stopCamera,
-  } = useCamera();
+  const [stream, setStream] = useState<MediaStream | null>(null);
+  const [facingMode, setFacingMode] = useState<"user" | "environment">("user");
+  const [hasPermission, setHasPermission] = useState<boolean | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  // Start camera with specified facing mode
+  const startCamera = async () => {
+    try {
+      const mediaStream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode },
+      });
+      setHasPermission(true);
+      setError(null);
+      setStream(mediaStream);
+      if (videoRef.current) {
+        videoRef.current.srcObject = mediaStream;
+      }
+    } catch (error) {
+      if (error instanceof DOMException && error.name === "NotAllowedError") {
+        setHasPermission(false);
+        setError("Camera access denied. Please enable camera permissions.");
+      } else {
+        setError("An error occurred while accessing the camera.");
+      }
+      console.error("Error accessing camera:", error);
+    }
+  };
+
+  // Stop the camera feed
+  const stopCamera = () => {
+    if (stream) {
+      stream.getTracks().forEach((track) => track.stop());
+      setStream(null);
+    }
+  };
+
+  // Switch between front and back cameras
+  const handleDeviceCycle = () => {
+    stopCamera();
+    setFacingMode((prevMode) => (prevMode === "user" ? "environment" : "user"));
+  };
+
+  // Capture current frame to canvas and get base64
+  const takePicture = () => {
+    if (videoRef.current && canvasRef.current) {
+      const canvas = canvasRef.current;
+      const context = canvas.getContext("2d");
+      if (context) {
+        canvas.width = videoRef.current.videoWidth;
+        canvas.height = videoRef.current.videoHeight;
+        context.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
+
+        // Get the base64 data URL of the image
+        const base64Image = canvas.toDataURL("image/png");
+        console.log("Captured Image in Base64:", base64Image);
+      }
+    }
+  };
+
+  // Effect to start camera on component mount and restart if facing mode changes
+  useEffect(() => {
+    startCamera();
+    return () => stopCamera();
+  }, [facingMode]);
+
+  // ------------------------------
 
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [takePhotoOpen, setTakePhotoOpen] = useState(false);
@@ -31,10 +90,6 @@ export function useStockPhoto() {
   const [currentPhoto, setCurrentPhoto] = useState<string>("");
   const [tempPhoto, setTempPhoto] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const defaultDevice = 0;
-
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [deviceIndex, setDeviceIndex] = useState<number>();
 
   const getPhotos = (): Promise<Photo[]> => {
     return new Promise((resolve, reject) =>
@@ -54,22 +109,6 @@ export function useStockPhoto() {
   useEffect(() => {
     getPhotos().then((response) => setPhotos(response));
   }, []);
-
-  const handleStartCamera = useCallback(async () => {
-    await getVideoStream();
-  }, [getVideoStream]);
-
-  useEffect(() => {
-    handleStartCamera();
-
-    return () => {
-      stopCamera();
-    };
-  }, [deviceIndex]);
-
-  function handleDeviceCycle() {
-    changeDevice();
-  }
 
   const [codeKey, setCodeKey] = useLocalStorage<string | null>({
     key: "codeKey",
@@ -103,42 +142,42 @@ export function useStockPhoto() {
 
   function handleOpenPhotoDialog() {
     setTempSubmitOpen(false);
-    if (hasCamera) {
-      handleStartCamera();
-      setTakePhotoOpen(true);
-    } else {
-      handleAddPhotos();
-    }
+    // if (hasCamera) {
+    startCamera();
+    setTakePhotoOpen(true);
+    // } else {
+    //   handleAddPhotos();
+    // }
   }
 
-  function handleAddPhotos() {
-    const fileInput = document.createElement("input");
-    fileInput.type = "file";
-    fileInput.accept = allowedPhotoFormats.join(", ");
-    fileInput.multiple = true;
+  // function handleAddPhotos() {
+  //   const fileInput = document.createElement("input");
+  //   fileInput.type = "file";
+  //   fileInput.accept = allowedPhotoFormats.join(", ");
+  //   fileInput.multiple = true;
 
-    fileInput.addEventListener("change", (event) => {
-      let files: File[] = Array.from((event.target as HTMLInputElement).files!);
-      files = files.filter((file) => allowedPhotoFormats.includes(file.type));
+  //   fileInput.addEventListener("change", (event) => {
+  //     let files: File[] = Array.from((event.target as HTMLInputElement).files!);
+  //     files = files.filter((file) => allowedPhotoFormats.includes(file.type));
 
-      const maxIterations = Math.min(maxPhotoFiles, files.length);
+  //     const maxIterations = Math.min(maxPhotoFiles, files.length);
 
-      for (let i = 0; i < maxIterations; i++) {
-        const file = files[i];
-        const reader = new FileReader();
-        reader.onload = () => {
-          setTempPhoto(reader.result as string);
-        };
-        reader.readAsDataURL(file);
-      }
-      setTempSubmitOpen(true);
-    });
-    fileInput.click();
-  }
+  //     for (let i = 0; i < maxIterations; i++) {
+  //       const file = files[i];
+  //       const reader = new FileReader();
+  //       reader.onload = () => {
+  //         setTempPhoto(reader.result as string);
+  //       };
+  //       reader.readAsDataURL(file);
+  //     }
+  //     setTempSubmitOpen(true);
+  //   });
+  //   fileInput.click();
+  // }
 
   function handleTakePicture() {
     const canvas = canvasRef.current;
-    const video = cameraRef.current;
+    const video = videoRef.current;
 
     if (video && canvas) {
       const context = canvas.getContext("2d");
@@ -200,10 +239,7 @@ export function useStockPhoto() {
     handleDeviceCycle,
     handleCloseCamera,
 
-    hasCamera,
-    isCameraStarted: isStarted,
-    cameraDeviceCount: deviceCount,
-    videoRef: cameraRef,
+    videoRef,
     canvasRef,
 
     previewPhotoOpen,

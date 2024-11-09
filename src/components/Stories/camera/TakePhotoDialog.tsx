@@ -10,9 +10,6 @@ interface TakePhotoDialogProps {
   onClose: () => void;
   onTakePhoto: () => void;
   onDeviceCycle: () => void;
-  hasCamera: boolean;
-  isCameraStarted: boolean;
-  cameraDeviceCount: number;
   videoRef: React.RefObject<HTMLVideoElement>;
   canvasRef: React.RefObject<HTMLCanvasElement>;
 }
@@ -22,9 +19,6 @@ export function TakePhotoDialog({
   onClose,
   onTakePhoto,
   onDeviceCycle,
-  hasCamera,
-  isCameraStarted,
-  cameraDeviceCount,
   videoRef,
   canvasRef,
 }: TakePhotoDialogProps) {
@@ -32,14 +26,14 @@ export function TakePhotoDialog({
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      if (open && !isCameraStarted && !lateStart) {
+      if (open && !lateStart) {
         setLateStart(true);
         onDeviceCycle();
       }
     }, 2000);
 
     return () => clearTimeout(timeout);
-  }, [open, isCameraStarted, lateStart, onDeviceCycle]);
+  }, [open, lateStart, onDeviceCycle]);
 
   return (
     <CameraModal
@@ -60,65 +54,56 @@ export function TakePhotoDialog({
             <IconArrowBack />
           </Button>
 
-          {hasCamera && (
-            <>
-              {isCameraStarted && (
-                <div
-                  style={{
-                    backgroundColor: "white",
-                    padding: "5px",
-                    borderRadius: "50%",
-                  }}
-                  onClick={onTakePhoto}
-                >
-                  <div
-                    style={{
-                      backgroundColor: "white",
-                      border: "3px solid black",
-                      borderRadius: "50%",
-                      padding: "20px",
-                    }}
-                  ></div>
-                </div>
-              )}
-
-              <Button
-                size="large"
-                onClick={onDeviceCycle}
-                title={cameraDeviceCount.toString()}
+          <>
+            <div
+              style={{
+                backgroundColor: "white",
+                padding: "5px",
+                borderRadius: "50%",
+              }}
+              onClick={onTakePhoto}
+            >
+              <div
                 style={{
-                  color: "#ffde22",
-                  backgroundColor: "transparent",
-                  borderColor: "#ffde22",
-                  borderStyle: "solid",
-                  borderWidth: "2px",
+                  backgroundColor: "white",
+                  border: "3px solid black",
+                  borderRadius: "50%",
+                  padding: "20px",
                 }}
-              >
-                <IconCameraRotate />
-              </Button>
-            </>
-          )}
+              ></div>
+            </div>
+
+            <Button
+              size="large"
+              onClick={onDeviceCycle}
+              style={{
+                color: "#ffde22",
+                backgroundColor: "transparent",
+                borderColor: "#ffde22",
+                borderStyle: "solid",
+                borderWidth: "2px",
+              }}
+            >
+              <IconCameraRotate />
+            </Button>
+          </>
         </>
       }
     >
-      {!isCameraStarted && (
-        <>
-          <Loader />
-          {lateStart && (
-            <Button size="small" onClick={onDeviceCycle}>
-              Tentar novamente
-            </Button>
-          )}
-        </>
-      )}
-
-      {!hasCamera && <Text>No camera available</Text>}
+      <>
+        <Loader />
+        {lateStart && (
+          <Button size="small" onClick={onDeviceCycle}>
+            Tentar novamente
+          </Button>
+        )}
+      </>
 
       <video
         ref={videoRef}
         autoPlay
         style={{
-          display: isCameraStarted ? "block" : "none",
+          display: "block",
           objectFit: "cover",
           height: "100%",
           width: "100%",
