@@ -7,6 +7,7 @@ import { useCamera } from "./useCameraHook";
 
 const allowedPhotoFormats = ["image/jpeg", "image/png"];
 const maxPhotoFiles = 1;
+const takePerFetch = 10;
 
 export interface Photo {
   imageUrl: string;
@@ -30,7 +31,7 @@ export function useStockPhoto() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  const getPhotos = (take = 50, skip = 0): Promise<Photo[]> => {
+  const getPhotos = (take = takePerFetch, skip = 0): Promise<Photo[]> => {
     return new Promise((resolve, reject) =>
       apiWorker.getStories({
         data: { take, skip },
@@ -39,6 +40,12 @@ export function useStockPhoto() {
       })
     );
   };
+
+  const loadMorePhotos = useCallback(() => {
+    getPhotos(takePerFetch, photos.length).then((response) =>
+      setPhotos((prev) => [...prev, ...response])
+    );
+  }, [photos]);
 
   useEffect(() => {
     getPhotos().then((response) => setPhotos(response));
@@ -226,5 +233,7 @@ export function useStockPhoto() {
 
     tempPhoto,
     isSubmitting,
+
+    loadMorePhotos,
   };
 }

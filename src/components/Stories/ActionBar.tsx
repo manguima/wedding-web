@@ -5,9 +5,11 @@ import { LogoIcon } from "../icons/LogoIcon";
 export function ActionBar({
   onPost,
   codeKey,
+  onSwitchView,
 }: {
   onPost: () => void;
   codeKey: string | null;
+  onSwitchView: () => void;
 }) {
   return (
     <Flex
@@ -31,7 +33,7 @@ export function ActionBar({
           variant="filled"
           size="xl"
           radius="xl"
-          onClick={onPost}
+          onClick={onSwitchView}
           color="#E0C862"
           style={{
             color: "#191F10",

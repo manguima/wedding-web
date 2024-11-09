@@ -4,22 +4,14 @@ import { Grid, Text } from "@mantine/core";
 export function PhotoThumbnail({
   photo,
   onSelect,
+  showDate = true,
 }: {
   photo: Photo;
   onSelect: () => void;
+  showDate?: boolean;
 }) {
   return (
-    <Grid.Col
-      span={{ base: 6, md: 6, lg: 3 }}
-      key={photo.imageUrl}
-      onClick={onSelect}
-      style={{
-        paddingBottom: "40%",
-        position: "relative",
-        overflow: "hidden",
-        cursor: "pointer",
-      }}
-    >
+    <>
       <div
         style={{
           position: "absolute",
@@ -52,32 +44,34 @@ export function PhotoThumbnail({
           pointerEvents: "none",
         }}
       />
-      <Text
-        style={{
-          position: "absolute",
-          bottom: 0,
-          left: 0,
-          zIndex: 2,
-          color: "white",
-          padding: "5px",
-          width: "100%",
-          textAlign: "center",
-          fontSize: "1.1rem",
-          fontWeight: 700,
-          userSelect: "none",
-          pointerEvents: "none",
-          background:
-            "linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.8) 100%)",
-        }}
-      >
-        {new Date(photo.createdAt).toLocaleDateString("pt-BR", {
-          day: "2-digit",
-          month: "short",
-          year: "numeric",
-          hour: "2-digit",
-          minute: "2-digit",
-        })}{" "}
-      </Text>
-    </Grid.Col>
+      {showDate && (
+        <Text
+          style={{
+            position: "absolute",
+            bottom: 0,
+            left: 0,
+            zIndex: 2,
+            color: "white",
+            padding: "5px",
+            width: "100%",
+            textAlign: "center",
+            fontSize: "1.1rem",
+            fontWeight: 700,
+            userSelect: "none",
+            pointerEvents: "none",
+            background:
+              "linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.8) 100%)",
+          }}
+        >
+          {new Date(photo.createdAt).toLocaleDateString("pt-BR", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+          })}
+        </Text>
+      )}
+    </>
   );
 }
