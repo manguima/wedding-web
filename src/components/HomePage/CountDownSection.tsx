@@ -2,6 +2,7 @@
 import {
   AspectRatio,
   Box,
+  Button,
   Center,
   Container,
   Divider,
@@ -149,18 +150,25 @@ export const CountDownSection = ({ index }: { index: number }) => {
                   span={{ base: 12 }}
                   style={{ marginTop: 20 }}
                 >
-                  <AspectRatio w={"100%"} ratio={16 / 9}>
-                    <iframe
-                      width="100%"
-                      height="100%"
-                      src="https://www.youtube.com/embed/pFg0FCx4FGs?si=qdHoad7xU9qQSW7F"
-                      title="YouTube video player"
-                      frameBorder="0"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                      allowFullScreen
-                      referrerPolicy="strict-origin-when-cross-origin"
-                    ></iframe>
-                  </AspectRatio>
+                  <Box
+                    w={"100%"}
+                    p={"1rem"}
+                    style={{
+                      textAlign: "center",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <a
+                      href="https://www.instagram.com/dey.agath?upcoming_event_id=18032020418366245"
+                      target="_blank"
+                    >
+                      <Button color="black" size="lg">
+                        Acompanhar no Instagram
+                      </Button>
+                    </a>
+                  </Box>
                 </Grid.Col>
               )}
 
