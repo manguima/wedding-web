@@ -7,7 +7,6 @@ export function useCamera() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [index, setIndex] = useState<number>(0);
 
-  // Filter out non-video input devices (e.g., microphones, speakers)
   const getVideoDevices = async (): Promise<MediaDeviceInfo[]> =>
     (await navigator.mediaDevices.enumerateDevices()).filter((device) => {
       return device.kind === "videoinput" && device.label !== "";
@@ -33,6 +32,7 @@ export function useCamera() {
     const nextIndex = index >= devices.length ? 0 : index;
     const device = devices[nextIndex];
     setIndex(nextIndex + 1);
+    console.log(devices);
     cameraRef.current = await getVideoStream(device.deviceId);
     videoRef.current!.srcObject = cameraRef.current;
     setIsStarted(true);
