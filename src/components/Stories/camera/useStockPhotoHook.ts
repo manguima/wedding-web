@@ -12,6 +12,7 @@ const takePerFetch = 10;
 export interface Photo {
   imageUrl: string;
   createdAt: string;
+  id: string;
 }
 
 export function useStockPhoto() {
