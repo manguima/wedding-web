@@ -7,7 +7,7 @@ import { useCamera } from "./useCameraHook";
 
 const allowedPhotoFormats = ["image/jpeg", "image/png"];
 const maxPhotoFiles = 1;
-const takePerFetch = 10;
+const takePerFetch = 999;
 
 export interface Photo {
   imageUrl: string;
@@ -26,7 +26,6 @@ export function useStockPhoto() {
   const [currentPhoto, setCurrentPhoto] = useState<string>("");
   const [tempPhoto, setTempPhoto] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const defaultDevice = 0;
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -43,6 +42,13 @@ export function useStockPhoto() {
   const reloadPhotos = useCallback(() => {
     getPhotos().then((response) => setPhotos(response));
   }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      reloadPhotos();
+    }, 1000 * 60 * 2); // 2 minutes
+    return () => clearInterval(interval);
+  }, [reloadPhotos]);
 
   const loadMorePhotos = useCallback(() => {
     getPhotos(takePerFetch, photos.length).then((response) =>
