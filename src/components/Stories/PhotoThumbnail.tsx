@@ -11,6 +11,7 @@ export function PhotoThumbnail({
   photo: Photo;
   showDate?: boolean;
 }) {
+  const [isDeleted, setIsDeleted] = useState(false);
   const [debugMode] = useLocalStorage({
     key: "debugMode",
     defaultValue: false,
@@ -20,11 +21,16 @@ export function PhotoThumbnail({
     return new Promise((resolve, reject) =>
       apiWorker.deleteStory({
         data: { id: photo.id },
-        onSuccess: (response) => resolve(response),
+        onSuccess: (response) => {
+          setIsDeleted(true);
+          resolve(response);
+        },
         onError: (error) => reject(error),
       })
     );
   };
+
+  if (isDeleted) return null;
 
   return (
     <>
