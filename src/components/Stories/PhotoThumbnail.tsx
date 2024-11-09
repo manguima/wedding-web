@@ -2,7 +2,7 @@ import { Photo } from "@/components/Stories/camera/useStockPhotoHook";
 import { apiWorker } from "@/zustand/apiWorker";
 import { Button, Grid, Text } from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 
 export function PhotoThumbnail({
   photo,
