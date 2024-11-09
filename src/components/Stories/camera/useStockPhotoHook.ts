@@ -256,5 +256,6 @@ export function useStockPhoto() {
 
     tempPhoto,
     isSubmitting,
+    takePicture,
   };
 }

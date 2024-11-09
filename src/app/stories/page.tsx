@@ -30,6 +30,7 @@ export default function StoriesPage() {
     tempPhoto,
     isSubmitting,
     codeKey,
+    takePicture,
   } = useStockPhoto();
 
   function handlePhotoPreview(imageUrl: string) {
@@ -60,7 +61,7 @@ export default function StoriesPage() {
         canvasRef={canvasRef}
         onClose={handleCloseCamera}
         onDeviceCycle={handleDeviceCycle}
-        onTakePhoto={handleTakePicture}
+        onTakePhoto={takePicture}
         open={takePhotoOpen}
         videoRef={videoRef}
       />
