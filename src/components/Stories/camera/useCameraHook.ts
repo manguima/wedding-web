@@ -8,9 +8,9 @@ export function useCamera() {
   const [index, setIndex] = useState<number>(0);
 
   const getVideoDevices = async (): Promise<MediaDeviceInfo[]> =>
-    (await navigator.mediaDevices.enumerateDevices()).filter(
-      (device) => device.kind === "videoinput"
-    );
+    (await navigator.mediaDevices.enumerateDevices()).filter((device) => {
+      return device.kind === "videoinput";
+    });
 
   const getVideoStream = async (deviceId: string): Promise<MediaStream> =>
     await navigator.mediaDevices.getUserMedia({
@@ -33,7 +33,7 @@ export function useCamera() {
     const device = devices[nextIndex];
     setIndex(nextIndex + 1);
     cameraRef.current = await getVideoStream(device.deviceId);
-    videoRef.current!.srcObject = await getVideoStream(device.deviceId);
+    videoRef.current!.srcObject = cameraRef.current;
     setIsStarted(true);
   };
 
@@ -50,6 +50,13 @@ export function useCamera() {
       stopCamera();
     }
     await startCamera();
+
+    getVideoDevices().then((devices) => {
+      devices.forEach((device) => {
+        alert(device.label);
+        alert(device.kind);
+      });
+    });
   };
 
   return {
