@@ -99,7 +99,7 @@ export function TakePhotoDialog({
     >
       {!isCameraStarted && (
         <>
-          <Loader />
+          <Loader color="#E0C862" />
           {lateStart && (
             <Button
               size="small"
@@ -107,6 +107,7 @@ export function TakePhotoDialog({
               color="#E0C862"
               style={{
                 color: "#191F10",
+                marginTop: "1rem",
               }}
             >
               Tentar novamente

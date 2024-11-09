@@ -84,7 +84,10 @@ export const apiWorker = {
 
   getStories: async ({ params, onSuccess, onError }: ApiWorkerParams) => {
     try {
-      const response = await api.get("/stories", { params });
+      const response = await api.get(
+        `/stories?take=${params?.take || 50}&skip=${params?.skip || 0}`,
+        { params }
+      );
       onSuccess?.(response);
     } catch (error) {
       onError?.(error);

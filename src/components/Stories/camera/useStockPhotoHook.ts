@@ -30,9 +30,10 @@ export function useStockPhoto() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  const getPhotos = (): Promise<Photo[]> => {
+  const getPhotos = (take = 50, skip = 0): Promise<Photo[]> => {
     return new Promise((resolve, reject) =>
       apiWorker.getStories({
+        data: { take, skip },
         onSuccess: (response) => resolve(response),
         onError: (error) => reject(error),
       })
@@ -41,12 +42,6 @@ export function useStockPhoto() {
 
   useEffect(() => {
     getPhotos().then((response) => setPhotos(response));
-    // reload photos in 30sec interval
-    const interval = setInterval(() => {
-      getPhotos().then((response) => setPhotos(response));
-    }, 30000);
-
-    return () => clearInterval(interval);
   }, []);
 
   const handleStartCamera = useCallback(async () => {
