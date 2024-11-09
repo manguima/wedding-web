@@ -56,35 +56,22 @@ export function useStockPhoto() {
     getPhotos().then((response) => setPhotos(response));
   }, []);
 
-  const handleStartCamera = useCallback(async () => {
-    if (!videoRef.current) return;
-    videoRef.current.srcObject = await changeDevice(
-      deviceIndex === undefined ? defaultDevice : deviceIndex
-    );
-  }, [changeDevice, deviceIndex, defaultDevice]);
-
-  useEffect(() => {
-    handleStartCamera();
-
-    return () => {
-      stopCamera();
-    };
-    // The camera should only be started once, otherwise it will loop infinite rendering
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [deviceIndex]);
-
-  useEffect(() => {
-    handleStartCamera();
-
-    return () => {
-      stopCamera();
-    };
-  }, []);
+  const handleStartCamera = useCallback(
+    async (nextDeviceIndex: number) => {
+      if (!videoRef.current) return;
+      setDeviceIndex(nextDeviceIndex);
+      videoRef.current.srcObject = await changeDevice(nextDeviceIndex);
+    },
+    [changeDevice, videoRef]
+  );
 
   function handleDeviceCycle() {
-    setDeviceIndex((prev) =>
-      prev === undefined ? 0 : (prev + 1) % deviceCount
-    );
+    if (!deviceCount) return;
+    const nextDeviceIndex =
+      deviceIndex === undefined
+        ? defaultDevice
+        : (deviceIndex + 1) % deviceCount;
+    handleStartCamera(nextDeviceIndex);
   }
 
   const [codeKey, setCodeKey] = useLocalStorage<string | null>({
@@ -120,7 +107,7 @@ export function useStockPhoto() {
   function handleOpenPhotoDialog() {
     setTempSubmitOpen(false);
     if (hasCamera) {
-      handleStartCamera();
+      handleStartCamera(defaultDevice);
       setTakePhotoOpen(true);
     } else {
       handleAddPhotos();

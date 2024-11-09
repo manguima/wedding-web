@@ -38,14 +38,11 @@ export function useCamera() {
   }, []);
 
   async function changeDevice(index: number) {
-    if (index >= 0 && index < deviceCount) {
-      const device = (await getVideoDevices())[index];
-      cameraRef.current = await getVideoStream(device);
-      setIsStarted(true);
+    const device = (await getVideoDevices())[index];
+    cameraRef.current = await getVideoStream(device);
+    setIsStarted(true);
 
-      return cameraRef.current;
-    }
-    return null;
+    return cameraRef.current;
   }
 
   async function stopCamera() {
