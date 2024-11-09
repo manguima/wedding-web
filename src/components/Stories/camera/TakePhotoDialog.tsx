@@ -12,7 +12,6 @@ interface TakePhotoDialogProps {
   onDeviceCycle: () => void;
   hasCamera: boolean;
   isCameraStarted: boolean;
-  cameraDeviceCount: number;
   videoRef: React.RefObject<HTMLVideoElement>;
   canvasRef: React.RefObject<HTMLCanvasElement>;
 }
@@ -24,7 +23,6 @@ export function TakePhotoDialog({
   onDeviceCycle,
   hasCamera,
   isCameraStarted,
-  cameraDeviceCount,
   videoRef,
   canvasRef,
 }: TakePhotoDialogProps) {
@@ -84,7 +82,6 @@ export function TakePhotoDialog({
                 size="xl"
                 radius="xl"
                 onClick={onDeviceCycle}
-                title={cameraDeviceCount.toString()}
                 color="#000"
                 style={{
                   color: "white",
