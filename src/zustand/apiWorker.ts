@@ -94,6 +94,24 @@ export const apiWorker = {
     }
   },
 
+  getNextStory: async ({ params, onSuccess, onError }: ApiWorkerParams) => {
+    try {
+      const response = await api.get(`/stories/${params.id}`);
+      onSuccess?.(response);
+    } catch (error) {
+      onError?.(error);
+    }
+  },
+
+  getRandomStory: async ({ params, onSuccess, onError }: ApiWorkerParams) => {
+    try {
+      const response = await api.get(`/stories/random`);
+      onSuccess?.(response);
+    } catch (error) {
+      onError?.(error);
+    }
+  },
+
   saveStory: async ({ data, onSuccess, onError }: ApiWorkerParams) => {
     try {
       const binaryImage = Buffer.from(data.file.split(",")[1], "base64");
