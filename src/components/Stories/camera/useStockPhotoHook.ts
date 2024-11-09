@@ -66,11 +66,16 @@ export function useStockPhoto() {
   );
 
   function handleDeviceCycle() {
+    alert("handleDeviceCycle");
     if (!deviceCount) return;
+    alert(deviceCount);
+    alert(deviceIndex);
     const nextDeviceIndex =
       deviceIndex === undefined
         ? defaultDevice
         : (deviceIndex + 1) % deviceCount;
+    alert(nextDeviceIndex);
+
     handleStartCamera(nextDeviceIndex);
   }
 
