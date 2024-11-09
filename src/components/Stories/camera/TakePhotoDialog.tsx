@@ -102,6 +102,7 @@ export function TakePhotoDialog({
       <video
         ref={videoRef}
         autoPlay
+        playsInline
         style={{
           display: "block",
           objectFit: "cover",
