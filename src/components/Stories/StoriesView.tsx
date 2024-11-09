@@ -143,11 +143,7 @@ export const StoriesView = ({
               scrollSnapAlign: "start",
             }}
           >
-            <PhotoThumbnail
-              photo={photo}
-              onSelect={() => handlePhotoPreview(photo.imageUrl)}
-              showDate={false}
-            />
+            <PhotoThumbnail photo={photo} showDate={false} />
           </Box>
         ))}
       </main>

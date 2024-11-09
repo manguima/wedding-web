@@ -58,11 +58,7 @@ export const GalleryView = ({
               cursor: "pointer",
             }}
           >
-            <PhotoThumbnail
-              key={index}
-              photo={photo}
-              onSelect={() => handlePhotoPreview(photo.imageUrl)}
-            />
+            <PhotoThumbnail key={index} photo={photo} />
           </Grid.Col>
         ))}
       </Grid>

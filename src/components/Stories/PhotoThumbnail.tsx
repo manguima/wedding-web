@@ -1,17 +1,48 @@
 import { Photo } from "@/components/Stories/camera/useStockPhotoHook";
-import { Grid, Text } from "@mantine/core";
+import { apiWorker } from "@/zustand/apiWorker";
+import { Button, Grid, Text } from "@mantine/core";
+import { useLocalStorage } from "@mantine/hooks";
+import { useCallback } from "react";
 
 export function PhotoThumbnail({
   photo,
-  onSelect,
   showDate = true,
 }: {
   photo: Photo;
-  onSelect: () => void;
   showDate?: boolean;
 }) {
+  const [debugMode] = useLocalStorage({
+    key: "debugMode",
+    defaultValue: false,
+  });
+
+  const deletePhoto = (): Promise<void> => {
+    return new Promise((resolve, reject) =>
+      apiWorker.deleteStory({
+        data: { id: photo.id },
+        onSuccess: (response) => resolve(response),
+        onError: (error) => reject(error),
+      })
+    );
+  };
+
   return (
     <>
+      {debugMode && (
+        <Button
+          onClick={deletePhoto}
+          style={{
+            position: "absolute",
+            top: 0,
+            right: 0,
+            zIndex: 3,
+            color: "white",
+          }}
+        >
+          Delete
+        </Button>
+      )}
+
       <div
         style={{
           position: "absolute",

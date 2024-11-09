@@ -120,4 +120,13 @@ export const apiWorker = {
       onError?.(error);
     }
   },
+
+  deleteStory: async ({ data, onSuccess, onError }: ApiWorkerParams) => {
+    try {
+      const response = await api.delete(`/stories/${data.id}`);
+      onSuccess?.(response);
+    } catch (error) {
+      onError?.(error);
+    }
+  },
 };
