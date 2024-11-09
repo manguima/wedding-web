@@ -42,7 +42,7 @@ export function PreviewPhotoDialog({
             borderStyle: "solid",
             borderWidth: "2px",
 
-            position: "absolute",
+            position: "fixed",
             top: "10px",
             right: "10px",
           }}
