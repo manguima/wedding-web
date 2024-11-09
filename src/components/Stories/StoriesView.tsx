@@ -1,42 +1,102 @@
 import { Photo } from "@/components/Stories/camera/useStockPhotoHook";
 import { PhotoThumbnail } from "@/components/Stories/PhotoThumbnail";
-import { Button, Flex, Grid, Switch, Text } from "@mantine/core";
-import { ScrollArea, Avatar, Box } from "@mantine/core";
+import { Flex, Progress, Switch } from "@mantine/core";
+import { Box } from "@mantine/core";
 import { useEffect, useRef, useState } from "react";
-import useScrollSnap from "react-use-scroll-snap";
 
 export const StoriesView = ({
   photos,
   handlePhotoPreview,
+  reloadPhotos,
 }: {
   photos: Photo[];
   handlePhotoPreview: (imageUrl: string) => void;
+  reloadPhotos: () => void;
 }) => {
-  const scrollRef = useRef(null);
-
-  const { goto: goTo, state } = useScrollSnap({
-    ref: scrollRef,
-    duration: 100,
-  });
-
+  const containerRef = useRef<HTMLDivElement>(null);
   const [autoScroll, setAutoScroll] = useState(true);
-  const [dotIndex, setDotIndex] = useState(0);
+  const [progress, setProgress] = useState(0);
 
-  // interval scrolling to the next photo every 1 seconds
   useEffect(() => {
     if (!autoScroll) return;
-    const interval = setInterval(() => {
-      goTo((state.current?.currentIndex || 0) + 1);
-    }, 2000);
-    return () => clearInterval(interval);
-  }, [state.current?.currentIndex, autoScroll]);
 
-  useEffect(() => {
-    setDotIndex(state.current?.currentIndex || 0);
-  }, [state]);
+    let interval: NodeJS.Timeout;
+
+    const resetInterval = () => {
+      setProgress(0);
+      clearInterval(interval);
+      startInterval();
+    };
+
+    const startInterval = () => {
+      interval = setInterval(() => {
+        setProgress((prev) => {
+          if (prev >= 100) {
+            if (containerRef.current) {
+              const currentScroll = containerRef.current.scrollTop;
+              const maxScroll =
+                containerRef.current.scrollHeight -
+                containerRef.current.clientHeight;
+
+              const nextIndex = Math.ceil(currentScroll / window.innerHeight);
+              const nextScrollTop = (nextIndex + 1) * window.innerHeight;
+
+              if (nextScrollTop >= containerRef.current.scrollHeight) {
+                reloadPhotos(); // Reload photos if at the last scroll position
+              }
+
+              containerRef.current.scrollTo({
+                top:
+                  nextScrollTop >= containerRef.current.scrollHeight
+                    ? 0
+                    : nextScrollTop,
+                behavior: "smooth",
+              });
+            }
+            return 0;
+          }
+          return prev + 1;
+        });
+      }, 50);
+    };
+
+    startInterval();
+
+    containerRef.current?.addEventListener("scroll", resetInterval);
+    containerRef.current?.addEventListener("click", resetInterval);
+
+    return () => {
+      clearInterval(interval);
+      containerRef.current?.removeEventListener("scroll", resetInterval);
+      containerRef.current?.removeEventListener("click", resetInterval);
+    };
+  }, [autoScroll, reloadPhotos]);
 
   return (
     <>
+      {autoScroll && (
+        <div
+          style={{
+            position: "fixed",
+            zIndex: 1000,
+            top: 0,
+            left: 0,
+            width: "100%",
+            userSelect: "none",
+            pointerEvents: "none",
+          }}
+        >
+          <Progress
+            value={progress}
+            size="xs"
+            color="#ffde22"
+            style={{
+              backgroundColor: "transparent",
+            }}
+          />
+        </div>
+      )}
+
       <Flex
         style={{
           position: "fixed",
@@ -48,6 +108,7 @@ export const StoriesView = ({
           flexDirection: "row",
           justifyContent: "space-between",
           alignItems: "center",
+          pointerEvents: "none",
         }}
       >
         <Switch
@@ -56,43 +117,40 @@ export const StoriesView = ({
           onChange={() => setAutoScroll((prev) => !prev)}
           color="yellow"
           size="lg"
-          style={{ userSelect: "none", color: "white" }}
+          style={{ color: "white", userSelect: "none", pointerEvents: "all" }}
         />
       </Flex>
 
-      <main ref={scrollRef} style={{ background: "black" }}>
+      <main
+        ref={containerRef}
+        style={{
+          scrollSnapType: "y mandatory",
+          overflowY: "scroll",
+          height: "100vh",
+          backgroundColor: "black",
+        }}
+      >
         {photos.map((photo, index) => (
-          <Section>
+          <Box
+            key={index}
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100vh",
+              width: "100%",
+              position: "relative",
+              scrollSnapAlign: "start",
+            }}
+          >
             <PhotoThumbnail
-              key={index}
               photo={photo}
               onSelect={() => handlePhotoPreview(photo.imageUrl)}
               showDate={false}
             />
-          </Section>
+          </Box>
         ))}
       </main>
     </>
   );
 };
-
-interface SectionProps {
-  children: React.ReactNode;
-}
-
-function Section({ children }: SectionProps) {
-  return (
-    <Box
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100vh",
-        width: "100%",
-        position: "relative",
-      }}
-    >
-      {children}
-    </Box>
-  );
-}

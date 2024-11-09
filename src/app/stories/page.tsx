@@ -33,6 +33,7 @@ export default function StoriesPage() {
     isSubmitting,
     codeKey,
     loadMorePhotos,
+    reloadPhotos,
   } = useStockPhoto();
 
   const [viewMode, setViewMode] = useState<"gallery" | "stories">("stories");
@@ -48,7 +49,11 @@ export default function StoriesPage() {
       )}
 
       {viewMode === "stories" && (
-        <StoriesView photos={photos} handlePhotoPreview={handlePhotoPreview} />
+        <StoriesView
+          photos={photos}
+          handlePhotoPreview={handlePhotoPreview}
+          reloadPhotos={reloadPhotos}
+        />
       )}
 
       <ActionBar
