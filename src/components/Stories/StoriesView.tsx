@@ -1,6 +1,6 @@
 import { Photo } from "@/components/Stories/camera/useStockPhotoHook";
 import { PhotoThumbnail } from "@/components/Stories/PhotoThumbnail";
-import { Flex, Switch } from "@mantine/core";
+import { Flex, Progress, Switch } from "@mantine/core";
 import { Box } from "@mantine/core";
 import { useEffect, useRef, useState } from "react";
 
@@ -13,31 +13,80 @@ export const StoriesView = ({
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [autoScroll, setAutoScroll] = useState(true);
+  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
     if (!autoScroll) return;
 
-    const interval = setInterval(() => {
-      if (containerRef.current) {
-        const currentScroll = containerRef.current.scrollTop;
-        const nextIndex = Math.ceil(currentScroll / window.innerHeight);
-        const nextScrollTop = (nextIndex + 1) * window.innerHeight;
+    let interval: NodeJS.Timeout;
 
-        containerRef.current.scrollTo({
-          top:
-            nextScrollTop >= containerRef.current.scrollHeight
-              ? 0
-              : nextScrollTop,
-          behavior: "smooth",
+    const resetInterval = () => {
+      setProgress(0);
+      clearInterval(interval);
+      startInterval();
+    };
+
+    const startInterval = () => {
+      interval = setInterval(() => {
+        setProgress((prev) => {
+          if (prev >= 100) {
+            if (containerRef.current) {
+              const currentScroll = containerRef.current.scrollTop;
+              const nextIndex = Math.ceil(currentScroll / window.innerHeight);
+              const nextScrollTop = (nextIndex + 1) * window.innerHeight;
+
+              containerRef.current.scrollTo({
+                top:
+                  nextScrollTop >= containerRef.current.scrollHeight
+                    ? 0
+                    : nextScrollTop,
+                behavior: "smooth",
+              });
+            }
+            return 0;
+          }
+          return prev + 1;
         });
-      }
-    }, 2000);
+      }, 50);
+    };
 
-    return () => clearInterval(interval);
+    startInterval();
+
+    containerRef.current?.addEventListener("scroll", resetInterval);
+    containerRef.current?.addEventListener("click", resetInterval);
+
+    return () => {
+      clearInterval(interval);
+      containerRef.current?.removeEventListener("scroll", resetInterval);
+      containerRef.current?.removeEventListener("click", resetInterval);
+    };
   }, [autoScroll]);
 
   return (
     <>
+      {autoScroll && (
+        <div
+          style={{
+            position: "fixed",
+            zIndex: 1000,
+            top: 0,
+            left: 0,
+            width: "100%",
+            userSelect: "none",
+            pointerEvents: "none",
+          }}
+        >
+          <Progress
+            value={progress}
+            size="xs"
+            color="#ffde22"
+            style={{
+              backgroundColor: "transparent",
+            }}
+          />
+        </div>
+      )}
+
       <Flex
         style={{
           position: "fixed",
