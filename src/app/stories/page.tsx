@@ -84,7 +84,9 @@ export default function StoriesPage() {
         open={previewPhotoOpen}
         photo={currentPhoto}
       />
-      <CodeKeyModal saveCodeKey={saveCodeKey} codeKey={codeKey} />
+
+      {/* TODO: Enable CodeKeyModal */}
+      {/* <CodeKeyModal saveCodeKey={saveCodeKey} codeKey={codeKey} /> */}
     </Flex>
   );
 }

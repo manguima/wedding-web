@@ -23,21 +23,19 @@ export function ActionBar({
         justifyContent: "center",
       }}
     >
-      {codeKey && (
-        <Button
-          style={{
-            color: "#ffde22",
-            backgroundColor: "transparent",
-            borderColor: "#ffde22",
-            borderStyle: "solid",
-            borderWidth: "2px",
-            fontSize: "1.2rem",
-          }}
-          onClick={onPost}
-        >
-          Poste seu momento
-        </Button>
-      )}
+      <Button
+        style={{
+          color: "#ffde22",
+          backgroundColor: "transparent",
+          borderColor: "#ffde22",
+          borderStyle: "solid",
+          borderWidth: "2px",
+          fontSize: "1.2rem",
+        }}
+        onClick={onPost}
+      >
+        Poste seu momento
+      </Button>
     </Flex>
   );
 }
