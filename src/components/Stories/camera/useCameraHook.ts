@@ -55,6 +55,8 @@ export function useCamera() {
       devices.forEach((device) => {
         alert(device.label);
         alert(device.kind);
+        alert(device.deviceId);
+        alert(device.groupId);
       });
     });
   };
