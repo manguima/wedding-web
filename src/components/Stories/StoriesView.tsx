@@ -7,9 +7,11 @@ import { useEffect, useRef, useState } from "react";
 export const StoriesView = ({
   photos,
   handlePhotoPreview,
+  reloadPhotos,
 }: {
   photos: Photo[];
   handlePhotoPreview: (imageUrl: string) => void;
+  reloadPhotos: () => void;
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [autoScroll, setAutoScroll] = useState(true);
@@ -32,8 +34,16 @@ export const StoriesView = ({
           if (prev >= 100) {
             if (containerRef.current) {
               const currentScroll = containerRef.current.scrollTop;
+              const maxScroll =
+                containerRef.current.scrollHeight -
+                containerRef.current.clientHeight;
+
               const nextIndex = Math.ceil(currentScroll / window.innerHeight);
               const nextScrollTop = (nextIndex + 1) * window.innerHeight;
+
+              if (nextScrollTop >= containerRef.current.scrollHeight) {
+                reloadPhotos(); // Reload photos if at the last scroll position
+              }
 
               containerRef.current.scrollTo({
                 top:
@@ -60,7 +70,7 @@ export const StoriesView = ({
       containerRef.current?.removeEventListener("scroll", resetInterval);
       containerRef.current?.removeEventListener("click", resetInterval);
     };
-  }, [autoScroll]);
+  }, [autoScroll, reloadPhotos]);
 
   return (
     <>
@@ -98,6 +108,7 @@ export const StoriesView = ({
           flexDirection: "row",
           justifyContent: "space-between",
           alignItems: "center",
+          pointerEvents: "none",
         }}
       >
         <Switch
@@ -106,7 +117,7 @@ export const StoriesView = ({
           onChange={() => setAutoScroll((prev) => !prev)}
           color="yellow"
           size="lg"
-          style={{ userSelect: "none", color: "white" }}
+          style={{ color: "white", userSelect: "none", pointerEvents: "all" }}
         />
       </Flex>
 

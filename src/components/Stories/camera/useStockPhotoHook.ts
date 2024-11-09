@@ -42,6 +42,10 @@ export function useStockPhoto() {
     );
   };
 
+  const reloadPhotos = useCallback(() => {
+    getPhotos().then((response) => setPhotos(response));
+  }, []);
+
   const loadMorePhotos = useCallback(() => {
     getPhotos(takePerFetch, photos.length).then((response) =>
       setPhotos((prev) => [...prev, ...response])
@@ -236,5 +240,6 @@ export function useStockPhoto() {
     isSubmitting,
 
     loadMorePhotos,
+    reloadPhotos,
   };
 }
