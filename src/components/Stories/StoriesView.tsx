@@ -1,9 +1,8 @@
 import { Photo } from "@/components/Stories/camera/useStockPhotoHook";
 import { PhotoThumbnail } from "@/components/Stories/PhotoThumbnail";
-import { Button, Flex, Grid, Switch, Text } from "@mantine/core";
-import { ScrollArea, Avatar, Box } from "@mantine/core";
+import { Flex, Switch } from "@mantine/core";
+import { Box } from "@mantine/core";
 import { useEffect, useRef, useState } from "react";
-import useScrollSnap from "react-use-scroll-snap";
 
 export const StoriesView = ({
   photos,
@@ -12,28 +11,30 @@ export const StoriesView = ({
   photos: Photo[];
   handlePhotoPreview: (imageUrl: string) => void;
 }) => {
-  const scrollRef = useRef(null);
-
-  const { goto: goTo, state } = useScrollSnap({
-    ref: scrollRef,
-    duration: 100,
-  });
-
+  const containerRef = useRef<HTMLDivElement>(null);
   const [autoScroll, setAutoScroll] = useState(true);
-  const [dotIndex, setDotIndex] = useState(0);
 
-  // interval scrolling to the next photo every 1 seconds
   useEffect(() => {
     if (!autoScroll) return;
-    const interval = setInterval(() => {
-      goTo((state.current?.currentIndex || 0) + 1);
-    }, 2000);
-    return () => clearInterval(interval);
-  }, [state.current?.currentIndex, autoScroll]);
 
-  useEffect(() => {
-    setDotIndex(state.current?.currentIndex || 0);
-  }, [state]);
+    const interval = setInterval(() => {
+      if (containerRef.current) {
+        const currentScroll = containerRef.current.scrollTop;
+        const nextIndex = Math.ceil(currentScroll / window.innerHeight);
+        const nextScrollTop = (nextIndex + 1) * window.innerHeight;
+
+        containerRef.current.scrollTo({
+          top:
+            nextScrollTop >= containerRef.current.scrollHeight
+              ? 0
+              : nextScrollTop,
+          behavior: "smooth",
+        });
+      }
+    }, 2000);
+
+    return () => clearInterval(interval);
+  }, [autoScroll]);
 
   return (
     <>
@@ -60,39 +61,36 @@ export const StoriesView = ({
         />
       </Flex>
 
-      <main ref={scrollRef} style={{ background: "black" }}>
+      <main
+        ref={containerRef}
+        style={{
+          scrollSnapType: "y mandatory",
+          overflowY: "scroll",
+          height: "100vh",
+          backgroundColor: "black",
+        }}
+      >
         {photos.map((photo, index) => (
-          <Section>
+          <Box
+            key={index}
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100vh",
+              width: "100%",
+              position: "relative",
+              scrollSnapAlign: "start",
+            }}
+          >
             <PhotoThumbnail
-              key={index}
               photo={photo}
               onSelect={() => handlePhotoPreview(photo.imageUrl)}
               showDate={false}
             />
-          </Section>
+          </Box>
         ))}
       </main>
     </>
   );
 };
-
-interface SectionProps {
-  children: React.ReactNode;
-}
-
-function Section({ children }: SectionProps) {
-  return (
-    <Box
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100vh",
-        width: "100%",
-        position: "relative",
-      }}
-    >
-      {children}
-    </Box>
-  );
-}
