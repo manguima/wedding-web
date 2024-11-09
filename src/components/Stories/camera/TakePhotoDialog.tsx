@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Loader, Text } from "@mantine/core";
+import { ActionIcon, Button, Loader, Text } from "@mantine/core";
 import { CameraModal } from "./CameraModal";
 import { useEffect, useState } from "react";
 import { IconArrowBack, IconCameraRotate } from "@tabler/icons-react";
@@ -46,19 +46,17 @@ export function TakePhotoDialog({
       open={open}
       actionButtons={
         <>
-          <Button
-            size="large"
+          <ActionIcon
+            size="xl"
+            radius="xl"
             onClick={onClose}
+            color="#000"
             style={{
-              color: "#ffde22",
-              backgroundColor: "transparent",
-              borderColor: "#ffde22",
-              borderStyle: "solid",
-              borderWidth: "2px",
+              color: "white",
             }}
           >
             <IconArrowBack />
-          </Button>
+          </ActionIcon>
 
           {hasCamera && (
             <>
@@ -82,20 +80,18 @@ export function TakePhotoDialog({
                 </div>
               )}
 
-              <Button
-                size="large"
+              <ActionIcon
+                size="xl"
+                radius="xl"
                 onClick={onDeviceCycle}
                 title={cameraDeviceCount.toString()}
+                color="#000"
                 style={{
-                  color: "#ffde22",
-                  backgroundColor: "transparent",
-                  borderColor: "#ffde22",
-                  borderStyle: "solid",
-                  borderWidth: "2px",
+                  color: "white",
                 }}
               >
                 <IconCameraRotate />
-              </Button>
+              </ActionIcon>
             </>
           )}
         </>
@@ -105,14 +101,21 @@ export function TakePhotoDialog({
         <>
           <Loader />
           {lateStart && (
-            <Button size="small" onClick={onDeviceCycle}>
+            <Button
+              size="small"
+              onClick={onDeviceCycle}
+              color="#E0C862"
+              style={{
+                color: "#191F10",
+              }}
+            >
               Tentar novamente
             </Button>
           )}
         </>
       )}
 
-      {!hasCamera && <Text>No camera available</Text>}
+      {!hasCamera && <Text>Nenhuma câmera encontrada</Text>}
 
       <video
         ref={videoRef}

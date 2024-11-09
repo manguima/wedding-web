@@ -1,4 +1,6 @@
-import { Button, Flex } from "@mantine/core";
+import { ActionIcon, Button, Flex, Group, Stack } from "@mantine/core";
+import { IconPhoto } from "@tabler/icons-react";
+import { LogoIcon } from "../icons/LogoIcon";
 
 export function ActionBar({
   onPost,
@@ -15,27 +17,42 @@ export function ActionBar({
         bottom: 0,
         left: 0,
         right: 0,
-        background:
-          "linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.8) 100%)",
-        padding: "10px",
+        background: "#191F10",
+        padding: "12px",
         display: "flex",
         alignItems: "center",
-        justifyContent: "center",
+        justifyContent: "space-between",
       }}
     >
-      <Button
-        style={{
-          color: "#ffde22",
-          backgroundColor: "transparent",
-          borderColor: "#ffde22",
-          borderStyle: "solid",
-          borderWidth: "2px",
-          fontSize: "1.2rem",
-        }}
-        onClick={onPost}
-      >
-        Poste seu momento
-      </Button>
+      <LogoIcon />
+
+      <Group gap="md">
+        <ActionIcon
+          variant="filled"
+          size="xl"
+          radius="xl"
+          onClick={onPost}
+          color="#E0C862"
+          style={{
+            color: "#191F10",
+          }}
+        >
+          <IconPhoto />
+        </ActionIcon>
+
+        <Button
+          variant="filled"
+          size="lg"
+          radius="xl"
+          onClick={onPost}
+          color="#E0C862"
+          style={{
+            color: "#191F10",
+          }}
+        >
+          Poste seu momento
+        </Button>
+      </Group>
     </Flex>
   );
 }

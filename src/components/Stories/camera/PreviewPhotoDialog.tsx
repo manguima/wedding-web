@@ -1,6 +1,6 @@
-import { Button } from "@mantine/core";
+import { ActionIcon, Button } from "@mantine/core";
 import { CameraModal } from "./CameraModal";
-import { IconCheck } from "@tabler/icons-react";
+import { IconCheck, IconX } from "@tabler/icons-react";
 import { useEffect } from "react";
 
 interface PreviewPhotoDialogProps {
@@ -29,22 +29,26 @@ export function PreviewPhotoDialog({
   return (
     <CameraModal
       open={open}
-      actionButtons={
-        <>
-          <Button
-            size="large"
-            onClick={onClose}
-            style={{
-              color: "#ffde22",
-              backgroundColor: "transparent",
-              borderColor: "#ffde22",
-              borderStyle: "solid",
-              borderWidth: "2px",
-            }}
-          >
-            <IconCheck />
-          </Button>
-        </>
+      actionButtons={<></>}
+      closeButton={
+        <ActionIcon
+          size="xl"
+          radius="xl"
+          onClick={onClose}
+          style={{
+            color: "#E0C862",
+            backgroundColor: "transparent",
+            borderColor: "#E0C862",
+            borderStyle: "solid",
+            borderWidth: "2px",
+
+            position: "absolute",
+            top: "10px",
+            right: "10px",
+          }}
+        >
+          <IconX />
+        </ActionIcon>
       }
     >
       {photo && <img src={photo} alt="Preview" style={{ width: "100%" }} />}

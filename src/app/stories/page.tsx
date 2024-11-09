@@ -7,6 +7,7 @@ import { TakePhotoDialog } from "@/components/Stories/camera/TakePhotoDialog";
 import { useStockPhoto } from "@/components/Stories/camera/useStockPhotoHook";
 import { PhotoThumbnail } from "@/components/Stories/PhotoThumbnail";
 import { Flex, Grid } from "@mantine/core";
+import { ScrollArea, Avatar, Box, Stack, Text } from "@mantine/core";
 
 export default function StoriesPage() {
   const {
@@ -41,11 +42,38 @@ export default function StoriesPage() {
   return (
     <Flex
       style={{
-        backgroundColor: "black",
         paddingBottom: 40,
         minHeight: "100vh",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
       }}
     >
+      <ScrollArea type="always" style={{ width: "100%", padding: "0 1rem" }}>
+        <Box style={{ display: "flex", gap: "1rem", padding: "1rem 0" }}>
+          {photos.map((_, index) => (
+            <Avatar
+              radius="xl"
+              size={70}
+              key={index}
+              src={photos[index].imageUrl}
+              alt={`Story ${index + 1}`}
+              onClick={() => handlePhotoPreview(photos[index].imageUrl)}
+              style={{
+                cursor: "pointer",
+                borderRadius: "50%",
+
+                borderStyle: "solid",
+                borderWidth: "2px",
+                borderColor: "white",
+
+                boxShadow: "0 0 0 2px #ffde22",
+              }}
+            />
+          ))}
+        </Box>
+      </ScrollArea>
+
       <Grid w="100%">
         {photos.map((photo, index) => (
           <PhotoThumbnail

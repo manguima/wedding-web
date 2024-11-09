@@ -4,10 +4,12 @@ export function CameraModal({
   open,
   actionButtons,
   children,
+  closeButton,
 }: {
   open: boolean;
   children: React.ReactNode;
   actionButtons: React.ReactNode;
+  closeButton?: React.ReactNode;
 }) {
   const theme = useMantineTheme();
 
@@ -56,6 +58,8 @@ export function CameraModal({
       >
         {actionButtons}
       </Flex>
+
+      {closeButton}
     </Box>
   );
 }
