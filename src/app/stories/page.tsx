@@ -11,6 +11,7 @@ import { Flex, Grid } from "@mantine/core";
 
 export default function StoriesPage() {
   const {
+    cameraDeviceCount,
     canvasRef,
     currentPhoto,
     handleCloseCamera,
@@ -19,6 +20,8 @@ export default function StoriesPage() {
     handlePreviewClose,
     handlePreviewPhoto,
     handleTakePicture,
+    hasCamera,
+    isCameraStarted,
     photos,
     previewPhotoOpen,
     takePhotoOpen,
@@ -30,7 +33,6 @@ export default function StoriesPage() {
     tempPhoto,
     isSubmitting,
     codeKey,
-    takePicture,
   } = useStockPhoto();
 
   function handlePhotoPreview(imageUrl: string) {
@@ -58,10 +60,13 @@ export default function StoriesPage() {
       <ActionBar codeKey={codeKey} onPost={() => handleOpenPhotoDialog()} />
 
       <TakePhotoDialog
+        cameraDeviceCount={cameraDeviceCount}
         canvasRef={canvasRef}
+        hasCamera={!!hasCamera}
+        isCameraStarted={isCameraStarted}
         onClose={handleCloseCamera}
         onDeviceCycle={handleDeviceCycle}
-        onTakePhoto={takePicture}
+        onTakePhoto={handleTakePicture}
         open={takePhotoOpen}
         videoRef={videoRef}
       />
