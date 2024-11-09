@@ -5,7 +5,6 @@ import { PreviewPhotoDialog } from "@/components/Stories/camera/PreviewPhotoDial
 import { SubmitPhotoDialog } from "@/components/Stories/camera/SubmitPhotoDialog";
 import { TakePhotoDialog } from "@/components/Stories/camera/TakePhotoDialog";
 import { useStockPhoto } from "@/components/Stories/camera/useStockPhotoHook";
-import { CodeKeyModal } from "@/components/Stories/CodeKeyModal";
 import { PhotoThumbnail } from "@/components/Stories/PhotoThumbnail";
 import { Flex, Grid } from "@mantine/core";
 

@@ -39,14 +39,14 @@ export function useStockPhoto() {
     );
   };
 
-  const reloadPhotos = () => {
-    setTimeout(() => {
-      getPhotos().then((response) => setPhotos(response));
-    }, 1000);
-  };
-
   useEffect(() => {
     getPhotos().then((response) => setPhotos(response));
+    // reload photos in 30sec interval
+    const interval = setInterval(() => {
+      getPhotos().then((response) => setPhotos(response));
+    }, 30000);
+
+    return () => clearInterval(interval);
   }, []);
 
   const handleStartCamera = useCallback(async () => {
@@ -197,7 +197,9 @@ export function useStockPhoto() {
     setTempSubmitOpen(false);
     setCurrentPhoto("");
     setTempPhoto("");
-    reloadPhotos();
+    setTimeout(() => {
+      getPhotos().then((response) => setPhotos(response));
+    }, 1000);
   }
 
   return {
