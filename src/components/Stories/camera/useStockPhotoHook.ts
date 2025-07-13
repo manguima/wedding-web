@@ -35,7 +35,7 @@ export function useStockPhoto() {
   const getPhotos = (take = takePerFetch, skip = 0): Promise<Photo[]> => {
     return new Promise((resolve, reject) =>
       apiWorker.getStories({
-        data: { take, skip },
+        params: { take, skip },
         onSuccess: (response) => resolve(response),
         onError: (error) => reject(error),
       })
@@ -103,11 +103,11 @@ export function useStockPhoto() {
   const handleUploadPhotos = useCallback(async () => {
     setIsSubmitting(true);
     return apiWorker.saveStory({
-      data: { file: tempPhoto, codeKey: "AAAA" }, // TODO: hardcoded codeKey
+      data: { file: tempPhoto, codeKey: codeKey || "" },
       onSuccess: handleGalleryClose,
       onError: handleGalleryClose,
     });
-  }, [tempPhoto]);
+  }, [tempPhoto, codeKey]);
 
   function handleOpenPhotoDialog() {
     setTempSubmitOpen(false);

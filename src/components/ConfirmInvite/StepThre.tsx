@@ -19,7 +19,7 @@ export const StepThre = ({ index }: { index: number }) => {
   const guestName =
     guests?.guests
       ?.filter((guest: Partial<Guest>) => guest?.isHost)?.[0]
-      .name.split(" ")[0] || "";
+      ?.name?.split(" ")?.[0] || "";
 
   const [onError, setOnError] = useState<string>();
 

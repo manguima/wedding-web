@@ -38,8 +38,8 @@ export default () => {
   } = useProductStore();
 
   const [skip, setSkip] = useState(0);
-  const [currentCategoryIndex, setCurrentCategoryIndex] = useState(1);
   const [hasMore, setHasMore] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   const router = useRouter();
 
@@ -77,24 +77,19 @@ export default () => {
     }
   }, [products]);
 
-  const handleProducts = async (
-    take: number = 100,
-    skip: number = 0,
-    currentCategoryIndex = 1
-  ) => {
-    await loadProductList({
-      skip,
-      take,
-      where: {
+  const loadProducts = async (isNewSearch = false) => {
+    if (isLoading) return;
+    
+    setIsLoading(true);
+    const currentSkip = isNewSearch ? 0 : skip;
+    
+    try {
+      const whereClause = {
         category:
           formProducts.values.categ !== "0"
             ? {
                 equals: formProducts.values.categ,
               }
-            : !formProducts.values.name &&
-              formProducts.values.department === "0" &&
-              formProducts.values.categ === "0"
-            ? { equals: currentCategoryIndex }
             : undefined,
         department:
           formProducts.values.department !== "0"
@@ -105,78 +100,55 @@ export default () => {
         name: {
           contains: !formProducts.values.name ? "" : formProducts.values.name,
         },
-      },
-    });
+      };
 
-    if (
-      categories.length > currentCategoryIndex &&
-      formProducts.values.categ === "0"
-    ) {
-      setCurrentCategoryIndex(currentCategoryIndex + 1);
+      const result = isNewSearch 
+        ? await fetchProductList({
+            skip: currentSkip,
+            take: takeSize,
+            where: whereClause,
+          })
+        : await loadProductList({
+            skip: currentSkip,
+            take: takeSize,
+            where: whereClause,
+          });
+      
+      if (result.response && result.response.length < takeSize) {
+        setHasMore(false);
+      } else {
+        setHasMore(true);
+      }
+      
+      if (isNewSearch) {
+        setSkip(takeSize);
+      } else {
+        setSkip(currentSkip + takeSize);
+      }
+    } catch (error) {
+      console.error('Error loading products:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
+  // Initial load and filter changes
   useEffect(() => {
-    if (
-      categories.length > currentCategoryIndex &&
-      currentCategoryIndex !== 1 &&
-      formProducts.values.categ === "0"
-    ) {
-      if (count < 3) {
-        handleProducts(undefined, undefined, currentCategoryIndex + 1);
-      }
-    }
-  }, [count]);
-
-  useEffect(() => {
-    if (
-      formProducts.values.categ !== "0" ||
-      formProducts.values.name ||
-      formProducts.values.department !== "0"
-    ) {
-      setCurrentCategoryIndex(0);
-      updateProducts([]);
-      fetchProductList({
-        skip: 0,
-        take: 100,
-        where: {
-          category:
-            formProducts.values.categ !== "0"
-              ? {
-                  equals: formProducts.values.categ,
-                }
-              : undefined,
-          department:
-            formProducts.values.department !== "0"
-              ? {
-                  equals: formProducts.values.department,
-                }
-              : undefined,
-          name: {
-            contains: !formProducts.values.name ? "" : formProducts.values.name,
-          },
-        },
-      });
-    }
+    setSkip(0);
+    setHasMore(true);
+    loadProducts(true);
   }, [
     formProducts.values.categ,
     formProducts.values.name,
     formProducts.values.department,
   ]);
 
+  // Infinite scroll
   useEffect(() => {
-    if (
-      isInView &&
-      categories.length > currentCategoryIndex &&
-      formProducts.values.categ === "0" &&
-      !formProducts.values.name &&
-      formProducts.values.department === "0"
-    ) {
-      handleProducts(takeSize, skip, currentCategoryIndex);
-    } else if (categories.length < currentCategoryIndex) {
-      setHasMore(false);
+    if (isInView && hasMore && !isLoading) {
+      loadProducts(false);
     }
-  }, [isInView]);
+  }, [isInView, hasMore, isLoading]);
 
   const handleBuyClick = async (product: Partial<Product>) => {
     const productData = {
@@ -249,7 +221,6 @@ export default () => {
         <Flex direction={"column"}>
           <ProductFilter
             onFilterChange={(filters) => {
-              updateProducts([]);
               formProducts.setFieldValue("categ", filters.categ);
               formProducts.setFieldValue("name", filters.name);
               formProducts.setFieldValue("department", filters.department);

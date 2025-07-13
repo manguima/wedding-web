@@ -13,6 +13,9 @@ import { useLayoutContext } from "./LayoutProvider";
 import { create } from "zustand";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useTheme } from "@/contexts/ThemeContext";
+import { useTenant } from "@/contexts/TenantContext";
+import { Image } from "@mantine/core";
 
 type UniqueToView = {
   scrollIntoView: ({ alignment }?: any | undefined) => void;
@@ -37,8 +40,14 @@ export const DefaultHeader = ({
   position?: "sticky" | "fixed";
 }) => {
   const { primaryColor, secondaryColor, acceptedToPlay } = useLayoutContext();
+  const { getAsset } = useTheme();
+  const { tenant } = useTenant();
 
   const [opened, { toggle }] = useDisclosure();
+  
+  // Determinar se deve usar logo customizada ou padrão
+  const logoUrl = getAsset('logo');
+  const hasCustomLogo = logoUrl && !logoUrl.includes('/images/logo.svg');
 
   return (
     <Container
@@ -62,11 +71,21 @@ export const DefaultHeader = ({
           style={{ position: "relative" }}
         >
           <Box w={{ base: "7rem", md: "8rem" }} style={{ zIndex: 3 }}>
-            <LogoIcon
-              width={"100%"}
-              primaryColor={opened ? "white" : primaryColor}
-              secondaryColor={opened ? "#E5C74D" : secondaryColor}
-            />
+            {hasCustomLogo ? (
+              <Image 
+                src={logoUrl} 
+                alt={tenant?.name || "Logo"}
+                fit="contain"
+                height="auto"
+                style={{ maxHeight: '60px' }}
+              />
+            ) : (
+              <LogoIcon
+                width={"100%"}
+                primaryColor={opened ? "white" : primaryColor}
+                secondaryColor={opened ? "#E5C74D" : secondaryColor}
+              />
+            )}
           </Box>
 
           <Flex gap={"1rem"}>

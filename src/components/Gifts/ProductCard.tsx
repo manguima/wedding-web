@@ -10,6 +10,7 @@ import {
 import { convertToFloat } from "@/utils/convertCurrency";
 import { Product } from "@/zustand/types/product.type";
 import { ProductPayModal } from "./ProductPayModal";
+import { useTheme } from "@/contexts/ThemeContext";
 
 interface ProductCardProps {
   product: Partial<Product>;
@@ -18,6 +19,7 @@ interface ProductCardProps {
 }
 
 const ProductCard = ({ product, onBuyClick, type }: ProductCardProps) => {
+  const { getColor } = useTheme();
   let toggleOpenFromChild: (() => void) | undefined;
 
   // Exemplo de função que pode ser chamada no pai para abrir/fechar
@@ -76,8 +78,8 @@ const ProductCard = ({ product, onBuyClick, type }: ProductCardProps) => {
               </Text>
               <Button
                 variant="filled"
-                color="#86e593"
-                c={"dark"}
+                color={getColor('buttonPrimaryColor') as string}
+                c={getColor('buttonTextColor') as string}
                 fullWidth
                 mt="md"
                 radius="md"

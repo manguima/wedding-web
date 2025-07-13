@@ -5,24 +5,14 @@ import "@mantine/core/styles.css";
 import { ColorSchemeScript, MantineProvider } from "@mantine/core";
 import { responsive } from "@/utils/responsive";
 import { ZustandProvider } from "@/zustand/zustandProvider";
+import { TenantProvider } from "@/contexts/TenantContext";
+import { ThemeProvider } from "@/contexts/ThemeContext";
 import "@mantine/carousel/styles.css";
 
+// Note: In a real multi-tenant app, metadata should be dynamic based on tenant
 export const metadata: Metadata = {
-  title: "Deyse & Matheus",
-  description: "Você está convidado para o nosso grande dia!",
-  openGraph: {
-    title: "Deyse & Matheus",
-    description: "Você está convidado para o nosso grande dia!",
-    url: "https://deimatch.com.br",
-    images: [
-      {
-        url: "https://deimatch.com.br/backgroundUrl.jpg",
-        width: 400,
-        height: 300,
-      },
-    ],
-    type: "website",
-  },
+  title: "Wedding Invitation",
+  description: "You're invited to our special day!",
   viewport: "width=device-width, initial-scale=1",
 };
 
@@ -50,12 +40,17 @@ export default function RootLayout({
         <ColorSchemeScript />
       </head>
       <body>
-        <ZustandProvider>
-          <MantineProvider theme={{ fontFamily: "Roboto, sans-serif" }}>
-            {children}
-          </MantineProvider>
-        </ZustandProvider>
+        <TenantProvider>
+          <ThemeProvider>
+            <ZustandProvider>
+              <MantineProvider theme={{ fontFamily: "Roboto, sans-serif" }}>
+                {children}
+              </MantineProvider>
+            </ZustandProvider>
+          </ThemeProvider>
+        </TenantProvider>
       </body>
     </html>
   );
 }
+// Hot reload test - Sun Jun 29 09:47:59 -03 2025

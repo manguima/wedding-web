@@ -5,12 +5,49 @@ import { useInView } from "framer-motion";
 import { Box, Button, Flex, Text } from "@mantine/core";
 import { IconCheck } from "@tabler/icons-react";
 import { fontHailey, fontItaliana } from "@/utils/fonts";
+import { useTheme } from "@/contexts/ThemeContext";
 
 export const StepInit = ({ index }: { index: number }) => {
   const updateCurrentStep = useCurrentStep.getState().updateCurrentStep;
   const currentStep = useCurrentStep.getState().currentStep;
 
   const { inputLoading } = useZustandContext();
+  
+  // GET THEME DATA
+  const { getWeddingData, getColor } = useTheme();
+  const weddingData = getWeddingData();
+  
+  // FORMAT WEDDING DATE
+  const getWeddingDateInfo = () => {
+    if (weddingData?.weddingDate) {
+      // Compensar timezone ao converter a data
+      const rawDate = new Date(weddingData.weddingDate);
+      const date = new Date(rawDate.getTime() + rawDate.getTimezoneOffset() * 60000);
+      
+      const monthNames = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 
+                         'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+      const dayNames = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+      
+      return {
+        month: monthNames[date.getMonth()],
+        day: date.getDate().toString().padStart(2, '0'),
+        dayOfWeek: dayNames[date.getDay()],
+        time: weddingData.weddingTime || '15:30',
+        location: weddingData.weddingLocation || 'Sítio Geranium'
+      };
+    }
+    
+    // Fallback
+    return {
+      month: 'Nov',
+      day: '09',
+      dayOfWeek: 'Sábado',
+      time: '15:30',
+      location: 'Sítio Geranium'
+    };
+  };
+  
+  const dateInfo = getWeddingDateInfo();
 
   // ANIMATION
   const targetRef = useRef(null);
@@ -27,7 +64,7 @@ export const StepInit = ({ index }: { index: number }) => {
         justify={"center"}
       >
         <Text
-          c={"#fff"}
+          c={getColor('confirmTextColor') as string}
           fw={400}
           ta={"center"}
           lh={{ base: "4rem", md: "4rem" }}
@@ -55,7 +92,7 @@ export const StepInit = ({ index }: { index: number }) => {
               right: "100%",
               borderWidth: "0.2rem 0",
               borderStyle: "solid",
-              borderColor: "#fff",
+              borderColor: getColor('borderColor') as string,
               transition: "all ease 0.3s",
               transitionDelay: "0.2s",
               transform: isInView ? "translateX(0)" : "translateX(-100px)",
@@ -67,9 +104,9 @@ export const StepInit = ({ index }: { index: number }) => {
               lh={{ base: "3rem", md: "3rem" }}
               fz={{ base: "3rem", md: "3rem" }}
               tt={"uppercase"}
-              c={"#fff"}
+              c={getColor('confirmTextColor') as string}
             >
-              Nov
+{dateInfo.month}
             </Text>
           </Box>
           <Flex
@@ -90,17 +127,17 @@ export const StepInit = ({ index }: { index: number }) => {
               lh={{ base: "1.5rem", md: "1.5rem" }}
               fz={{ base: "1.5rem", md: "1.5rem" }}
               top={{ base: "0", md: "1rem" }}
-              c={"#fff"}
+              c={getColor('confirmTextColor') as string}
               ff={fontItaliana.style.fontFamily}
               style={{ position: "absolute" }}
             >
-              Sábado
+{dateInfo.dayOfWeek}
             </Text>
             <Text
               lh={{ base: "8rem", md: "8rem" }}
               fz={{ base: "8rem", md: "8rem" }}
               tt={"uppercase"}
-              c={"#ffde22"}
+              c={getColor('confirmAccentColor') as string}
               ff={fontItaliana.style.fontFamily}
               style={{
                 transition: "all ease 0.3s",
@@ -109,13 +146,13 @@ export const StepInit = ({ index }: { index: number }) => {
                 opacity: isInView ? 1 : 0,
               }}
             >
-              09
+{dateInfo.day}
             </Text>
             <Text
               ta={"center"}
               lh={{ base: "1.5rem", md: "1.5rem" }}
               fz={{ base: "1.5rem", md: "1.5rem" }}
-              c={"#fff"}
+              c={getColor('confirmTextColor') as string}
               ff={fontItaliana.style.fontFamily}
               bottom={{ base: "0", md: "1rem" }}
               style={{
@@ -127,7 +164,7 @@ export const StepInit = ({ index }: { index: number }) => {
                 opacity: isInView ? 1 : 0,
               }}
             >
-              Sítio Geranium
+{dateInfo.location}
             </Text>
           </Flex>
           <Box
@@ -136,7 +173,7 @@ export const StepInit = ({ index }: { index: number }) => {
               left: "100%",
               borderWidth: "0.2rem 0",
               borderStyle: "solid",
-              borderColor: "#fff",
+              borderColor: getColor('borderColor') as string,
               transition: "all ease 0.3s",
               transitionDelay: "1s",
               transform: isInView ? "translateX(0)" : "translateX(-100px)",
@@ -148,9 +185,9 @@ export const StepInit = ({ index }: { index: number }) => {
               lh={{ base: "3rem", md: "3rem" }}
               fz={{ base: "3rem", md: "3rem" }}
               tt={"uppercase"}
-              c={"#fff"}
+              c={getColor('confirmTextColor') as string}
             >
-              15:30
+{dateInfo.time}
             </Text>
           </Box>
         </Flex>
@@ -170,8 +207,8 @@ export const StepInit = ({ index }: { index: number }) => {
               </Box>
             }
             mt={{ base: "4rem", md: 0 }}
-            c={"#000"}
-            color="#F5D759"
+            c={getColor('buttonTextColor') as string}
+            color={getColor('confirmButtonColor') as string}
             onClick={() => {
               updateCurrentStep(index + 1);
             }}

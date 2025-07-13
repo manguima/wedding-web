@@ -20,6 +20,8 @@ import Link from "next/link";
 import { menuToView } from "../layouts/DefaultHeader";
 import { useScrollIntoView } from "@mantine/hooks";
 import { useInView } from "framer-motion";
+import { useTheme } from "@/contexts/ThemeContext";
+import { useTenant } from "@/contexts/TenantContext";
 
 export const HeaderSection = ({ index }: { index: number }) => {
   // GET VALUES HOME PROVIDER
@@ -28,13 +30,49 @@ export const HeaderSection = ({ index }: { index: number }) => {
   // GET VALUES KABUKIROLL SECTIONS
   const { currentSection } = useKabukiRoll();
 
+  // GET THEME DATA
+  const { getAsset, getContent, getWeddingData, getColor } = useTheme();
+  const { tenant } = useTenant();
+
+  // GET WEDDING DATA
+  const weddingData = getWeddingData();
+
+  // GENERATE DATE ARRAY FROM WEDDING DATA
+  const getDateWedding = () => {
+    if (!weddingData?.weddingDate) {
+      return [
+        { value: "09", type: "day", label: "dia" },
+        { value: "11", type: "month", label: "mês" },
+        { value: "24", type: "year", label: "ano" },
+      ];
+    }
+
+    // Compensar timezone ao converter a data
+    const rawDate = new Date(weddingData.weddingDate);
+    const date = new Date(
+      rawDate.getTime() + rawDate.getTimezoneOffset() * 60000
+    );
+
+    const day = date.getDate().toString().padStart(2, "0");
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const year = date.getFullYear().toString().slice(-2);
+
+    return [
+      { value: day, type: "day", label: "dia" },
+      { value: month, type: "month", label: "mês" },
+      { value: year, type: "year", label: "ano" },
+    ];
+  };
+
+  const dateWedding = getDateWedding();
+
   // VALIDE VALUES KABUKI WITH HOME PROVIDER AND CHANGE VALUES
   useEffect(() => {
     if (currentSection === index + 1) {
-      setPrimaryColor?.("white");
-      setSecondaryColor?.("#E5C74D");
+      setPrimaryColor?.(getColor('headerTextColor') as string);
+      setSecondaryColor?.(getColor('headerAccentColor') as string);
     }
-  }, [currentSection]);
+  }, [currentSection, getColor]);
 
   // MENU TO VIEW
   const { scrollIntoView, targetRef } = useScrollIntoView<HTMLDivElement>({
@@ -71,10 +109,10 @@ export const HeaderSection = ({ index }: { index: number }) => {
       >
         <Paper style={{ position: "sticky", top: 0 }} w={"100%"} h={"100vh"}>
           <Image
-            style={{ zIndex: 2, filter: "brightness(50%)" }}
+            style={{ zIndex: 2, filter: `brightness(${getColor('headerFilterBrightness')}%)` }}
             height={"100%"}
             fit="cover"
-            src={"images/img_header_section.jpg"}
+            src={getAsset("header_background")}
           />
         </Paper>
       </Flex>
@@ -94,7 +132,7 @@ export const HeaderSection = ({ index }: { index: number }) => {
               : "translateX(-100px) translateY(-200px) rotate(-40deg) scaleX(-1)",
           }}
         >
-          <Image src={"images/tree1.png"} />
+          <Image src={getAsset("tree1")} />
         </Box>
       </Portal>
 
@@ -121,7 +159,7 @@ export const HeaderSection = ({ index }: { index: number }) => {
           >
             <Text
               fz={{ base: "5rem", md: "5rem" }}
-              c={"white"}
+              c={getColor('headerTextColor') as string}
               lh={{ base: "2rem", md: "2rem" }}
               tt={"uppercase"}
               ff={fontItaliana.style.fontFamily}
@@ -130,7 +168,7 @@ export const HeaderSection = ({ index }: { index: number }) => {
             </Text>
             <Text
               fz={{ base: "7rem", md: "10rem" }}
-              c="#E5C74D"
+              c={getColor('headerAccentColor') as string}
               lh={{ base: "8rem", md: "8rem" }}
               ff={fontHailey.style.fontFamily}
             >
@@ -141,9 +179,9 @@ export const HeaderSection = ({ index }: { index: number }) => {
               fz={{ base: "5rem", md: "5rem" }}
               tt={"uppercase"}
               lh={{ base: "2rem", md: "3rem" }}
-              c="white"
+              c={getColor('headerTextColor') as string}
             >
-              Data
+              data
             </Text>
           </Flex>
           <Flex
@@ -158,7 +196,7 @@ export const HeaderSection = ({ index }: { index: number }) => {
                   p={"1rem"}
                   style={{
                     background: "transparent",
-                    border: "0.2rem solid white",
+                    border: `0.2rem solid ${getColor('borderColor')}`,
                     borderRadius: "0.4rem",
                     position: "relative",
                   }}
@@ -166,12 +204,14 @@ export const HeaderSection = ({ index }: { index: number }) => {
                   <Text
                     lh={{ base: "1rem", md: "1.5rem" }}
                     fz={{ base: "1rem", md: "1.5rem" }}
-                    c={"white"}
+                    c={getColor('headerTextColor') as string}
                   >
                     {item.value}
                   </Text>
                   <Flex
                     w={"100%"}
+                    h={{ md: "100%", xs: "auto" }}
+                    style={{ alignItems: "center" }}
                     top={{ base: "calc(100% + 0.5rem)", md: 0 }}
                     left={{ base: "0", md: "calc(100% + 1rem)" }}
                     pos={{ base: "absolute" }}
@@ -179,7 +219,7 @@ export const HeaderSection = ({ index }: { index: number }) => {
                     <Text
                       w={{ base: "100%", md: "unset" }}
                       ta={"center"}
-                      c={"white"}
+                      c={getColor('headerTextColor') as string}
                       fz={{ base: "1rem", md: "1rem" }}
                       tt={"capitalize"}
                     >
@@ -193,7 +233,7 @@ export const HeaderSection = ({ index }: { index: number }) => {
 
           <Button
             variant="outline"
-            color="#E5C74D"
+            color={getColor('headerAccentColor') as string}
             // component={Link}
             onClick={() => menuToView.getState().invite.scrollIntoView()}
             // href={"#confirm"}
@@ -218,14 +258,8 @@ export const HeaderSection = ({ index }: { index: number }) => {
             : "translateX(100px) translateY(200px) rotate(40deg) scaleY(-1)",
         }}
       >
-        <Image src={"images/tree1.png"} />
+        <Image src={getAsset("tree1")} />
       </Box>
     </Container>
   );
 };
-
-const dateWedding = [
-  { value: "09", type: "day", label: "dia" },
-  { value: "11", type: "month", label: "mês" },
-  { value: "24", type: "year", label: "ano" },
-];

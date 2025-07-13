@@ -19,6 +19,7 @@ import { responsive } from "@/utils/responsive";
 import { menuToView } from "../layouts/DefaultHeader";
 import { useScrollIntoView } from "@mantine/hooks";
 import { useInView } from "framer-motion";
+import { useTheme } from "@/contexts/ThemeContext";
 
 export const AboutusSection = ({ index }: { index: number }) => {
   // GET VALUES HOME PROVIDER
@@ -27,13 +28,16 @@ export const AboutusSection = ({ index }: { index: number }) => {
   // GET VALUES KABUKIROLL SECTIONS
   const { currentSection } = useKabukiRoll();
 
+  // GET THEME DATA
+  const { getAsset, getContent, getColor } = useTheme();
+
   // VALIDE VALUES KABUKI WITH HOME PROVIDER AND CHANGE VALUES
   useEffect(() => {
     if (currentSection === index + 1) {
-      setPrimaryColor?.("black");
-      setSecondaryColor?.("#E5C74D");
+      setPrimaryColor?.(getColor('aboutTextColor') as string);
+      setSecondaryColor?.(getColor('aboutShadowColor') as string);
     }
-  }, [currentSection]);
+  }, [currentSection, getColor]);
 
   // MENU TO VIEW
   const { scrollIntoView, targetRef } = useScrollIntoView<HTMLDivElement>({
@@ -75,7 +79,7 @@ export const AboutusSection = ({ index }: { index: number }) => {
           transform: isInView ? "translateY(0)" : "translateY(200px)",
         }}
       >
-        <Image src={"images/tree2.png"} />
+        <Image src={getAsset('tree2')} />
       </Box>
 
       <Center
@@ -111,15 +115,15 @@ export const AboutusSection = ({ index }: { index: number }) => {
                 <Box
                   style={{
                     borderRadius: "40rem 40rem 1rem 1rem",
-                    boxShadow: "-10px 10px 0px 0px #dddddd",
+                    boxShadow: `-10px 10px 0px 0px ${getColor('aboutShadowColor')}`,
                     overflow: "hidden",
                   }}
                 >
                   <AspectRatio visibleFrom="md" w={"100%"} ratio={10 / 14}>
-                    <Image src="images/img_aboutus_section.png" />
+                    <Image src={getAsset('about_image')} />
                   </AspectRatio>
                   <AspectRatio hiddenFrom="md" w={"100%"} ratio={10 / 5}>
-                    <Image src="images/img_aboutus_section.png" />
+                    <Image src={getAsset('about_image')} />
                   </AspectRatio>
                 </Box>
               </Box>
@@ -144,7 +148,7 @@ export const AboutusSection = ({ index }: { index: number }) => {
                   transitionDelay: `${delay}s`,
                 }}
               >
-                Um pouco sobre nós
+                {getContent('aboutTitle') || 'Nossa História'}
               </Title>
               <Text
                 style={{
@@ -154,18 +158,9 @@ export const AboutusSection = ({ index }: { index: number }) => {
                   transitionDelay: `${delay * 2}s`,
                 }}
                 fz={{ base: "1rem", md: "1rem" }}
-                c={"#00000099"}
+                c={getColor('textMuted') as string}
               >
-                Nos apaixonamos um pelo outro, cativados pela paciência e
-                bondade, reconhecendo que Deus é o centro desse amor. Ao longo
-                dos anos, enfrentamos desafios, pedimos desculpas quando
-                necessário, crescemos juntos, mantivemos a fé um no outro e em
-                Deus, aguardamos momentos especiais e superamos obstáculos
-                juntos. Acreditamos que esse amor, ancorado em nossa fé e
-                comprometimento, é eterno, destinado a durar para sempre. Nos
-                alegramos em poder dizer que estamos em direção ao altar, em
-                busca de eternizar esse amor. Assim não sendo dois, mas uma só
-                carne e desejamos que...
+                {getContent('aboutText') || 'Esta é a nossa história de amor. Nos conhecemos e nos apaixonamos, e agora queremos compartilhar este momento especial com vocês.'}
               </Text>
               <Text
                 style={{

@@ -6,6 +6,11 @@ module.exports = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  experimental: {
+    serverActions: {
+      allowedOrigins: ["*"],
+    },
+  },
   // webpack5: true,
   // webpack: (config) => {
   //   config.resolve.fallback = { fs: false };

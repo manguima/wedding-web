@@ -5,6 +5,32 @@ const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_URL_API,
 });
 
+// Add tenant header to all requests
+api.interceptors.request.use((config) => {
+  if (typeof window !== 'undefined') {
+    const host = window.location.hostname;
+    let tenantSlug = 'default';
+    
+    if (host.includes('localhost')) {
+      const subdomain = host.split('.')[0];
+      if (subdomain !== 'localhost') {
+        tenantSlug = subdomain;
+      }
+    }
+    
+    // Send both headers for compatibility
+    config.headers['X-Tenant-ID'] = tenantSlug;
+    config.headers['X-Tenant-Slug'] = tenantSlug;
+    
+    console.log('ApiWorker - Sending tenant headers:', {
+      'X-Tenant-ID': tenantSlug,
+      'X-Tenant-Slug': tenantSlug,
+      host: host
+    });
+  }
+  return config;
+});
+
 api.interceptors.response.use((response) => response.data);
 
 type ApiWorkerParams<T = any> = {
@@ -17,18 +43,60 @@ type ApiWorkerParams<T = any> = {
 export const apiWorker = {
   loadInvite: async ({ data, onSuccess, onError }: ApiWorkerParams) => {
     try {
-      const response = await api.post("/invite/validate", data);
+      // Get tenant slug from URL
+      let tenantSlug = 'default';
+      if (typeof window !== 'undefined') {
+        const host = window.location.hostname;
+        if (host.includes('localhost')) {
+          const subdomain = host.split('.')[0];
+          if (subdomain !== 'localhost') {
+            tenantSlug = subdomain;
+          }
+        }
+      }
+      
+      console.log('🔍 ApiWorker - Validando convite');
+      console.log('📍 Host:', typeof window !== 'undefined' ? window.location.hostname : 'server');
+      console.log('🏢 Tenant Slug:', tenantSlug);
+      console.log('🎫 Código:', data.codeKey);
+      console.log('📤 Payload:', { ...data, tenantSlug });
+      
+      const response = await api.post("/invite/validate", {
+        ...data,
+        tenantSlug: tenantSlug
+      });
+      
+      console.log('✅ Convite validado com sucesso:', response);
       onSuccess?.(response);
     } catch (error) {
+      console.error('❌ Erro ao validar convite:', error);
+      console.error('📋 Detalhes do erro:', {
+        message: error.message,
+        status: error.response?.status,
+        statusText: error.response?.statusText,
+        data: error.response?.data
+      });
       onError?.(error);
     }
   },
 
   saveGuests: async ({ data, onSuccess, onError }: ApiWorkerParams) => {
     try {
+      console.log('👥 ApiWorker - Salvando convidados');
+      console.log('📤 Data enviada:', data);
+      
       const response = await api.patch("/guest/create", data);
+      
+      console.log('✅ Convidados salvos com sucesso:', response);
       onSuccess?.(response);
     } catch (error) {
+      console.error('❌ Erro ao salvar convidados:', error);
+      console.error('📋 Detalhes do erro:', {
+        message: error.message,
+        status: error.response?.status,
+        statusText: error.response?.statusText,
+        data: error.response?.data
+      });
       onError?.(error);
     }
   },
@@ -85,7 +153,7 @@ export const apiWorker = {
   getStories: async ({ params, onSuccess, onError }: ApiWorkerParams) => {
     try {
       const response = await api.get(
-        `/stories?take=${params?.take || 50}&skip=${params?.skip || 0}`,
+        `/stories/public?take=${params?.take || 50}&skip=${params?.skip || 0}`,
         { params }
       );
       onSuccess?.(response);
@@ -142,6 +210,15 @@ export const apiWorker = {
   deleteStory: async ({ data, onSuccess, onError }: ApiWorkerParams) => {
     try {
       const response = await api.delete(`/stories/${data.id}`);
+      onSuccess?.(response);
+    } catch (error) {
+      onError?.(error);
+    }
+  },
+
+  createMusicSuggestion: async ({ data, onSuccess, onError }: ApiWorkerParams) => {
+    try {
+      const response = await api.post("/sign-music", data);
       onSuccess?.(response);
     } catch (error) {
       onError?.(error);

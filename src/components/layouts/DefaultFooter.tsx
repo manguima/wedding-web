@@ -1,5 +1,5 @@
 "use client";
-import { ActionIcon, Center, Container, Flex, Grid, Text } from "@mantine/core";
+import { ActionIcon, Center, Container, Flex, Grid, Text, Image } from "@mantine/core";
 import { LogoIcon } from "../icons/LogoIcon";
 import {
   IconBrandLinkedin,
@@ -9,9 +9,17 @@ import {
 import Link from "next/link";
 import { ButtonNav, listNav } from "./DefaultHeader";
 import { useLayoutContext } from "./LayoutProvider";
+import { useTheme } from "@/contexts/ThemeContext";
+import { useTenant } from "@/contexts/TenantContext";
 
 export const DefaultFooter = () => {
   const { acceptedToPlay, setAcceptedToPlay } = useLayoutContext();
+  const { getAsset, getColor } = useTheme();
+  const { tenant } = useTenant();
+  
+  // Determinar se deve usar logo customizada ou padrão
+  const logoUrl = getAsset('logo');
+  const hasCustomLogo = logoUrl && !logoUrl.includes('/images/logo.svg');
   return (
     <Container
       fluid
@@ -26,8 +34,18 @@ export const DefaultFooter = () => {
             <Grid.Col span={{ base: 12, sm: 6, md: 4 }}>
               <Flex direction={"column"} gap={"1.5rem"}>
                 <Flex direction={"column"} gap={"0.5rem"}>
-                  <LogoIcon width={"12rem"} />
-                  <Text c={"white"} fz={"1rem"} lh={"1.2rem"}>
+                  {hasCustomLogo ? (
+                    <Image 
+                      src={logoUrl} 
+                      alt={tenant?.name || "Logo"}
+                      fit="contain"
+                      width="12rem"
+                      style={{ maxHeight: '80px' }}
+                    />
+                  ) : (
+                    <LogoIcon width={"12rem"} />
+                  )}
+                  <Text c={getColor('textLight') as string} fz={"1rem"} lh={"1.2rem"}>
                     Site desenvolvido pelos noivos com viés informativo acerca
                     do evento. Caso tenha interesse em desenvolver um site para
                     a sua empresa ou evento, entre em contato.
@@ -41,9 +59,9 @@ export const DefaultFooter = () => {
                       "https://www.linkedin.com/in/matheus-guimar%C3%A3es-790a31251/"
                     }
                     size={"3rem"}
-                    color={"#E5C74D"}
+                    color={getColor('primaryColor') as string}
                   >
-                    <IconBrandLinkedin color="#79630b" />
+                    <IconBrandLinkedin color={getColor('textDark') as string} />
                   </ActionIcon>
                   <ActionIcon
                     onClick={() => {
@@ -53,14 +71,14 @@ export const DefaultFooter = () => {
                         setAcceptedToPlay(true);
                       }
                     }}
-                    color={"#E5C74D"}
+                    color={getColor('primaryColor') as string}
                     size={"3rem"}
                     title={acceptedToPlay ? "Parar Música" : "Iniciar Música"}
                   >
                     {acceptedToPlay ? (
-                      <IconPlayerPause color="#79630b" />
+                      <IconPlayerPause color={getColor('textDark') as string} />
                     ) : (
-                      <IconPlayerPlay color="#79630b" />
+                      <IconPlayerPlay color={getColor('textDark') as string} />
                     )}
                   </ActionIcon>
                 </Flex>
@@ -68,7 +86,7 @@ export const DefaultFooter = () => {
             </Grid.Col>
             <Grid.Col span={{ base: 12, sm: 6, md: 4 }}>
               <Flex direction={"column"}>
-                <Text fw={700} fz={"1.4rem"} c={"white"}>
+                <Text fw={700} fz={"1.4rem"} c={getColor('textLight') as string}>
                   Menu
                 </Text>
                 <Flex direction={"column"}>
@@ -90,8 +108,8 @@ export const DefaultFooter = () => {
             px={{ base: "2rem", md: "0" }}
             justify={"space-between"}
           >
-            <Text c={"#64815C"}>Criado por Matheus & Deyse</Text>
-            <Text c={"#64815C"}>Copyright - 2024 ®</Text>
+            <Text c={getColor('textMuted') as string}>Criado por Matheus & Deyse</Text>
+            <Text c={getColor('textMuted') as string}>Copyright - 2024 ®</Text>
           </Flex>
         </Center>
       </Flex>

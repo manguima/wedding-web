@@ -4,6 +4,7 @@ import { useKabukiRoll } from "../KabukiRoll/KabukiRoll";
 import { useLayoutContext } from "../layouts/LayoutProvider";
 import { useEffect } from "react";
 import { useZustandContext } from "@/zustand/zustandProvider";
+import { useTheme } from "@/contexts/ThemeContext";
 import { create } from "zustand";
 import { menuToView } from "../layouts/DefaultHeader";
 import { useScrollIntoView } from "@mantine/hooks";
@@ -38,6 +39,9 @@ export const ConfirmInviteSection = ({ index }: { index: number }) => {
   // GET VALUES KABUKIROLL SECTIONS
   const { currentSection } = useKabukiRoll();
 
+  // GET THEME DATA
+  const { getAsset, getContent, getColor } = useTheme();
+
   // MENU TO VIEW
   const { scrollIntoView, targetRef } = useScrollIntoView<HTMLDivElement>({
     offset: -10,
@@ -49,10 +53,10 @@ export const ConfirmInviteSection = ({ index }: { index: number }) => {
   // VALIDE VALUES KABUKI WITH HOME PROVIDER AND CHANGE VALUES
   useEffect(() => {
     if (currentSection === index + 1) {
-      setPrimaryColor?.("white");
-      setSecondaryColor?.("#E5C74D");
+      setPrimaryColor?.(getColor('confirmTextColor') as string);
+      setSecondaryColor?.(getColor('confirmAccentColor') as string);
     }
-  }, [currentSection]);
+  }, [currentSection, getColor]);
 
   const currentStep = useCurrentStep((state) => state.currentStep);
 
@@ -76,10 +80,10 @@ export const ConfirmInviteSection = ({ index }: { index: number }) => {
           h={"100%"}
         >
           <Image
-            style={{ filter: "brightness(25%)" }}
+            style={{ filter: `brightness(${getColor('confirmFilterBrightness')}%)` }}
             height={"100%"}
             fit="cover"
-            src={"images/img_checkout_section.png"}
+            src={getAsset('checkout_image')}
           />
         </Paper>
         <Flex

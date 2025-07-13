@@ -13,6 +13,7 @@ import { useEffect, useRef } from "react";
 import { fontHailey } from "@/utils/fonts";
 import { IconBrandLinkedin } from "@tabler/icons-react";
 import { useInView } from "framer-motion";
+import { useTheme } from "@/contexts/ThemeContext";
 
 export const BuildingSection = ({ index }: { index: number }) => {
   // GET VALUES HOME PROVIDER
@@ -21,13 +22,16 @@ export const BuildingSection = ({ index }: { index: number }) => {
   // GET VALUES KABUKIROLL SECTIONS
   const { currentSection } = useKabukiRoll();
 
+  // GET THEME DATA
+  const { getAsset, getContent, getColor } = useTheme();
+
   // VALIDE VALUES KABUKI WITH HOME PROVIDER AND CHANGE VALUES
   useEffect(() => {
     if (currentSection === index + 1) {
-      setPrimaryColor?.("black");
-      setSecondaryColor?.("#E5C74D");
+      setPrimaryColor?.(getColor('textDark') as string);
+      setSecondaryColor?.(getColor('primaryColor') as string);
     }
-  }, [currentSection]);
+  }, [currentSection, getColor]);
 
   // ANIMATION
   const targetRef = useRef(null);
@@ -40,7 +44,7 @@ export const BuildingSection = ({ index }: { index: number }) => {
       w={"100%"}
       h={"150dvh"}
       style={{
-        backgroundImage: "url(./images/img_building_section.png)",
+        backgroundImage: `url(${getAsset('building_image')})`,
         backgroundSize: "100%",
         backgroundPosition: "bottom",
         backgroundRepeat: "no-repeat",
@@ -61,7 +65,7 @@ export const BuildingSection = ({ index }: { index: number }) => {
               opacity: isInView ? 1 : 0,
             }}
           >
-            Ainda tem muito mais!
+            {getContent('locationTitle') || 'Local da Cerimônia'}
           </Title>
           <Text
             style={{
@@ -72,7 +76,7 @@ export const BuildingSection = ({ index }: { index: number }) => {
             }}
             fz={"1rem"}
           >
-            Aguarde para novas atualizações.
+            {getContent('locationDescription') || 'Venha celebrar conosco neste dia especial.'}
           </Text>
         </Flex>
       </Center>

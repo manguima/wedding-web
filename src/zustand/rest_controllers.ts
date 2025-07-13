@@ -5,12 +5,32 @@ const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_URL_API,
 });
 
+// Add tenant header to all requests
+api.interceptors.request.use((config) => {
+  if (typeof window !== 'undefined') {
+    const host = window.location.hostname;
+    let tenantSlug = 'default';
+    
+    if (host.includes('localhost')) {
+      const subdomain = host.split('.')[0];
+      if (subdomain !== 'localhost') {
+        tenantSlug = subdomain;
+      }
+    }
+    
+    // Send both headers for compatibility
+    config.headers['X-Tenant-ID'] = tenantSlug;
+    config.headers['X-Tenant-Slug'] = tenantSlug;
+  }
+  return config;
+});
+
 // if we don't write the next line, our resources will receive the entire response in the data field. We don't want that.
 api.interceptors.response.use((response) => response.data);
 
 // VALIDATE INVITE GUEST
 export const loadInvite = async (
-  data: { codeKey: string },
+  data: { codeKey: string; tenantId: string },
   onSuccess: (data: any) => void,
   onError: (error: any) => void
 ) => {

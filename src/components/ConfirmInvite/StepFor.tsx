@@ -1,10 +1,47 @@
 import { Box, Button, Flex, Text } from "@mantine/core";
 import { useCurrentStep } from "../HomePage/ConfirmInviteSection";
 import { fontItaliana } from "@/utils/fonts";
+import { useTheme } from "@/contexts/ThemeContext";
 
 export const StepFor = ({ index }: { index: number }) => {
   const updateCurrentStep = useCurrentStep.getState().updateCurrentStep;
   const currentStep = useCurrentStep.getState().currentStep;
+  
+  // GET THEME DATA
+  const { getWeddingData } = useTheme();
+  const weddingData = getWeddingData();
+  
+  // FORMAT WEDDING DATE
+  const getWeddingDateInfo = () => {
+    if (weddingData?.weddingDate) {
+      // Compensar timezone ao converter a data
+      const rawDate = new Date(weddingData.weddingDate);
+      const date = new Date(rawDate.getTime() + rawDate.getTimezoneOffset() * 60000);
+      
+      const monthNames = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 
+                         'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+      const dayNames = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+      
+      return {
+        month: monthNames[date.getMonth()],
+        day: date.getDate().toString().padStart(2, '0'),
+        dayOfWeek: dayNames[date.getDay()],
+        time: weddingData.weddingTime || '15:30',
+        location: weddingData.weddingLocation || 'Sítio Geranium'
+      };
+    }
+    
+    // Fallback
+    return {
+      month: 'Nov',
+      day: '09',
+      dayOfWeek: 'Sábado',
+      time: '15:30',
+      location: 'Sítio Geranium'
+    };
+  };
+  
+  const dateInfo = getWeddingDateInfo();
 
   return (
     <Flex w={"100%"} miw={"25rem"} direction={"column"} gap={"2rem"}>
@@ -21,7 +58,7 @@ export const StepFor = ({ index }: { index: number }) => {
           }}
         >
           <Text fw={300} lh={"3rem"} fz={"3rem"} tt={"uppercase"} c={"#fff"}>
-            Nov
+{dateInfo.month}
           </Text>
         </Box>
         <Flex
@@ -40,7 +77,7 @@ export const StepFor = ({ index }: { index: number }) => {
             ff={fontItaliana.style.fontFamily}
             style={{ position: "absolute", top: "1rem" }}
           >
-            Sábado
+{dateInfo.dayOfWeek}
           </Text>
           <Text
             lh={"8rem"}
@@ -49,7 +86,7 @@ export const StepFor = ({ index }: { index: number }) => {
             c={"#ffde22"}
             ff={fontItaliana.style.fontFamily}
           >
-            09
+{dateInfo.day}
           </Text>
           <Text
             lh={0}
@@ -58,7 +95,7 @@ export const StepFor = ({ index }: { index: number }) => {
             ff={fontItaliana.style.fontFamily}
             style={{ position: "absolute", bottom: "1rem" }}
           >
-            Sítio Geranium
+{dateInfo.location}
           </Text>
         </Flex>
         <Box
@@ -69,7 +106,7 @@ export const StepFor = ({ index }: { index: number }) => {
           }}
         >
           <Text fw={300} lh={"3rem"} fz={"3rem"} tt={"uppercase"} c={"#fff"}>
-            15:30
+{dateInfo.time}
           </Text>
         </Box>
       </Flex>
