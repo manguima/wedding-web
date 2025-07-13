@@ -2,7 +2,7 @@ import axios, { AxiosResponse } from "axios";
 import { useCodeStore } from "./zustandProvider";
 
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_URL_API,
+  baseURL: process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_URL_API,
 });
 
 // Add tenant header to all requests

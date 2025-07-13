@@ -7,7 +7,7 @@ import { useCamera } from "./useCameraHook";
 
 const allowedPhotoFormats = ["image/jpeg", "image/png"];
 const maxPhotoFiles = 1;
-const takePerFetch = 10;
+const takePerFetch = 999;
 
 export interface Photo {
   imageUrl: string;
@@ -16,7 +16,7 @@ export interface Photo {
 }
 
 export function useStockPhoto() {
-  const { hasCamera, deviceCount, changeDevice, stopCamera, isStarted } =
+  const { hasCamera, changeDevice, stopCamera, isStarted, videoRef } =
     useCamera();
 
   const [photos, setPhotos] = useState<Photo[]>([]);
@@ -26,10 +26,7 @@ export function useStockPhoto() {
   const [currentPhoto, setCurrentPhoto] = useState<string>("");
   const [tempPhoto, setTempPhoto] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [deviceIndex, setDeviceIndex] = useState<number>();
-  const defaultDevice = 0;
 
-  const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const getPhotos = (take = takePerFetch, skip = 0): Promise<Photo[]> => {
@@ -46,6 +43,13 @@ export function useStockPhoto() {
     getPhotos().then((response) => setPhotos(response));
   }, []);
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      reloadPhotos();
+    }, 1000 * 60 * 2); // 2 minutes
+    return () => clearInterval(interval);
+  }, [reloadPhotos]);
+
   const loadMorePhotos = useCallback(() => {
     getPhotos(takePerFetch, photos.length).then((response) =>
       setPhotos((prev) => [...prev, ...response])
@@ -56,27 +60,14 @@ export function useStockPhoto() {
     getPhotos().then((response) => setPhotos(response));
   }, []);
 
-  const handleStartCamera = useCallback(
-    async (nextDeviceIndex: number) => {
-      if (!videoRef.current) return;
-      setDeviceIndex(nextDeviceIndex);
-      videoRef.current.srcObject = await changeDevice(nextDeviceIndex);
-    },
-    [changeDevice, videoRef]
-  );
+  const handleStartCamera = useCallback(async () => {
+    if (!videoRef.current) return;
+    await changeDevice();
+  }, [changeDevice, videoRef]);
 
-  function handleDeviceCycle() {
-    alert("handleDeviceCycle");
-    if (!deviceCount) return;
-    alert(deviceCount);
-    alert(deviceIndex);
-    const nextDeviceIndex =
-      deviceIndex === undefined
-        ? defaultDevice
-        : (deviceIndex + 1) % deviceCount;
-    alert(nextDeviceIndex);
-
-    handleStartCamera(nextDeviceIndex);
+  async function handleDeviceCycle() {
+    if (!videoRef.current) return;
+    await changeDevice();
   }
 
   const [codeKey, setCodeKey] = useLocalStorage<string | null>({
@@ -112,7 +103,7 @@ export function useStockPhoto() {
   function handleOpenPhotoDialog() {
     setTempSubmitOpen(false);
     if (hasCamera) {
-      handleStartCamera(defaultDevice);
+      handleStartCamera();
       setTakePhotoOpen(true);
     } else {
       handleAddPhotos();
@@ -212,7 +203,6 @@ export function useStockPhoto() {
 
     hasCamera,
     isCameraStarted: isStarted,
-    cameraDeviceCount: deviceCount,
     videoRef,
     canvasRef,
 

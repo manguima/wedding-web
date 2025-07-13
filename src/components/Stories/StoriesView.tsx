@@ -122,6 +122,7 @@ export const StoriesView = ({
       </Flex>
 
       <main
+        className="no-scroll"
         ref={containerRef}
         style={{
           scrollSnapType: "y mandatory",

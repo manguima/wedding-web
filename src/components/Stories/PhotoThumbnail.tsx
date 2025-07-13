@@ -2,7 +2,7 @@ import { Photo } from "@/components/Stories/camera/useStockPhotoHook";
 import { apiWorker } from "@/zustand/apiWorker";
 import { Button, Grid, Text } from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 
 export function PhotoThumbnail({
   photo,
@@ -11,6 +11,7 @@ export function PhotoThumbnail({
   photo: Photo;
   showDate?: boolean;
 }) {
+  const [isDeleted, setIsDeleted] = useState(false);
   const [debugMode] = useLocalStorage({
     key: "debugMode",
     defaultValue: false,
@@ -20,11 +21,16 @@ export function PhotoThumbnail({
     return new Promise((resolve, reject) =>
       apiWorker.deleteStory({
         data: { id: photo.id },
-        onSuccess: (response) => resolve(response),
+        onSuccess: (response) => {
+          setIsDeleted(true);
+          resolve(response);
+        },
         onError: (error) => reject(error),
       })
     );
   };
+
+  if (isDeleted) return null;
 
   return (
     <>

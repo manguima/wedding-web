@@ -11,7 +11,6 @@ import { useState } from "react";
 
 export default function StoriesPage() {
   const {
-    cameraDeviceCount,
     canvasRef,
     currentPhoto,
     handleCloseCamera,
@@ -32,7 +31,6 @@ export default function StoriesPage() {
     tempPhoto,
     isSubmitting,
     codeKey,
-    loadMorePhotos,
     reloadPhotos,
   } = useStockPhoto();
 
@@ -65,7 +63,6 @@ export default function StoriesPage() {
       />
 
       <TakePhotoDialog
-        cameraDeviceCount={cameraDeviceCount}
         canvasRef={canvasRef}
         hasCamera={!!hasCamera}
         isCameraStarted={isCameraStarted}

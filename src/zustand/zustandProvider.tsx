@@ -97,7 +97,7 @@ export const ZustandProvider = ({ children }: { children: ReactNode }) => {
     setInputLoading(true);
     useCodeStore.getState().updateCode(initialValues);
     loadInvite(
-      { codeKey: code },
+      { codeKey: code, tenantId: '' },
       (data) => {
         if (!!data) {
           useCodeStore.getState().updateCode(data);

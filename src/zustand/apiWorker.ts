@@ -2,7 +2,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_URL_API,
+  baseURL: process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_URL_API,
 });
 
 // Add tenant header to all requests
@@ -71,10 +71,10 @@ export const apiWorker = {
     } catch (error) {
       console.error('❌ Erro ao validar convite:', error);
       console.error('📋 Detalhes do erro:', {
-        message: error.message,
-        status: error.response?.status,
-        statusText: error.response?.statusText,
-        data: error.response?.data
+        message: (error as any)?.message,
+        status: (error as any)?.response?.status,
+        statusText: (error as any)?.response?.statusText,
+        data: (error as any)?.response?.data
       });
       onError?.(error);
     }
@@ -92,10 +92,10 @@ export const apiWorker = {
     } catch (error) {
       console.error('❌ Erro ao salvar convidados:', error);
       console.error('📋 Detalhes do erro:', {
-        message: error.message,
-        status: error.response?.status,
-        statusText: error.response?.statusText,
-        data: error.response?.data
+        message: (error as any)?.message,
+        status: (error as any)?.response?.status,
+        statusText: (error as any)?.response?.statusText,
+        data: (error as any)?.response?.data
       });
       onError?.(error);
     }

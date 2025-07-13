@@ -17,10 +17,19 @@ export const GalleryView = ({
         minHeight: "100vh",
         flexDirection: "column",
         alignItems: "center",
-        justifyContent: "center",
+        justifyContent: "start",
       }}
     >
-      <ScrollArea type="always" style={{ width: "100%", padding: "0 1rem" }}>
+      <ScrollArea
+        type="always"
+        style={{ width: "100%", padding: "0 1rem" }}
+        styles={{
+          scrollbar: {
+            width: "0",
+            height: "0",
+          },
+        }}
+      >
         <Box style={{ display: "flex", gap: "1rem", padding: "1rem 0" }}>
           {photos.map((_, index) => (
             <Avatar
