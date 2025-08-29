@@ -112,7 +112,7 @@ export const KabukiRoll = ({
 
       if (anchorTo >= scrollHeight) {
         currentPage = index;
-        console.log("current page", currentPage);
+        // console.log("current page", currentPage);
         progress = (anchorTo - scrollHeight) / sectionHeight;
       }
     });
@@ -188,8 +188,9 @@ export const KabukiRoll = ({
         ref={providerRef}
         style={{
           minHeight: "100vh",
-          // minWidth: "100vw",
-          maxWidth: "100vw",
+          minWidth: "100svw",
+          // maxWidth: "100vw",
+          contain: "paint",
           position: "relative",
           display: "flex",
           flexDirection: "column",

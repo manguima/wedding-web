@@ -1,0 +1,227 @@
+"use client";
+
+import { useCallback, useEffect, useRef, useState } from "react";
+import { apiWorker } from "@/zustand/apiWorker";
+import { useLocalStorage } from "@mantine/hooks";
+import { useCamera } from "./useCameraHook";
+
+const allowedPhotoFormats = ["image/jpeg", "image/png"];
+const maxPhotoFiles = 1;
+const takePerFetch = 999;
+
+export interface Photo {
+  imageUrl: string;
+  createdAt: string;
+  id: string;
+}
+
+export function useStockPhoto() {
+  const { hasCamera, changeDevice, stopCamera, isStarted, videoRef } =
+    useCamera();
+
+  const [photos, setPhotos] = useState<Photo[]>([]);
+  const [takePhotoOpen, setTakePhotoOpen] = useState(false);
+  const [previewPhotoOpen, setPreviewPhotoOpen] = useState(false);
+  const [tempSubmitOpen, setTempSubmitOpen] = useState(false);
+  const [currentPhoto, setCurrentPhoto] = useState<string>("");
+  const [tempPhoto, setTempPhoto] = useState<string>("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  const getPhotos = (take = takePerFetch, skip = 0): Promise<Photo[]> => {
+    return new Promise((resolve, reject) =>
+      apiWorker.getStories({
+        params: { take, skip },
+        onSuccess: (response) => resolve(response),
+        onError: (error) => reject(error),
+      })
+    );
+  };
+
+  const reloadPhotos = useCallback(() => {
+    getPhotos().then((response) => setPhotos(response));
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      reloadPhotos();
+    }, 1000 * 60 * 2); // 2 minutes
+    return () => clearInterval(interval);
+  }, [reloadPhotos]);
+
+  const loadMorePhotos = useCallback(() => {
+    getPhotos(takePerFetch, photos.length).then((response) =>
+      setPhotos((prev) => [...prev, ...response])
+    );
+  }, [photos]);
+
+  useEffect(() => {
+    getPhotos().then((response) => setPhotos(response));
+  }, []);
+
+  const handleStartCamera = useCallback(async () => {
+    if (!videoRef.current) return;
+    await changeDevice();
+  }, [changeDevice, videoRef]);
+
+  async function handleDeviceCycle() {
+    if (!videoRef.current) return;
+    await changeDevice();
+  }
+
+  const [codeKey, setCodeKey] = useLocalStorage<string | null>({
+    key: "codeKey",
+    defaultValue: null,
+  });
+
+  function saveCodeKey(_codeKey: string) {
+    return new Promise<void>((resolve, reject) => {
+      apiWorker.validateCodeKey({
+        data: { codeKey: _codeKey.toUpperCase().slice(0, 6) },
+        onSuccess: () => {
+          setCodeKey(_codeKey);
+          resolve();
+        },
+        onError: () => {
+          setCodeKey(null);
+          reject();
+        },
+      });
+    });
+  }
+
+  const handleUploadPhotos = useCallback(async () => {
+    setIsSubmitting(true);
+    return apiWorker.saveStory({
+      data: { file: tempPhoto, codeKey: codeKey || "" },
+      onSuccess: handleGalleryClose,
+      onError: handleGalleryClose,
+    });
+  }, [tempPhoto, codeKey]);
+
+  function handleOpenPhotoDialog() {
+    setTempSubmitOpen(false);
+    if (hasCamera) {
+      handleStartCamera();
+      setTakePhotoOpen(true);
+    } else {
+      handleAddPhotos();
+    }
+  }
+
+  function handleAddPhotos() {
+    const fileInput = document.createElement("input");
+    fileInput.type = "file";
+    fileInput.accept = allowedPhotoFormats.join(", ");
+    fileInput.multiple = true;
+
+    fileInput.addEventListener("change", (event) => {
+      let files: File[] = Array.from((event.target as HTMLInputElement).files!);
+      files = files.filter((file) => allowedPhotoFormats.includes(file.type));
+
+      const maxIterations = Math.min(maxPhotoFiles, files.length);
+
+      for (let i = 0; i < maxIterations; i++) {
+        const file = files[i];
+        const reader = new FileReader();
+        reader.onload = () => {
+          setTempPhoto(reader.result as string);
+        };
+        reader.readAsDataURL(file);
+      }
+      setTempSubmitOpen(true);
+    });
+    fileInput.click();
+  }
+
+  function handleTakePicture() {
+    const canvas = canvasRef.current;
+    const video = videoRef.current;
+
+    if (video && canvas) {
+      const context = canvas.getContext("2d");
+      if (!context) return;
+
+      const videoWidth = video.videoWidth;
+      const videoHeight = video.videoHeight;
+
+      canvas.width = videoWidth;
+      canvas.height = videoHeight;
+
+      context.clearRect(0, 0, canvas.width, canvas.height);
+      context.fillStyle = "black";
+      context.fillRect(0, 0, canvas.width, canvas.height);
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+      const dataURL = canvas.toDataURL("image/png");
+      setTempPhoto(dataURL);
+
+      handleCloseCamera();
+    }
+
+    setTempSubmitOpen(true);
+  }
+
+  function handleCloseCamera() {
+    setTakePhotoOpen(false);
+    stopCamera();
+    if (tempPhoto) {
+      setTempSubmitOpen(true);
+    }
+  }
+
+  function handlePreviewPhoto(photo: string) {
+    setTempSubmitOpen(false);
+    setCurrentPhoto(photo);
+    setPreviewPhotoOpen(true);
+  }
+
+  function handlePreviewClose() {
+    setPreviewPhotoOpen(false);
+    setCurrentPhoto("");
+  }
+
+  function handleGalleryClose() {
+    setIsSubmitting(false);
+    setTempSubmitOpen(false);
+    setCurrentPhoto("");
+    setTempPhoto("");
+    setTimeout(() => {
+      getPhotos().then((response) => setPhotos(response));
+    }, 1000);
+  }
+
+  return {
+    handleUploadPhotos,
+    handleOpenPhotoDialog,
+
+    takePhotoOpen,
+    handleTakePicture,
+    handleDeviceCycle,
+    handleCloseCamera,
+
+    hasCamera,
+    isCameraStarted: isStarted,
+    videoRef,
+    canvasRef,
+
+    previewPhotoOpen,
+    currentPhoto,
+    handlePreviewPhoto,
+    handlePreviewClose,
+
+    tempSubmitOpen,
+    handleGalleryClose,
+    photos,
+
+    saveCodeKey,
+    codeKey,
+
+    tempPhoto,
+    isSubmitting,
+
+    loadMorePhotos,
+    reloadPhotos,
+  };
+}

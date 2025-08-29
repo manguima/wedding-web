@@ -1,24 +1,61 @@
 "use client";
-import { Box, Center, Container, Flex, UnstyledButton } from "@mantine/core";
+import {
+  Box,
+  Burger,
+  Center,
+  Container,
+  Flex,
+  UnstyledButton,
+} from "@mantine/core";
 import { LogoIcon } from "../icons/LogoIcon";
-import Link from "next/link";
 import { useDisclosure, useHover } from "@mantine/hooks";
 import { useLayoutContext } from "./LayoutProvider";
-import { useEffect, useRef } from "react";
-import { useKabukiRoll } from "../KabukiRoll/KabukiRoll";
+import { create } from "zustand";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { useTheme } from "@/contexts/ThemeContext";
+import { useTenant } from "@/contexts/TenantContext";
+import { Image } from "@mantine/core";
+
+type UniqueToView = {
+  scrollIntoView: ({ alignment }?: any | undefined) => void;
+};
+
+type StateToView = {
+  home: UniqueToView;
+  aboutus: UniqueToView;
+  invite: UniqueToView;
+  gift?: any;
+};
+
+export const menuToView = create<StateToView>((set) => ({
+  home: { scrollIntoView: () => {} },
+  aboutus: { scrollIntoView: () => {} },
+  invite: { scrollIntoView: () => {} },
+}));
 
 export const DefaultHeader = ({
   position = "fixed",
 }: {
   position?: "sticky" | "fixed";
 }) => {
-  const { primaryColor, secondaryColor } = useLayoutContext();
+  const { primaryColor, secondaryColor, acceptedToPlay } = useLayoutContext();
+  const { getAsset } = useTheme();
+  const { tenant } = useTenant();
+
+  const [opened, { toggle }] = useDisclosure();
+  
+  // Determinar se deve usar logo customizada ou padrão
+  const logoUrl = getAsset('logo');
+  const hasCustomLogo = logoUrl && !logoUrl.includes('/images/logo.svg');
 
   return (
     <Container
       fluid
-      p={{ base: "1rem", sm: "2rem" }}
-      w={"100%"}
+      id="headerMenu"
+      p={{ base: "1.5rem", sm: "2rem" }}
+      w={"100svw"}
+      top={0}
       style={{
         background: "linear-gradient(180deg, #0F1D1430 0%, #0F1D1400 90%)",
         position: position,
@@ -33,17 +70,64 @@ export const DefaultHeader = ({
           w={"100%"}
           style={{ position: "relative" }}
         >
-          <Box>
-            <LogoIcon
-              width={"8rem"}
-              primaryColor={primaryColor}
-              secondaryColor={secondaryColor}
-            />
+          <Box w={{ base: "7rem", md: "8rem" }} style={{ zIndex: 3 }}>
+            {hasCustomLogo ? (
+              <Image 
+                src={logoUrl} 
+                alt={tenant?.name || "Logo"}
+                fit="contain"
+                height="auto"
+                style={{ maxHeight: '60px' }}
+              />
+            ) : (
+              <LogoIcon
+                width={"100%"}
+                primaryColor={opened ? "white" : primaryColor}
+                secondaryColor={opened ? "#E5C74D" : secondaryColor}
+              />
+            )}
           </Box>
+
           <Flex gap={"1rem"}>
-            {listNav.map((item, index) => (
-              <ButtonNav {...item} index={index} />
-            ))}
+            <Burger
+              color={opened ? "#fff" : secondaryColor}
+              hiddenFrom="md"
+              size={"xl"}
+              style={{ zIndex: 3 }}
+              opened={opened}
+              onClick={toggle}
+            />
+            <Flex
+              top={0}
+              left={0}
+              display={{ base: opened ? "flex" : "none", md: "flex" }}
+              gap={{ base: "1rem", md: "2rem" }}
+              pt={{ base: "7rem", md: "unset" }}
+              p={{ base: "2rem", md: "unset" }}
+              w={{ base: "100%", md: "unset" }}
+              pos={{ base: "fixed", md: "unset" }}
+              bg={{ base: "#000", md: "unset" }}
+              direction={{ base: "column", md: "row" }}
+              justify={{ base: "center", md: "start" }}
+              align={{ base: "center", md: "start" }}
+              style={{ zIndex: "0" }}
+            >
+              {listNav.map((item, index) => (
+                <Box
+                  key={index}
+                  fz={{ base: "2rem", md: "1rem" }}
+                  onClick={toggle}
+                >
+                  <ButtonNav
+                    key={index}
+                    {...item}
+                    index={index}
+                    primaryColor={primaryColor}
+                    secondaryColor={secondaryColor}
+                  />
+                </Box>
+              ))}
+            </Flex>
           </Flex>
         </Flex>
       </Center>
@@ -51,40 +135,72 @@ export const DefaultHeader = ({
   );
 };
 
-const ButtonNav = ({
+export const ButtonNav = ({
   label,
   url,
   index,
+  action,
+  primaryColor = "white",
+  secondaryColor = "#E5C74D",
 }: {
   label: string;
   url: string;
   index: number;
+  action?: any;
+  primaryColor?: string | undefined;
+  secondaryColor?: string | undefined;
 }) => {
-  const { hovered, ref } = useHover<HTMLAnchorElement>();
+  const { hovered, ref } = useHover<HTMLButtonElement>();
 
-  const { primaryColor, secondaryColor } = useLayoutContext();
+  const router = useRouter();
 
-  return (
+  return action ? (
     <UnstyledButton
       ref={ref}
       key={index}
-      component={Link}
-      href={url}
-      styles={{
-        root: {
-          fontSize: "1rem",
-          color: hovered ? secondaryColor : primaryColor,
-        },
+      fz={{ base: "unset", md: "1rem" }}
+      fw={{ base: 300, md: 400 }}
+      onClick={!!action && action}
+      c={{ base: "white", md: hovered ? secondaryColor : primaryColor }}
+    >
+      {label}
+    </UnstyledButton>
+  ) : (
+    <UnstyledButton
+      ref={ref}
+      key={index}
+      fz={{ base: "unset", md: "1rem" }}
+      fw={{ base: 300, md: 400 }}
+      onClick={() => {
+        router.push(url);
       }}
+      c={{ base: "white", md: hovered ? secondaryColor : primaryColor }}
     >
       {label}
     </UnstyledButton>
   );
 };
 
-const listNav = [
-  { label: "Início", url: "/" },
-  { label: "Confirmar presença", url: "#confirm" },
-  { label: "Sobre Nós", url: "#aboutus" },
-  { label: "Lista de presentes", url: "#gifts" },
+export const listNav = [
+  {
+    label: "Início",
+    url: "/",
+    action: () => menuToView.getState().home?.scrollIntoView(),
+  },
+  {
+    label: "Confirmar presença",
+    url: "#confirm",
+    action: () => menuToView.getState().invite?.scrollIntoView(),
+  },
+  {
+    label: "Sobre Nós",
+    url: "#aboutus",
+    action: () => menuToView.getState().aboutus?.scrollIntoView(),
+  },
+  {
+    label: "Lista de Presentes",
+    url: "/presentes",
+    // action: () => menuToView.getState().aboutus?.scrollIntoView(),
+  },
+  // { label: "Lista de presentes", url: "#gifts" },
 ];
